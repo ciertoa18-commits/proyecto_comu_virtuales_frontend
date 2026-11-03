@@ -1,0 +1,9 @@
+.curso { padding: 0; overflow: hidden; }
+.titulo { width: 100%; display: flex; align-items: center; gap: 14px; padding: 16px 18px; background: #fff; border: 0; font: inherit; text-align: left; cursor: pointer; }
+.titulo:hover { background: #fafafa; }
+.codigo { background: var(--azul-claro); color: var(--primario); font-weight: 800; font-size: .78rem; padding: .3rem .6rem; border-radius: 8px; white-space: nowrap; }
+.nombre { flex: 1; }
+.nombre small { display: block; color: #777; }
+.flecha { color: #999; }
+.secciones { padding: 4px 18px 16px; border-top: 1px solid #f0f0f0; }
+.admin { margin-top: .8rem; }

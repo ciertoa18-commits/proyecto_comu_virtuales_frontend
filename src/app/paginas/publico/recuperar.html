@@ -1,0 +1,38 @@
+<main class="auth-fondo">
+  <section class="auth-card">
+    <div class="auth-ilustracion">{{ paso() === 1 ? '🔑' : '📩' }}</div>
+    <h1 class="auth-titulo">Recuperar contraseña</h1>
+    @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
+
+    @if (paso() === 1) {
+      <p class="auth-sub">Escribe el correo de tu cuenta y te enviaremos un código de 6 dígitos.</p>
+      <form [formGroup]="formCorreo" (ngSubmit)="pedir()" novalidate>
+        <div class="campo">
+          <input type="email" autocomplete="username" placeholder="Correo electrónico" formControlName="correo" />
+          @if (errorCampo(formCorreo.controls.correo, msgCorreo); as m) { <small class="campo-error">{{ m }}</small> }
+        </div>
+        <button class="btn-login" type="submit" [disabled]="enviando()">{{ enviando() ? 'Enviando...' : 'Enviar código' }}</button>
+      </form>
+    } @else {
+      @if (info()) { <div class="exito" role="status">{{ info() }}</div> }
+      <p class="auth-sub">Revisa la bandeja (y el spam) de <strong>{{ correo }}</strong>.</p>
+      <form [formGroup]="formClave" (ngSubmit)="cambiar()" novalidate>
+        <label class="campo"><span>Código de 6 dígitos</span>
+          <input type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000" formControlName="codigo" />
+          @if (errorCampo(formClave.controls.codigo, 'Son 6 números.'); as m) { <small class="campo-error">{{ m }}</small> }
+        </label>
+        <label class="campo"><span>Nueva contraseña</span>
+          <input type="password" autocomplete="new-password" formControlName="nueva" />
+          @if (errorCampo(formClave.controls.nueva); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres.</small> }
+        </label>
+        <label class="campo"><span>Repite la nueva contraseña</span>
+          <input type="password" autocomplete="new-password" formControlName="confirmar" />
+          @if (formClave.errors?.['distintas'] && formClave.controls.confirmar.touched) { <small class="campo-error">Las contraseñas no coinciden.</small> }
+        </label>
+        <button class="btn-login" type="submit" [disabled]="enviando()">{{ enviando() ? 'Guardando...' : 'Cambiar contraseña' }}</button>
+      </form>
+      <p class="auth-pie"><button class="link" type="button" (click)="otroCodigo()">¿No te llegó? Pedir otro código</button></p>
+    }
+    <p class="auth-pie"><a routerLink="/login">← Volver a iniciar sesión</a></p>
+  </section>
+</main>

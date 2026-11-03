@@ -1,0 +1,11 @@
+.nota { width: 70px; text-align: right; padding: .35rem .45rem !important; }
+.nota.guardando { border-color: var(--ambar); background: #fff8e6; }
+.mal { color: #c0392b; }
+.retirado td { opacity: .55; }
+.libreta th small { font-weight: 400; color: #888; }
+.matricular { display: flex; flex-direction: column; gap: .4rem; }
+.matricular label { font-weight: 600; font-size: .88rem; }
+.lista { border: 1px solid var(--line); border-radius: 10px; max-height: 220px; overflow-y: auto; }
+.lista button { display: block; width: 100%; text-align: left; padding: .55rem .8rem; border: 0; border-top: 1px solid #f0f0f0; background: #fff; font: inherit; cursor: pointer; }
+.lista button:hover { background: var(--azul-claro); }
+.lista small { color: #777; }

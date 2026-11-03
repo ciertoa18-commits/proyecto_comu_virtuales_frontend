@@ -1,0 +1,29 @@
+<main class="auth-fondo">
+  <form class="auth-card" [formGroup]="form" (ngSubmit)="entrar()" novalidate>
+    <h1 class="auth-titulo">Iniciar Sesión</h1>
+    <p class="auth-sub">Si es la primera vez que ingresas a PerúEduca,<br />te invitamos a registrarte.</p>
+
+    @if (error()) {
+      <div class="alerta" role="alert">{{ error() }}</div>
+    } @else {
+      @switch (motivo()) {
+        @case ('salio') { <div class="exito" role="status">Sesión cerrada correctamente. ¡Hasta pronto! 👋</div> }
+        @case ('vencio') { <div class="aviso" role="status">Tu sesión expiró. Vuelve a iniciar sesión.</div> }
+        @case ('restablecida') { <div class="exito" role="status">Tu contraseña fue cambiada. Ingresa con la nueva.</div> }
+      }
+    }
+
+    <div class="campo">
+      <input type="email" autocomplete="username" placeholder="Correo electrónico" formControlName="correo" />
+      @if (err('correo'); as m) { <small class="campo-error">{{ m }}</small> }
+    </div>
+    <div class="campo">
+      <input type="password" autocomplete="current-password" placeholder="Contraseña" formControlName="password" />
+      @if (err('password'); as m) { <small class="campo-error">{{ m }}</small> }
+    </div>
+
+    <div class="auth-link-der"><a routerLink="/recuperar">¿Has olvidado tu contraseña?</a></div>
+    <button class="btn-login" type="submit" [disabled]="enviando()">{{ enviando() ? 'Ingresando...' : 'Iniciar Sesión' }}</button>
+    <p class="auth-pie">¿Usuario nuevo? <a routerLink="/registro">Regístrate</a></p>
+  </form>
+</main>

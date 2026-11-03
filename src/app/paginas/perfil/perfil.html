@@ -1,0 +1,67 @@
+<section class="portada">
+  <div class="centro">
+    <label class="foto" [title]="'Cambiar foto'">
+      @if (usuario()?.idFotoPerfil; as f) {
+        <cv-imagen [idArchivo]="f" alt="Tu foto" ancho="110px" alto="110px" [redonda]="true" />
+      } @else {
+        <span class="avatar-grande">{{ iniciales() }}</span>
+      }
+      <span class="camara">{{ subiendo() ? '⏳' : '📷' }}</span>
+      <input type="file" accept=".jpg,.jpeg,.png" hidden (change)="foto($event)" />
+    </label>
+    <h2>{{ usuario()?.nombres }} {{ usuario()?.apellidos }}</h2>
+    <span class="rol">{{ rol() }}</span>
+  </div>
+</section>
+
+@if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
+@if (exito()) { <div class="exito" role="status">{{ exito() }}</div> }
+
+<nav class="tabs">
+  <button class="tab" [class.activa]="pestana() === 'datos'" (click)="pestana.set('datos')">Mis datos</button>
+  <button class="tab" [class.activa]="pestana() === 'seguridad'" (click)="pestana.set('seguridad')">Contraseña</button>
+</nav>
+
+@if (pestana() === 'datos') {
+  <div class="dos">
+    <form class="tarjeta tarjeta-plana" [formGroup]="formDatos" (ngSubmit)="guardar()" novalidate>
+      <h2>Datos personales</h2>
+      <div class="dos-columnas">
+        <div><label for="n">Nombres</label><input id="n" formControlName="nombres" />
+          @if (errorCampo(formDatos.controls.nombres); as m) { <small class="campo-error">{{ m }}</small> }</div>
+        <div><label for="a">Apellidos</label><input id="a" formControlName="apellidos" />
+          @if (errorCampo(formDatos.controls.apellidos); as m) { <small class="campo-error">{{ m }}</small> }</div>
+      </div>
+      <label for="t">Teléfono (opcional)</label>
+      <input id="t" type="tel" inputmode="numeric" maxlength="9" placeholder="987654321" formControlName="telefono" />
+      @if (delServidor()['telefono'] ?? errorCampo(formDatos.controls.telefono, msgTelefono); as m) { <small class="campo-error">{{ m }}</small> }
+      @if (esDocente()) { <label for="e">Especialidad</label><input id="e" formControlName="especialidad" /> }
+      <label for="i">Idioma preferido</label>
+      <select id="i" formControlName="idIdiomaPref">
+        <option [ngValue]="null">Sin preferencia</option>
+        @for (x of (idiomas$ | async) ?? []; track x.idIdioma) { <option [ngValue]="x.idIdioma">{{ x.nombre }}</option> }
+      </select>
+      <small class="ayuda">Te recomendamos comunidades en tu idioma.</small>
+      <div class="botones"><button class="btn btn-primario" type="submit">Guardar cambios</button></div>
+    </form>
+    <div class="bloque">
+      <h2>Cuenta</h2>
+      <div class="datos">
+        <span>Correo</span><strong>{{ usuario()?.correo }}</strong>
+        <span>Rol</span><strong>{{ rol() }}</strong>
+        <span>Estado</span><strong>{{ usuario()?.estado }}</strong>
+        <span>Miembro desde</span><strong>{{ usuario()?.fechaRegistro | date: 'longDate' }}</strong>
+      </div>
+    </div>
+  </div>
+} @else {
+  <form class="tarjeta tarjeta-plana angosta" [formGroup]="formClave" (ngSubmit)="cambiarClave()" novalidate>
+    <h2>Cambiar contraseña</h2>
+    <label for="ca">Contraseña actual</label><input id="ca" type="password" autocomplete="current-password" formControlName="actual" />
+    <label for="cn">Nueva contraseña</label><input id="cn" type="password" autocomplete="new-password" formControlName="nueva" />
+    @if (errorCampo(formClave.controls.nueva); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres.</small> }
+    <label for="cc">Repite la nueva contraseña</label><input id="cc" type="password" autocomplete="new-password" formControlName="confirmar" />
+    @if (formClave.errors?.['distintas'] && formClave.controls.confirmar.touched) { <small class="campo-error">Las contraseñas no coinciden.</small> }
+    <div class="botones"><button class="btn btn-primario" type="submit">Cambiar contraseña</button></div>
+  </form>
+}

@@ -1,0 +1,79 @@
+<a class="volver" routerLink="/comunidades">← Comunidades</a>
+
+@if (comunidad(); as c) {
+  <section class="cabeza">
+    @if (c.idImagen) {
+      <cv-imagen class="fondo" [idArchivo]="c.idImagen" [alt]="c.nombre" alto="200px" />
+    } @else {
+      <div class="fondo img" [style.background-image]="'url(' + portada(c.idComunidad) + ')'"></div>
+    }
+    <div class="capa">
+      <div>
+        <span class="badge-tipo" [class.priv]="c.visibilidad === 'PRIVADA'">{{ c.visibilidad === 'PUBLICA' ? 'PÚBLICA' : 'PRIVADA' }}</span>
+        <h1>{{ c.nombre }}</h1>
+        <p>{{ c.descripcion }}</p>
+      </div>
+      <div class="acciones">
+        <a *siPuede="'COMUNIDAD_CREAR'" class="btn" [routerLink]="['/comunidades', c.idComunidad, 'editar']">✏️ Editar</a>
+        @if (!esAdmin()) {
+          @switch (mia()?.estado) {
+            @case ('MIEMBRO') { <button class="btn" type="button" (click)="salir()">Salir de la comunidad</button> }
+            @case ('SOLICITUD_PENDIENTE') { <span class="pill alerta-pill grande">⏳ Solicitud pendiente</span> }
+            @default {
+              @if (c.visibilidad === 'PUBLICA') {
+                <button class="btn btn-coral" type="button" [disabled]="pidiendo()" (click)="unirse()">+ Unirme</button>
+              } @else {
+                <button class="btn btn-coral" type="button" (click)="modalSolicitud.set(true)">🔒 Solicitar ingreso</button>
+              }
+            }
+          }
+        }
+      </div>
+    </div>
+  </section>
+
+  @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
+  @if (exito()) { <div class="exito" role="status">{{ exito() }}</div> }
+
+  @if (puedeVer()) {
+    <nav class="tabs">
+      <button class="tab" [class.activa]="pestana() === 'muro'" (click)="pestana.set('muro')">📰 Muro</button>
+      <button class="tab" [class.activa]="pestana() === 'cursos'" (click)="pestana.set('cursos')">📘 Cursos</button>
+      <button class="tab" [class.activa]="pestana() === 'eventos'" (click)="pestana.set('eventos')">📅 Eventos</button>
+      <button *siPuede="'MIEMBROS_VER'" class="tab" [class.activa]="pestana() === 'miembros'" (click)="pestana.set('miembros')">👥 Miembros</button>
+      @if (esModerador() && c.moderacionPrevia) {
+        <button class="tab" [class.activa]="pestana() === 'revisar'" (click)="pestana.set('revisar')">🛡️ Por revisar</button>
+      }
+    </nav>
+    @switch (pestana()) {
+      @case ('muro') { <cv-tab-muro [idComunidad]="c.idComunidad" [moderada]="c.moderacionPrevia" /> }
+      @case ('revisar') { <cv-tab-muro [idComunidad]="c.idComunidad" [moderada]="true" [revision]="true" /> }
+      @case ('cursos') { <cv-tab-cursos [idComunidad]="c.idComunidad" /> }
+      @case ('eventos') { <cv-tab-eventos [idComunidad]="c.idComunidad" /> }
+      @case ('miembros') { <cv-tab-miembros [idComunidad]="c.idComunidad" /> }
+    }
+  } @else {
+    <div class="bloque bloqueado">
+      <div class="grande-ico">🔐</div>
+      <h2>Únete para ver el contenido</h2>
+      <p class="apagado">El muro, los cursos y los eventos son solo para los miembros de la comunidad.</p>
+    </div>
+  }
+
+  @if (modalSolicitud()) {
+    <cv-modal titulo="Solicitar ingreso" (cerrar)="modalSolicitud.set(false)">
+      <p class="apagado">Esta comunidad es privada. Cuéntale al administrador por qué quieres unirte (opcional).</p>
+      <div class="tarjeta">
+        <textarea #msg maxlength="500" placeholder="Ej.: Soy docente de Matemática en Puno..."></textarea>
+        <div class="botones">
+          <button class="btn" type="button" (click)="modalSolicitud.set(false)">Cancelar</button>
+          <button class="btn btn-primario" type="button" [disabled]="pidiendo()" (click)="solicitar(msg.value)">Enviar solicitud</button>
+        </div>
+      </div>
+    </cv-modal>
+  }
+} @else if (error()) {
+  <div class="alerta" role="alert">{{ error() }}</div>
+} @else {
+  <p class="vacio">Cargando comunidad...</p>
+}

@@ -1,0 +1,69 @@
+<a class="volver" [routerLink]="id() ? ['/comunidades', id()] : ['/comunidades']">← Volver</a>
+<h1>{{ id() ? 'Editar comunidad' : 'Crear comunidad' }}</h1>
+<p class="subtitulo-pagina">Completa la información de la comunidad.</p>
+
+@if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
+
+<form class="tarjeta tarjeta-plana" [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+  <label for="nombre">Nombre <b class="req">*</b></label>
+  <input id="nombre" maxlength="150" formControlName="nombre" placeholder="Ej.: Docentes de Matemática de Puno" />
+  @if (err('nombre'); as m) { <small class="campo-error">{{ m }}</small> }
+
+  <label for="descripcion">Descripción</label>
+  <textarea id="descripcion" maxlength="1000" formControlName="descripcion"></textarea>
+  <small class="ayuda derecha">{{ form.controls.descripcion.value?.length ?? 0 }}/1000</small>
+
+  <div class="dos-columnas">
+    <div>
+      <label for="cat">Categoría <b class="req">*</b></label>
+      <select id="cat" formControlName="idCategoria">
+        <option [ngValue]="null">Elige...</option>
+        @for (c of (categorias$ | async) ?? []; track c.idCategoria) { <option [ngValue]="c.idCategoria">{{ c.nombre }}</option> }
+      </select>
+      @if (err('idCategoria'); as m) { <small class="campo-error">{{ m }}</small> }
+    </div>
+    <div>
+      <label for="idioma">Idioma</label>
+      <select id="idioma" formControlName="idIdioma">
+        <option [ngValue]="null">Sin especificar</option>
+        @for (i of (idiomas$ | async) ?? []; track i.idIdioma) { <option [ngValue]="i.idIdioma">{{ i.nombre }}</option> }
+      </select>
+    </div>
+  </div>
+  <label for="pueblo">Pueblo originario</label>
+  <select id="pueblo" formControlName="idPueblo">
+    <option [ngValue]="null">Ninguno</option>
+    @for (p of (pueblos$ | async) ?? []; track p.idPueblo) { <option [ngValue]="p.idPueblo">{{ p.nombre }}</option> }
+  </select>
+
+  <div class="dos-columnas cajas">
+    <div class="caja">
+      <h4>Visibilidad</h4>
+      <label class="radio"><input type="radio" value="PUBLICA" formControlName="visibilidad" />
+        <span><b>Pública</b><small>Cualquiera puede unirse.</small></span></label>
+      <label class="radio"><input type="radio" value="PRIVADA" formControlName="visibilidad" />
+        <span><b>Privada</b><small>Se entra con solicitud aprobada.</small></span></label>
+    </div>
+    <div class="caja">
+      <h4>Moderación</h4>
+      <label class="radio"><input type="checkbox" formControlName="moderacionPrevia" />
+        <span><b>Revisar publicaciones</b><small>Un moderador aprueba cada publicación antes de mostrarla.</small></span></label>
+    </div>
+  </div>
+
+  <label>Imagen de portada</label>
+  <div class="portada">
+    @if (form.controls.idImagen.value; as img) {
+      <cv-imagen [idArchivo]="img" alt="Portada" ancho="220px" alto="110px" />
+    }
+    <label class="subir">📷 {{ subiendo() ? 'Subiendo...' : form.controls.idImagen.value ? 'Cambiar imagen' : 'Subir imagen (JPG/PNG, 2 MB)' }}
+      <input type="file" accept=".jpg,.jpeg,.png" (change)="subirImagen($event)" hidden />
+    </label>
+  </div>
+
+  <div class="botones">
+    @if (id()) { <button class="btn btn-peligro izquierda" type="button" (click)="eliminar()">Eliminar comunidad</button> }
+    <a class="btn btn-borde" [routerLink]="id() ? ['/comunidades', id()] : ['/comunidades']">Cancelar</a>
+    <button class="btn btn-primario" type="submit" [disabled]="guardando() || subiendo()">{{ guardando() ? 'Guardando...' : 'Guardar' }}</button>
+  </div>
+</form>

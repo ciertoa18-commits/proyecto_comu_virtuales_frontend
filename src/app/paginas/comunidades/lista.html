@@ -1,0 +1,58 @@
+<div class="cabecera">
+  <h1>Comunidades</h1>
+  <a *siPuede="'COMUNIDAD_CREAR'" class="btn btn-primario" routerLink="/comunidades/nueva">+ Crear comunidad</a>
+</div>
+
+<div class="info-banners">
+  <button type="button" class="info-banner" [class.sel]="!soloMias()" (click)="verMias(false)">
+    <span class="ib-ico">🌎</span><span><strong>Todas las comunidades</strong><small>Explora y únete a nuevas comunidades</small></span>
+  </button>
+  <button type="button" class="info-banner" [class.sel]="soloMias()" (click)="verMias(true)">
+    <span class="ib-ico">⭐</span><span><strong>Mis comunidades</strong><small>{{ mias().length }} en las que participas</small></span>
+  </button>
+</div>
+
+<form class="filtros" (submit)="$event.preventDefault(); buscar(q.value, cat.value, idi.value)">
+  <label>Buscar <input #q class="buscador" type="search" placeholder="Nombre de la comunidad..." /></label>
+  <label>Categoría
+    <select #cat (change)="buscar(q.value, cat.value, idi.value)">
+      <option value="">Todas</option>
+      @for (c of (categorias$ | async) ?? []; track c.idCategoria) { <option [value]="c.idCategoria">{{ c.nombre }}</option> }
+    </select>
+  </label>
+  <label>Idioma
+    <select #idi (change)="buscar(q.value, cat.value, idi.value)">
+      <option value="">Todos</option>
+      @for (i of (idiomas$ | async) ?? []; track i.idIdioma) { <option [value]="i.idIdioma">{{ i.nombre }}</option> }
+    </select>
+  </label>
+  <button class="btn" type="submit">Buscar</button>
+</form>
+
+@if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
+
+<div class="rejilla">
+  @for (c of visibles(); track c.idComunidad) {
+    <a class="com-card" [routerLink]="['/comunidades', c.idComunidad]">
+      @if (c.idImagen) {
+        <cv-imagen [idArchivo]="c.idImagen" [alt]="c.nombre" alto="130px" />
+      } @else {
+        <div class="com-banner" [style.background-image]="'url(' + portada(c.idComunidad) + ')'"></div>
+      }
+      <div class="com-body">
+        <div class="com-titulo">
+          <strong>{{ c.nombre }}</strong>
+          <span class="badge-tipo" [class.priv]="c.visibilidad === 'PRIVADA'">{{ c.visibilidad === 'PUBLICA' ? 'PÚBLICA' : 'PRIVADA' }}</span>
+        </div>
+        <p class="com-desc">{{ c.descripcion }}</p>
+        @switch (estadoDe()[c.idComunidad]?.estado) {
+          @case ('MIEMBRO') { <span class="pill">✓ Eres miembro</span> }
+          @case ('SOLICITUD_PENDIENTE') { <span class="pill alerta-pill">Solicitud enviada</span> }
+        }
+      </div>
+    </a>
+  } @empty {
+    <p class="vacio">{{ cargando() ? 'Cargando comunidades...' : soloMias() ? 'Aún no participas en ninguna comunidad.' : 'No se encontraron comunidades.' }}</p>
+  }
+</div>
+<cv-paginador [pagina]="pagina()" [total]="totalPaginas()" (ir)="cargar($event)" />

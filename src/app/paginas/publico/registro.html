@@ -1,0 +1,72 @@
+<main class="auth-fondo">
+  @if (listo(); as r) {
+    <section class="auth-card" role="status">
+      <div class="auth-ilustracion">{{ r.estado === 'PENDIENTE' ? '⏳' : '🎉' }}</div>
+      <h1 class="auth-titulo">{{ r.estado === 'PENDIENTE' ? '¡Solicitud enviada!' : '¡Cuenta creada!' }}</h1>
+      <p class="auth-sub">{{ r.mensaje }}</p>
+      @if (r.estado === 'PENDIENTE') {
+        <p class="nota">Cuando el administrador apruebe tu cuenta podrás ingresar con tu correo y contraseña.</p>
+      }
+      <a class="btn-login enlace" routerLink="/login">Ir a iniciar sesión</a>
+    </section>
+  } @else {
+    <form class="auth-card ancha" [formGroup]="form" (ngSubmit)="crear()" novalidate>
+      <h1 class="auth-titulo">Crear cuenta</h1>
+      <p class="auth-sub">Únete a PerúEduca con tu correo electrónico.</p>
+      @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
+
+      <div class="roles" role="radiogroup" aria-label="Tipo de cuenta">
+        <button type="button" class="rol" role="radio" [class.sel]="!docente" [attr.aria-checked]="!docente" (click)="elegir('ESTUDIANTE')">
+          <span class="ico">🎒</span><strong>Estudiante</strong><small>Entras de inmediato</small>
+        </button>
+        <button type="button" class="rol" role="radio" [class.sel]="docente" [attr.aria-checked]="docente" (click)="elegir('DOCENTE')">
+          <span class="ico">🧑‍🏫</span><strong>Docente</strong><small>Un administrador aprueba tu cuenta</small>
+        </button>
+      </div>
+
+      <div class="par">
+        <label class="campo"><span>Nombres <b class="req">*</b></span>
+          <input type="text" autocomplete="given-name" formControlName="nombres" />
+          @if (err('nombres'); as m) { <small class="campo-error">{{ m }}</small> }
+        </label>
+        <label class="campo"><span>Apellidos <b class="req">*</b></span>
+          <input type="text" autocomplete="family-name" formControlName="apellidos" />
+          @if (err('apellidos'); as m) { <small class="campo-error">{{ m }}</small> }
+        </label>
+      </div>
+      <label class="campo"><span>Correo electrónico <b class="req">*</b></span>
+        <input type="email" autocomplete="email" [placeholder]="'nombre' + dominio" formControlName="correo" />
+        @if (err('correo', msgCorreo); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">{{ docente ? 'Docente' : 'Estudiante' }}: usa tu correo institucional {{ dominio }}</small> }
+      </label>
+      <div class="par">
+        <label class="campo"><span>Teléfono (opcional)</span>
+          <input type="tel" inputmode="numeric" maxlength="9" placeholder="987654321" formControlName="telefono" />
+          @if (err('telefono', msgTelefono); as m) { <small class="campo-error">{{ m }}</small> }
+        </label>
+        <label class="campo"><span>Idioma preferido</span>
+          <select formControlName="idIdiomaPref">
+            @for (i of (idiomas$ | async) ?? []; track i.idIdioma) { <option [ngValue]="i.idIdioma">{{ i.nombre }}</option> }
+          </select>
+        </label>
+      </div>
+      @if (docente) {
+        <label class="campo"><span>Especialidad <b class="req">*</b></span>
+          <input type="text" placeholder="Ej.: Matemática, Comunicación..." formControlName="especialidad" />
+          @if (err('especialidad'); as m) { <small class="campo-error">{{ m }}</small> }
+        </label>
+      }
+      <div class="par">
+        <label class="campo"><span>Contraseña <b class="req">*</b></span>
+          <input type="password" autocomplete="new-password" formControlName="password" />
+          @if (err('password'); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres.</small> }
+        </label>
+        <label class="campo"><span>Repite la contraseña <b class="req">*</b></span>
+          <input type="password" autocomplete="new-password" formControlName="confirmar" />
+          @if (form.errors?.['distintas'] && form.controls.confirmar.touched) { <small class="campo-error">Las contraseñas no coinciden.</small> }
+        </label>
+      </div>
+      <button class="btn-login" type="submit" [disabled]="enviando()">{{ enviando() ? 'Creando cuenta...' : 'Crear cuenta' }}</button>
+      <p class="auth-pie">¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+    </form>
+  }
+</main>

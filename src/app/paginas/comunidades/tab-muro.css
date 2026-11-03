@@ -1,0 +1,15 @@
+.nueva { display: flex; gap: 14px; }
+.yo, .av { width: 40px; height: 40px; border-radius: 50%; background: var(--primario); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .8rem; flex: none; }
+.av { background: #6b7a8f; }
+.campos { flex: 1; display: flex; flex-direction: column; gap: .6rem; min-width: 0; }
+.pie { display: flex; align-items: center; gap: .8rem; justify-content: space-between; flex-wrap: wrap; }
+.chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+.chip { background: var(--azul-claro); color: var(--primario); border-radius: 14px; padding: .25rem .7rem; font-size: .8rem; }
+.chip button { background: none; border: 0; color: inherit; cursor: pointer; font-weight: 700; }
+.post header { display: flex; align-items: center; gap: 12px; margin-bottom: .7rem; }
+.post header small { display: block; }
+.borrar { margin-left: auto; }
+.post h3 { font-size: 1.05rem; }
+.texto { white-space: pre-wrap; margin: .3rem 0 .7rem; }
+.post footer { display: flex; gap: .6rem; border-top: 1px solid #f0f0f0; padding-top: .7rem; margin-top: .5rem; }
+.post footer .link { text-decoration: none; }

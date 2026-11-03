@@ -1,0 +1,83 @@
+<section class="hero">
+  <div>
+    <h1>Hola, {{ nombre() }} 👋</h1>
+    <p>Las Comunidades Virtuales son grupos de personas que, desde la red, intercambian voluntariamente información. Aprende y comparte con tu comunidad.</p>
+  </div>
+  <a class="btn-grande" routerLink="/comunidades">Ver comunidades</a>
+</section>
+
+@if (sesion.rol() === 'ADMIN') {
+  <h2>Panel de administración</h2>
+  <div class="panel">
+    <a class="bloque kpi" routerLink="/admin/usuarios" [queryParams]="{ estado: 'PENDIENTE' }" [class.alerta-kpi]="docentesPendientes() > 0">
+      <span>⏳</span><b>{{ docentesPendientes() }}</b><small>Docentes por aprobar</small></a>
+    <a class="bloque kpi" routerLink="/admin/solicitudes" [class.alerta-kpi]="solicitudesPendientes() > 0">
+      <span>📥</span><b>{{ solicitudesPendientes() }}</b><small>Solicitudes de ingreso</small></a>
+    <a class="bloque kpi" routerLink="/admin/usuarios"><span>👥</span><b>{{ totalUsuarios() }}</b><small>Usuarios</small></a>
+    <a class="bloque kpi" routerLink="/comunidades"><span>🌎</span><b>{{ totalComunidades() }}</b><small>Comunidades</small></a>
+  </div>
+  <div class="accesos">
+    <a class="btn btn-primario" routerLink="/comunidades/nueva">+ Crear comunidad</a>
+    <a class="btn" routerLink="/notificaciones/enviar">📣 Enviar aviso</a>
+    <a class="btn" routerLink="/admin/reportes">📊 Ver reportes</a>
+  </div>
+} @else {
+  <div class="columnas">
+    @if (sesion.rol() === 'ESTUDIANTE') {
+      <section>
+        <h2>Próximas clases</h2>
+        <div class="bloque">
+          @for (c of clases(); track c.sesion.idSesion) {
+            <div class="fila">
+              <div>
+                <strong>{{ c.sesion.titulo }}</strong>
+                <div class="apagado">{{ c.sesion.fechaInicio ? (c.sesion.fechaInicio | date: "EEEE d 'de' MMMM, HH:mm") : 'Sin fecha' }}@if (c.sesion.duracionMin) { · {{ c.sesion.duracionMin }} min }</div>
+              </div>
+              @if (c.enlace) { <a class="btn btn-primario btn-chico" [href]="c.enlace" target="_blank" rel="noopener">Entrar</a> }
+            </div>
+          } @empty {
+            <p class="vacio">No tienes clases programadas.</p>
+          }
+        </div>
+      </section>
+    }
+    <section>
+      <h2>{{ sesion.rol() === 'DOCENTE' ? 'Mis clases' : 'Mis cursos' }}</h2>
+      <div class="bloque">
+        @for (s of secciones(); track s.idSeccion) {
+          <a class="fila enlace-fila" [routerLink]="['/secciones', s.idSeccion]">
+            <span><strong>{{ s.curso }}</strong> <span class="apagado">· Grupo {{ s.grupo }}</span></span>
+            <span class="pill" [class.inactivo]="s.estado === 'CERRADA'">{{ s.estado }}</span>
+          </a>
+        } @empty {
+          <p class="vacio">{{ sesion.rol() === 'DOCENTE' ? 'Aún no tienes secciones asignadas.' : 'Aún no tienes cursos. Únete a una comunidad y matricúlate.' }}</p>
+        }
+      </div>
+    </section>
+  </div>
+}
+
+@if (recomendadas().length) {
+  <h2>Comunidades recomendadas para ti</h2>
+  <div class="rejilla">
+    @for (c of recomendadas(); track c.idComunidad) {
+      <a class="com-card" [routerLink]="['/comunidades', c.idComunidad]">
+        <div class="com-banner" [style.background-image]="'url(' + portada(c.idComunidad) + ')'"></div>
+        <div class="com-body">
+          <div class="com-titulo"><strong>{{ c.nombre }}</strong><span class="badge-tipo" [class.priv]="c.visibilidad === 'PRIVADA'">{{ c.visibilidad === 'PUBLICA' ? 'PÚBLICA' : 'PRIVADA' }}</span></div>
+          <p class="com-desc">{{ c.descripcion }}</p>
+        </div>
+      </a>
+    }
+  </div>
+}
+
+<h2 class="titulo-centro">Además debes saber</h2>
+<div class="tres">
+  <article class="bloque"><div class="ilustra">💻</div><h3>Dinámica de temas</h3>
+    <ul><li>Experiencias pedagógicas compartidas.</li><li>Desafíos similares.</li><li>Temas relacionados a la práctica docente.</li></ul></article>
+  <article class="bloque"><div class="ilustra">💬</div><h3>Dinámica en la comunidad</h3>
+    <p>Los participantes pueden compartir documentos y enlaces, así como producciones propias.</p></article>
+  <article class="bloque"><div class="ilustra">🎓</div><h3>Beneficios</h3>
+    <ul><li>Desarrollo profesional.</li><li>Contactos profesionales.</li><li>Desarrollo de espíritu colaborativo.</li></ul></article>
+</div>

@@ -1,0 +1,10 @@
+.cajas { margin-top: 1rem; gap: 1rem; }
+.caja { border: 1px solid #e2e2e2; border-radius: 12px; padding: 14px 16px; }
+.caja h4 { margin: 0 0 .6rem; }
+.radio { display: flex; gap: .7rem; align-items: flex-start; margin: 0 0 .7rem !important; font-weight: 400 !important; cursor: pointer; }
+.radio input { margin-top: .25rem; }
+.radio small { display: block; color: #666; font-size: .8rem; }
+.portada { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.subir { border: 2px dashed #c8d5f3; border-radius: 12px; padding: 14px 18px; color: var(--primario); cursor: pointer; font-weight: 600; margin: 0 !important; }
+.derecha { text-align: right; }
+.izquierda { margin-right: auto; }

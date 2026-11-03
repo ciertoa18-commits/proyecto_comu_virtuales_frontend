@@ -1,0 +1,13 @@
+.autor, .linea { display: flex; gap: 12px; align-items: flex-start; }
+.autor small { display: block; }
+.av { width: 40px; height: 40px; border-radius: 50%; background: #6b7a8f; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .8rem; flex: none; }
+.av.chico { width: 32px; height: 32px; font-size: .7rem; }
+.titulo { font-size: 1.5rem; margin: 1rem 0 .4rem; }
+.texto { white-space: pre-wrap; }
+.adjuntos { display: flex; gap: .5rem; flex-wrap: wrap; }
+.nuevo textarea, .respuestas textarea { width: 100%; }
+.cuerpo { flex: 1; }
+.cuerpo p { margin: .2rem 0 .4rem; white-space: pre-wrap; }
+.respuestas { margin-left: 44px; border-left: 2px solid #f0f0f0; padding-left: 14px; }
+.x { background: none; border: 0; cursor: pointer; opacity: .5; }
+.x:hover { opacity: 1; }

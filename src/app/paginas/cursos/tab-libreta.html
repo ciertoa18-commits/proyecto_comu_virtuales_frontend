@@ -1,0 +1,59 @@
+@if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
+@if (exito()) { <div class="exito" role="status">{{ exito() }}</div> }
+
+<div class="cabecera">
+  <h2>Notas · {{ activos().length }} estudiante(s)</h2>
+  @if (!bloqueada()) { <button class="btn btn-peligro btn-chico" type="button" (click)="cerrar()">🔒 Cerrar sección</button> }
+</div>
+
+@if (sesion.puede('MATRICULAR_OTROS') && !bloqueada()) {
+  <div class="bloque matricular">
+    <label for="busca">Matricular a un estudiante</label>
+    <input #caja id="busca" type="search" autocomplete="off" placeholder="Busca por nombre o correo..." (input)="buscar(caja.value)" />
+    @if (resultados().length) {
+      <div class="lista">
+        @for (u of resultados(); track u.idUsuario) {
+          <button type="button" (click)="matricular(u, caja)">{{ u.nombres }} {{ u.apellidos }} <small>· {{ u.correo }}</small></button>
+        }
+      </div>
+    }
+  </div>
+}
+
+@if (!evaluaciones().length) { <p class="aviso">Primero crea las evaluaciones en la pestaña <strong>Evaluaciones</strong>.</p> }
+
+<div class="tabla-scroll">
+  <table class="tabla libreta">
+    <thead>
+      <tr>
+        <th>Estudiante</th>
+        @for (e of evaluaciones(); track e.idEvaluacion) { <th class="numero" [title]="e.tipo">{{ e.nombre }}<br /><small>{{ e.peso }}%</small></th> }
+        <th class="numero">Promedio</th>
+        <th>Estado</th>
+        @if (sesion.rol() === 'ADMIN' && !bloqueada()) { <th></th> }
+      </tr>
+    </thead>
+    <tbody>
+      @for (f of filas(); track f.matricula.idMatricula) {
+        <tr [class.retirado]="f.matricula.estado === 'RETIRADO'">
+          <td><strong>{{ f.estudiante.apellidos }}</strong>, {{ f.estudiante.nombres }}</td>
+          @for (e of evaluaciones(); track e.idEvaluacion) {
+            <td class="numero">
+              <input #celda class="nota" type="number" min="0" max="20" step="0.5" [value]="nota(f, e) ?? ''"
+                [disabled]="bloqueada() || f.matricula.estado === 'RETIRADO'" [class.guardando]="guardando() === f.matricula.idMatricula + '-' + e.idEvaluacion"
+                (blur)="guardar(f, e, celda)" (keydown.enter)="celda.blur()" [attr.aria-label]="'Nota de ' + f.estudiante.nombres + ' en ' + e.nombre" />
+            </td>
+          }
+          <td class="numero"><strong [class.mal]="f.promedio < aprobatoria">{{ f.promedio | number: '1.1-2' }}</strong></td>
+          <td><span class="pill" [class.inactivo]="f.matricula.estado === 'RETIRADO'" [class.riesgo]="f.matricula.estado === 'DESAPROBADO'">{{ f.matricula.estado }}</span></td>
+          @if (sesion.rol() === 'ADMIN' && !bloqueada()) {
+            <td>@if (f.matricula.estado === 'MATRICULADO') { <button class="btn btn-chico btn-peligro" type="button" (click)="retirar(f)">Retirar</button> }</td>
+          }
+        </tr>
+      } @empty {
+        <tr><td [attr.colspan]="evaluaciones().length + 4" class="vacio">Aún no hay estudiantes matriculados.</td></tr>
+      }
+    </tbody>
+  </table>
+</div>
+<p class="apagado">Escala vigesimal: se aprueba con {{ aprobatoria }}. Escribe la nota y presiona Enter o sal de la casilla para guardar.</p>

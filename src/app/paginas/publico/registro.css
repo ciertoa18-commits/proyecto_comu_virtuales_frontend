@@ -1,0 +1,9 @@
+.roles { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin-bottom: 1.4rem; }
+.rol { border: 2px solid #e2e2e2; border-radius: 14px; padding: .9rem; text-align: center; cursor: pointer; background: #fff; font: inherit; }
+.rol:hover { border-color: #b9c9ef; }
+.rol.sel { border-color: var(--primario); background: var(--azul-claro); }
+.rol .ico { font-size: 1.9rem; display: block; }
+.rol strong { display: block; margin-top: .3rem; }
+.rol small { color: #666; font-size: .76rem; }
+.par { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
+@media (max-width: 520px) { .par, .roles { grid-template-columns: 1fr; } }

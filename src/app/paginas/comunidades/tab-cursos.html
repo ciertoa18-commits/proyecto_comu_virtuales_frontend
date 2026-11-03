@@ -1,0 +1,89 @@
+@if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
+@if (exito()) { <div class="exito" role="status">{{ exito() }}</div> }
+
+<div class="cabecera">
+  <h2>Cursos</h2>
+  <button *siPuede="'CURSO_GESTIONAR'" class="btn btn-primario btn-chico" type="button" (click)="abrirCurso('nuevo')">+ Nuevo curso</button>
+</div>
+
+@for (c of cursos(); track c.idCurso) {
+  <div class="bloque curso">
+    <button class="titulo" type="button" (click)="alternar(c)" [attr.aria-expanded]="abierto() === c.idCurso">
+      <span class="codigo">{{ c.codigo }}</span>
+      <span class="nombre"><strong>{{ c.nombre }}</strong>@if (c.descripcion) { <small>{{ c.descripcion }}</small> }</span>
+      <span class="flecha">{{ abierto() === c.idCurso ? '▲' : '▼' }}</span>
+    </button>
+    @if (abierto() === c.idCurso) {
+      <div class="secciones">
+        @for (s of secciones()[c.idCurso] ?? []; track s.idSeccion) {
+          <div class="fila">
+            <div>
+              <strong>Grupo {{ s.grupo }}</strong>
+              <span class="pill" [class.inactivo]="s.estado === 'CERRADA'">{{ s.estado }}</span>
+              <div class="apagado">Docente: {{ personas.nombre(s.idDocente) }}@if (s.cupoMaximo) { · Cupo: {{ s.cupoMaximo }} }</div>
+            </div>
+            <div class="acciones">
+              @if (puedeEntrar(s)) {
+                <a class="btn btn-chico btn-primario" [routerLink]="['/secciones', s.idSeccion]">Entrar</a>
+              } @else if (sesion.puede('MATRICULARSE') && s.estado !== 'CERRADA') {
+                <button class="btn btn-chico btn-coral" type="button" (click)="matricular(s)">Matricularme</button>
+              }
+            </div>
+          </div>
+        } @empty {
+          <p class="apagado">Este curso aún no tiene secciones.</p>
+        }
+        @if (esAdmin()) {
+          <div class="acciones admin">
+            <button class="btn btn-chico" type="button" (click)="abrirSeccion(c)">+ Sección</button>
+            <button class="btn btn-chico" type="button" (click)="abrirCurso(c)">✏️ Editar curso</button>
+            <button class="btn btn-chico btn-peligro" type="button" (click)="eliminarCurso(c)">Eliminar</button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+} @empty {
+  <p class="vacio">Esta comunidad aún no tiene cursos.</p>
+}
+
+@if (modalCurso(); as mc) {
+  <cv-modal [titulo]="mc === 'nuevo' ? 'Nuevo curso' : 'Editar curso'" (cerrar)="modalCurso.set(null)">
+    @if (errorModal()) { <div class="alerta">{{ errorModal() }}</div> }
+    <form class="tarjeta" [formGroup]="formCurso" (ngSubmit)="guardarCurso()" novalidate>
+      <label for="cc">Código</label><input id="cc" maxlength="20" formControlName="codigo" placeholder="MAT-101" />
+      @if (errorCampo(formCurso.controls.codigo); as m) { <small class="campo-error">{{ m }}</small> }
+      <label for="cn">Nombre</label><input id="cn" maxlength="150" formControlName="nombre" />
+      @if (errorCampo(formCurso.controls.nombre); as m) { <small class="campo-error">{{ m }}</small> }
+      <label for="cd">Descripción</label><textarea id="cd" maxlength="1000" formControlName="descripcion"></textarea>
+      <div class="botones"><button class="btn" type="button" (click)="modalCurso.set(null)">Cancelar</button><button class="btn btn-primario" type="submit">Guardar</button></div>
+    </form>
+  </cv-modal>
+}
+
+@if (modalSeccion(); as ms) {
+  <cv-modal [titulo]="'Nueva sección · ' + ms.nombre" (cerrar)="modalSeccion.set(null)">
+    @if (errorModal()) { <div class="alerta">{{ errorModal() }}</div> }
+    <form class="tarjeta" [formGroup]="formSeccion" (ngSubmit)="guardarSeccion()" novalidate>
+      <label for="sp">Periodo académico</label>
+      <select id="sp" formControlName="idPeriodo">
+        <option [ngValue]="null">Elige...</option>
+        @for (p of periodos(); track p.idPeriodo) { <option [ngValue]="p.idPeriodo">{{ p.nombre }} ({{ p.estado }})</option> }
+      </select>
+      @if (errorCampo(formSeccion.controls.idPeriodo); as m) { <small class="campo-error">{{ m }}</small> }
+      <label for="sd">Docente</label>
+      <select id="sd" formControlName="idDocente">
+        <option [ngValue]="null">Elige...</option>
+        @for (d of docentes(); track d.idUsuario) { <option [ngValue]="d.idUsuario">{{ d.nombres }} {{ d.apellidos }}@if (d.especialidad) { · {{ d.especialidad }} }</option> }
+      </select>
+      @if (errorCampo(formSeccion.controls.idDocente); as m) { <small class="campo-error">{{ m }}</small> }
+      <div class="dos-columnas">
+        <div><label for="sg">Grupo</label><input id="sg" maxlength="10" formControlName="grupo" placeholder="A" />
+          @if (errorCampo(formSeccion.controls.grupo); as m) { <small class="campo-error">{{ m }}</small> }</div>
+        <div><label for="sc">Cupo máximo</label><input id="sc" type="number" min="1" formControlName="cupoMaximo" /></div>
+      </div>
+      <label for="ss">Sala virtual (enlace)</label><input id="ss" type="url" formControlName="salaVirtual" placeholder="https://meet.google.com/..." />
+      <div class="botones"><button class="btn" type="button" (click)="modalSeccion.set(null)">Cancelar</button><button class="btn btn-primario" type="submit">Crear sección</button></div>
+    </form>
+  </cv-modal>
+}

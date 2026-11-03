@@ -1,0 +1,46 @@
+<h1>Mensajes</h1>
+@if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
+
+<div class="caja-chat">
+  <aside class="bandeja">
+    <div class="nuevo">
+      <input #busca type="search" autocomplete="off" placeholder="🔍 Escribir a..." (focus)="mostrarContactos.set(true)" (input)="filtro.set(busca.value)" />
+      @if (mostrarContactos() && resultados().length) {
+        <div class="resultados">
+          @for (p of resultados(); track p.idUsuario) { <button type="button" (click)="nueva(p, busca)">{{ p.nombres }} {{ p.apellidos }}<small>{{ rolDe(p.rol) }}</small></button> }
+        </div>
+      }
+    </div>
+    @for (c of conversaciones(); track c.con) {
+      <button class="conv" type="button" [class.activa]="con() === c.con" (click)="abrir(c.con)">
+        <span class="av">{{ iniciales(personas.nombre(c.con)) }}</span>
+        <span class="datos"><strong>{{ personas.nombre(c.con) }}</strong><small>{{ c.ultimo.contenido }}</small></span>
+        @if (c.sinLeer) { <span class="globo">{{ c.sinLeer }}</span> }
+      </button>
+    } @empty {
+      <p class="vacio">No tienes conversaciones. Busca arriba a un compañero o docente de tus comunidades.</p>
+    }
+  </aside>
+
+  <section class="hilo">
+    @if (con(); as otro) {
+      <header><span class="av">{{ iniciales(personas.nombre(otro)) }}</span><strong>{{ personas.nombre(otro) }}</strong></header>
+      <div class="burbujas">
+        @for (m of chat(); track m.idMensaje) {
+          <div class="burbuja" [class.mia]="m.idEmisor === sesion.sesion()?.idUsuario">
+            <p>{{ m.contenido }}</p><small>{{ m.fechaEnvio | date: 'dd/MM HH:mm' }}</small>
+          </div>
+        } @empty {
+          <p class="vacio">Escribe el primer mensaje 👋</p>
+        }
+        <div #fin></div>
+      </div>
+      <footer>
+        <textarea #txt maxlength="4000" placeholder="Escribe un mensaje..." (keydown.enter)="$event.preventDefault(); enviar(txt)"></textarea>
+        <button class="btn btn-primario" type="button" [disabled]="enviando()" (click)="enviar(txt)">Enviar</button>
+      </footer>
+    } @else {
+      <div class="vacio centro">💬<br />Elige una conversación</div>
+    }
+  </section>
+</div>

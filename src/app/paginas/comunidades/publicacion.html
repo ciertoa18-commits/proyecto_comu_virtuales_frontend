@@ -1,0 +1,57 @@
+@if (vista(); as v) {
+  <a class="volver" [routerLink]="['/comunidades', v.publicacion.idComunidad]">← Volver a la comunidad</a>
+  <article class="bloque">
+    <header class="autor">
+      <span class="av">{{ iniciales(v.autor.nombres + ' ' + v.autor.apellidos) }}</span>
+      <div><strong>{{ v.autor.nombres }} {{ v.autor.apellidos }}</strong><small class="apagado">{{ v.autor.rol }} · {{ v.publicacion.fechaPublicacion | date: 'dd/MM/yyyy HH:mm' }}</small></div>
+    </header>
+    @if (v.publicacion.titulo) { <h1 class="titulo">{{ v.publicacion.titulo }}</h1> }
+    @if (v.publicacion.contenido) { <p class="texto">{{ v.publicacion.contenido }}</p> }
+    @if (v.adjuntos.length) {
+      <div class="adjuntos">@for (a of v.adjuntos; track a.idArchivo) { <cv-descarga [idArchivo]="a.idArchivo" [texto]="'Archivo ' + a.orden" /> }</div>
+    }
+  </article>
+
+  @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
+
+  <h2>Comentarios ({{ comentarios().length }})</h2>
+  <div class="bloque nuevo">
+    <textarea #caja maxlength="2000" placeholder="Escribe un comentario..."></textarea>
+    <div class="botones"><button class="btn btn-primario btn-chico" type="button" [disabled]="enviando()" (click)="comentar(caja, null)">Comentar</button></div>
+  </div>
+
+  @for (h of hilos(); track h.c.comentario.idComentario) {
+    <div class="bloque comentario">
+      <ng-container *ngTemplateOutlet="item; context: { $implicit: h.c }" />
+      <div class="respuestas">
+        @for (r of h.respuestas; track r.comentario.idComentario) { <ng-container *ngTemplateOutlet="item; context: { $implicit: r }" /> }
+        @if (respondiendo() === h.c.comentario.idComentario) {
+          <textarea #resp maxlength="2000" placeholder="Tu respuesta..."></textarea>
+          <div class="botones">
+            <button class="btn btn-chico" type="button" (click)="respondiendo.set(null)">Cancelar</button>
+            <button class="btn btn-chico btn-primario" type="button" [disabled]="enviando()" (click)="comentar(resp, h.c.comentario.idComentario)">Responder</button>
+          </div>
+        } @else {
+          <button class="link" type="button" (click)="respondiendo.set(h.c.comentario.idComentario)">↩ Responder</button>
+        }
+      </div>
+    </div>
+  } @empty {
+    <p class="vacio">Aún no hay comentarios.</p>
+  }
+
+  <ng-template #item let-c>
+    <div class="linea">
+      <span class="av chico">{{ iniciales(c.autor.nombres + ' ' + c.autor.apellidos) }}</span>
+      <div class="cuerpo">
+        <strong>{{ c.autor.nombres }} {{ c.autor.apellidos }}</strong> <small class="apagado">{{ c.comentario.fechaComentario | date: 'dd/MM HH:mm' }}</small>
+        <p>{{ c.comentario.contenido }}</p>
+      </div>
+      @if (puedeBorrar(c)) { <button class="x" type="button" aria-label="Eliminar comentario" (click)="eliminar(c)">🗑</button> }
+    </div>
+  </ng-template>
+} @else if (error()) {
+  <div class="alerta" role="alert">{{ error() }}</div>
+} @else {
+  <p class="vacio">Cargando...</p>
+}

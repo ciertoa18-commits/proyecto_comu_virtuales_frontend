@@ -1,0 +1,8 @@
+.pendientes { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; background: #fff6e0; border-radius: 12px; padding: 14px 18px; margin-bottom: 1.2rem; border: 2px solid transparent; cursor: pointer; font: inherit; }
+.pendientes:hover { border-color: #f0c96a; }
+.pendientes .ico { width: 44px; height: 44px; border-radius: 10px; background: var(--ambar); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex: none; }
+.pendientes strong { color: #8a5a00; display: block; }
+.pendientes small { color: #7a6a40; }
+.persona { display: flex; align-items: center; gap: 10px; }
+.persona small { display: block; color: #888; }
+.av { width: 34px; height: 34px; border-radius: 50%; background: #e0e0e0; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .72rem; color: #555; flex: none; }

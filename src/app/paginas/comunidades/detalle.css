@@ -1,0 +1,11 @@
+.cabeza { position: relative; border-radius: 16px; overflow: hidden; margin-bottom: 1.2rem; min-height: 200px; background: #3f5a6b; }
+.fondo { position: absolute; inset: 0; }
+.fondo.img { background-size: cover; background-position: center; }
+.fondo ::ng-deep img { height: 100% !important; border-radius: 0 !important; }
+.capa { position: relative; min-height: 200px; display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding: 22px 26px; color: #fff; background: linear-gradient(180deg, rgba(0, 0, 0, .05) 0%, rgba(0, 0, 0, .65) 100%); }
+.capa h1 { color: #fff; margin: .4rem 0 .3rem; text-shadow: 0 1px 4px rgba(0, 0, 0, .5); }
+.capa p { margin: 0; max-width: 640px; opacity: .95; }
+.acciones { display: flex; gap: .5rem; flex-wrap: wrap; }
+.grande { font-size: .85rem; padding: .45rem .9rem; }
+.bloqueado { text-align: center; padding: 2.5rem 1rem; }
+.grande-ico { font-size: 3rem; }

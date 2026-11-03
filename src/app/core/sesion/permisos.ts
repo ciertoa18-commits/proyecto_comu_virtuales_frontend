@@ -1,0 +1,44 @@
+import { Rol } from '../modelos';
+
+/**
+ * Qué puede hacer cada rol en la interfaz. El backend vuelve a validar todo:
+ * esto solo decide qué botones y menús se muestran.
+ */
+export type Accion =
+  | 'COMUNIDAD_CREAR'
+  | 'COMUNIDAD_UNIRSE'
+  | 'MIEMBROS_VER'
+  | 'SOLICITUDES_RESOLVER'
+  | 'CURSO_GESTIONAR'
+  | 'CONTENIDO_GESTIONAR'
+  | 'MATRICULARSE'
+  | 'MATRICULAR_OTROS'
+  | 'TAREA_ENTREGAR'
+  | 'PUBLICAR'
+  | 'EVENTO_CREAR'
+  | 'AVISO_ENVIAR'
+  | 'USUARIOS_GESTIONAR'
+  | 'REPORTES_VER'
+  | 'CURSOS_PROPIOS';
+
+const ACCIONES: Record<Rol, Accion[]> = {
+  ESTUDIANTE: ['COMUNIDAD_UNIRSE', 'MATRICULARSE', 'TAREA_ENTREGAR', 'PUBLICAR', 'CURSOS_PROPIOS'],
+  DOCENTE: ['COMUNIDAD_UNIRSE', 'MIEMBROS_VER', 'CONTENIDO_GESTIONAR', 'PUBLICAR', 'EVENTO_CREAR', 'AVISO_ENVIAR', 'CURSOS_PROPIOS'],
+  ADMIN: [
+    'COMUNIDAD_CREAR',
+    'MIEMBROS_VER',
+    'SOLICITUDES_RESOLVER',
+    'CURSO_GESTIONAR',
+    'CONTENIDO_GESTIONAR',
+    'MATRICULAR_OTROS',
+    'PUBLICAR',
+    'EVENTO_CREAR',
+    'AVISO_ENVIAR',
+    'USUARIOS_GESTIONAR',
+    'REPORTES_VER',
+  ],
+};
+
+export function rolPuede(rol: Rol | undefined, accion: Accion): boolean {
+  return !!rol && ACCIONES[rol].includes(accion);
+}

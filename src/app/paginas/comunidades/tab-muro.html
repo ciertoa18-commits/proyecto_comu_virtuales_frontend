@@ -1,0 +1,55 @@
+@if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
+@if (exito()) { <div class="exito" role="status">{{ exito() }}</div> }
+
+@if (!revision()) {
+  <form class="bloque nueva" [formGroup]="form" (ngSubmit)="publicar()">
+    <div class="yo">{{ iniciales(sesion.sesion()?.nombre) }}</div>
+    <div class="campos">
+      <input type="text" maxlength="200" placeholder="Título (opcional)" formControlName="titulo" />
+      <textarea maxlength="20000" placeholder="Comparte una experiencia, una duda o un recurso con tu comunidad..." formControlName="contenido"></textarea>
+      @if (adjuntos().length) {
+        <div class="chips">
+          @for (a of adjuntos(); track a.idArchivo) {
+            <span class="chip">📎 {{ a.nombreOriginal }} <button type="button" aria-label="Quitar" (click)="quitar(a)">×</button></span>
+          }
+        </div>
+      }
+      <div class="pie">
+        <label class="btn btn-chico">📎 {{ subiendo() ? 'Subiendo...' : 'Adjuntar' }}<input type="file" multiple hidden (change)="adjuntar($event)" /></label>
+        @if (moderada()) { <span class="apagado">Esta comunidad revisa las publicaciones antes de mostrarlas.</span> }
+        <button class="btn btn-primario" type="submit" [disabled]="publicando() || subiendo()">{{ publicando() ? 'Publicando...' : 'Publicar' }}</button>
+      </div>
+    </div>
+  </form>
+}
+
+@for (v of publicaciones(); track v.publicacion.idPublicacion) {
+  <article class="bloque post">
+    <header>
+      <span class="av">{{ iniciales(v.autor.nombres + ' ' + v.autor.apellidos) }}</span>
+      <div>
+        <strong>{{ v.autor.nombres }} {{ v.autor.apellidos }}</strong>
+        <small class="apagado">{{ v.autor.rol }} · {{ v.publicacion.fechaPublicacion | date: 'dd/MM/yyyy HH:mm' }}</small>
+      </div>
+      @if (esMia(v) || sesion.rol() === 'ADMIN') { <button class="btn btn-chico btn-peligro borrar" type="button" (click)="eliminar(v)">Eliminar</button> }
+    </header>
+    @if (v.publicacion.titulo) { <h3>{{ v.publicacion.titulo }}</h3> }
+    @if (v.publicacion.contenido) { <p class="texto">{{ v.publicacion.contenido }}</p> }
+    @if (v.adjuntos.length) {
+      <div class="chips">
+        @for (a of v.adjuntos; track a.idArchivo) { <cv-descarga [idArchivo]="a.idArchivo" [texto]="'Archivo ' + a.orden" /> }
+      </div>
+    }
+    <footer>
+      @if (revision()) {
+        <button class="btn btn-chico btn-exito" type="button" (click)="moderar(v, 'APROBADA')">✓ Aprobar</button>
+        <button class="btn btn-chico btn-peligro" type="button" (click)="moderar(v, 'RECHAZADA')">✗ Rechazar</button>
+      } @else {
+        <a class="link" [routerLink]="['/publicaciones', v.publicacion.idPublicacion]">💬 Comentarios</a>
+      }
+    </footer>
+  </article>
+} @empty {
+  <p class="vacio">{{ revision() ? 'No hay publicaciones esperando revisión.' : 'Aún no hay publicaciones. ¡Sé el primero en compartir algo!' }}</p>
+}
+<cv-paginador [pagina]="pagina()" [total]="totalPaginas()" (ir)="cargar($event)" />

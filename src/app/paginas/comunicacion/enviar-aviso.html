@@ -1,0 +1,54 @@
+<h1>Enviar aviso</h1>
+<p class="subtitulo-pagina">El aviso llega a la campana 🔔 de cada destinatario.</p>
+@if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
+@if (exito()) { <div class="exito" role="status">✅ {{ exito() }}</div> }
+
+<form class="tarjeta tarjeta-plana formulario" [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+  <h2>1. ¿A quién se lo envías?</h2>
+  <div class="destinos" role="radiogroup" aria-label="Destinatarios">
+    @for (o of opciones(); track o.valor) {
+      <button type="button" class="destino" role="radio" [class.sel]="destino === o.valor" [attr.aria-checked]="destino === o.valor" (click)="elegir(o.valor)">
+        <span class="ico">{{ o.icono }}</span><span><strong>{{ o.titulo }}</strong><small>{{ o.detalle }}</small></span>
+      </button>
+    }
+  </div>
+
+  @if (destino === 'SECCION') {
+    <label for="sec">Sección</label>
+    <select id="sec" (change)="idSeccion.set(numero($any($event.target).value))">
+      <option value="">Elige una sección...</option>
+      @for (s of secciones(); track s.idSeccion) { <option [value]="s.idSeccion">{{ s.curso }} · Grupo {{ s.grupo }}</option> }
+    </select>
+    @if (!secciones().length) { <small class="ayuda">No tienes secciones asignadas.</small> }
+  }
+
+  @if (destino === 'USUARIO') {
+    <label for="per">Persona</label>
+    @if (persona(); as p) {
+      <div class="elegida"><span><strong>{{ p.nombres }} {{ p.apellidos }}</strong> · <small>{{ p.correo }}</small></span>
+        <button class="btn btn-chico" type="button" (click)="persona.set(null)">Cambiar</button></div>
+    } @else {
+      <input id="per" type="search" autocomplete="off" placeholder="Escribe al menos 2 letras..." (input)="buscar($any($event.target).value)" />
+      @if (resultados().length) {
+        <div class="resultados">
+          @for (u of resultados(); track u.idUsuario) {
+            <button type="button" (click)="elegirPersona(u)">{{ u.nombres }} {{ u.apellidos }} <small>· {{ u.correo }} · {{ nombreRol[u.rol] }}</small></button>
+          }
+        </div>
+      }
+    }
+  }
+
+  <h2 class="sep">2. Escribe el aviso</h2>
+  <label for="tit">Título <b class="req">*</b></label>
+  <input id="tit" maxlength="200" placeholder="Ej.: Mañana no hay clases" formControlName="titulo" />
+  @if (errorCampo(form.controls.titulo); as m) { <small class="campo-error">{{ m }}</small> }
+  <label for="con">Mensaje (opcional)</label>
+  <textarea id="con" maxlength="500" formControlName="contenido"></textarea>
+  <small class="ayuda derecha">{{ form.controls.contenido.value.length }}/500</small>
+
+  <div class="botones">
+    @if (destino) { <span class="apagado resumen">Se enviará a: <strong>{{ resumen() }}</strong></span> }
+    <button class="btn btn-primario" type="submit" [disabled]="enviando()">{{ enviando() ? 'Enviando...' : '📣 Enviar aviso' }}</button>
+  </div>
+</form>

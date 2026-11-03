@@ -1,0 +1,163 @@
+@if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
+@if (exito()) { <div class="exito" role="status">{{ exito() }}</div> }
+@if (cerrada()) { <div class="aviso">Esta sección está cerrada: el contenido es solo de lectura.</div> }
+
+<div class="cabecera">
+  <h2>Unidades</h2>
+  @if (docente() && !cerrada()) { <button class="btn btn-primario btn-chico" type="button" (click)="abrirUnidad('nueva')">+ Nueva unidad</button> }
+</div>
+
+@for (b of bloques(); track b.unidad.idUnidad) {
+  <section class="bloque unidad">
+    <header>
+      <span class="num">{{ b.unidad.orden }}</span>
+      <div class="info"><h3>{{ b.unidad.nombre }}</h3>@if (b.unidad.descripcion) { <p class="apagado">{{ b.unidad.descripcion }}</p> }</div>
+      @if (docente() && !cerrada()) {
+        <div class="acciones">
+          <button class="btn btn-chico" type="button" (click)="abrirSesion(b, null)">+ Sesión</button>
+          <button class="btn btn-chico btn-primario" type="button" (click)="abrirRecurso(b)">+ Recurso</button>
+          <button class="btn btn-chico" type="button" aria-label="Editar unidad" (click)="abrirUnidad(b.unidad)">✏️</button>
+          <button class="btn btn-chico btn-peligro" type="button" aria-label="Eliminar unidad" (click)="eliminarUnidad(b.unidad)">🗑</button>
+        </div>
+      }
+    </header>
+
+    @if (b.sesiones.length) {
+      <h4>Sesiones</h4>
+      @for (s of b.sesiones; track s.idSesion) {
+        <div class="fila">
+          <div><strong>{{ s.orden }}. {{ s.titulo }}</strong>
+            <div class="apagado">{{ s.fechaInicio ? (s.fechaInicio | date: "EEE d MMM, HH:mm") : 'Sin fecha' }}@if (s.duracionMin) { · {{ s.duracionMin }} min }</div></div>
+          <div class="acciones">
+            @if (s.enlaceClase || seccion().salaVirtual) { <a class="btn btn-chico btn-azul-borde" [href]="s.enlaceClase || seccion().salaVirtual" target="_blank" rel="noopener">🎥 Clase</a> }
+            @if (docente() && !cerrada()) { <button class="btn btn-chico" type="button" (click)="abrirSesion(b, s)">✏️</button> }
+          </div>
+        </div>
+      }
+    }
+
+    <h4>Recursos</h4>
+    @for (r of b.recursos; track r.idRecurso) {
+      <div class="fila recurso">
+        <div class="r-info">
+          <span class="r-ico">{{ icono[r.tipo] }}</span>
+          <div><strong>{{ r.titulo }}</strong>
+            <div class="apagado">{{ r.tipo }}@if (r.idSesion) { · {{ sesionDe(b, r.idSesion) }} }</div>
+            @if (r.descripcion) { <div class="desc">{{ r.descripcion }}</div> }</div>
+        </div>
+        <div class="acciones">
+          @if (r.idArchivo) { <cv-descarga [idArchivo]="r.idArchivo" /> }
+          @if (r.urlExterna) { <a class="btn btn-chico btn-azul-borde" [href]="r.urlExterna" target="_blank" rel="noopener">Abrir ↗</a> }
+          @if (r.tipo === 'TAREA') {
+            @if (docente()) { <button class="btn btn-chico" type="button" (click)="verEntregas(r)">📥 Entregas</button> }
+            @else if (!cerrada()) { <button class="btn btn-chico btn-coral" type="button" (click)="abrirEntrega(r)">Entregar</button> }
+          }
+          @if (docente() && !cerrada()) { <button class="btn btn-chico btn-peligro" type="button" aria-label="Eliminar recurso" (click)="eliminarRecurso(r)">🗑</button> }
+        </div>
+      </div>
+    } @empty {
+      <p class="apagado">Sin recursos todavía.</p>
+    }
+  </section>
+} @empty {
+  <p class="vacio">{{ cargando() ? 'Cargando contenido...' : docente() ? 'Crea la primera unidad del curso.' : 'El docente aún no publica contenido.' }}</p>
+}
+
+<!-- ===== Modales ===== -->
+@if (modalUnidad(); as mu) {
+  <cv-modal [titulo]="mu === 'nueva' ? 'Nueva unidad' : 'Editar unidad'" (cerrar)="modalUnidad.set(null)">
+    @if (errorModal()) { <div class="alerta">{{ errorModal() }}</div> }
+    <form class="tarjeta" [formGroup]="formUnidad" (ngSubmit)="guardarUnidad()" novalidate>
+      <label for="un">Nombre</label><input id="un" maxlength="150" formControlName="nombre" placeholder="Unidad 1: Números naturales" />
+      @if (errorCampo(formUnidad.controls.nombre); as m) { <small class="campo-error">{{ m }}</small> }
+      <label for="ud">Descripción</label><textarea id="ud" formControlName="descripcion"></textarea>
+      <label for="uo">Orden</label><input id="uo" type="number" min="1" formControlName="orden" />
+      <div class="botones"><button class="btn" type="button" (click)="modalUnidad.set(null)">Cancelar</button><button class="btn btn-primario" type="submit">Guardar</button></div>
+    </form>
+  </cv-modal>
+}
+
+@if (modalSesion(); as ms) {
+  <cv-modal [titulo]="(ms.sesion ? 'Editar sesión · ' : 'Nueva sesión · ') + ms.unidad.nombre" (cerrar)="modalSesion.set(null)">
+    @if (errorModal()) { <div class="alerta">{{ errorModal() }}</div> }
+    <form class="tarjeta" [formGroup]="formSesion" (ngSubmit)="guardarSesion()" novalidate>
+      <label for="st">Título</label><input id="st" maxlength="200" formControlName="titulo" />
+      @if (errorCampo(formSesion.controls.titulo); as m) { <small class="campo-error">{{ m }}</small> }
+      <div class="dos-columnas">
+        <div><label for="so">Orden</label><input id="so" type="number" min="1" formControlName="orden" /></div>
+        <div><label for="sdu">Duración (min)</label><input id="sdu" type="number" min="1" formControlName="duracionMin" /></div>
+      </div>
+      <label for="sf">Fecha y hora</label><input id="sf" type="datetime-local" formControlName="fechaInicio" />
+      <label for="se">Enlace de la clase (si es distinto a la sala virtual)</label><input id="se" type="url" formControlName="enlaceClase" />
+      <div class="botones"><button class="btn" type="button" (click)="modalSesion.set(null)">Cancelar</button><button class="btn btn-primario" type="submit">Guardar</button></div>
+    </form>
+  </cv-modal>
+}
+
+@if (modalRecurso(); as mr) {
+  <cv-modal [titulo]="'Nuevo recurso · ' + mr.unidad.nombre" [ancho]="true" (cerrar)="modalRecurso.set(null)">
+    @if (errorModal()) { <div class="alerta">{{ errorModal() }}</div> }
+    <form class="tarjeta" [formGroup]="formRecurso" (ngSubmit)="guardarRecurso()" novalidate>
+      <label>Tipo</label>
+      <div class="tipos">
+        @for (t of tipos; track t) {
+          <label class="tipo" [class.sel]="formRecurso.controls.tipo.value === t"><input type="radio" [value]="t" formControlName="tipo" hidden />{{ icono[t] }} {{ t }}</label>
+        }
+      </div>
+      <label for="rt">Título</label><input id="rt" maxlength="200" formControlName="titulo" />
+      @if (errorCampo(formRecurso.controls.titulo); as m) { <small class="campo-error">{{ m }}</small> }
+      <label for="rd">Descripción / indicaciones</label><textarea id="rd" formControlName="descripcion"></textarea>
+      <label for="rs">Sesión (opcional)</label>
+      <select id="rs" formControlName="idSesion">
+        <option [ngValue]="null">Toda la unidad</option>
+        @for (s of mr.sesiones; track s.idSesion) { <option [ngValue]="s.idSesion">{{ s.orden }}. {{ s.titulo }}</option> }
+      </select>
+      @if (formRecurso.controls.tipo.value === 'ENLACE' || formRecurso.controls.tipo.value === 'VIDEO') {
+        <label for="ru">Enlace</label><input id="ru" type="url" formControlName="urlExterna" placeholder="https://..." />
+      }
+      <label>Archivo {{ formRecurso.controls.tipo.value === 'DOCUMENTO' ? '' : '(opcional)' }}</label>
+      <label class="subir">📎 {{ subiendo() ? 'Subiendo...' : archivo() ? archivo()!.nombreOriginal : 'Elegir archivo (máx. 50 MB)' }}<input type="file" hidden (change)="subir($event)" /></label>
+      @if (formRecurso.controls.tipo.value === 'TAREA') {
+        <div class="dos-columnas">
+          <div><label for="rf">Fecha límite</label><input id="rf" type="datetime-local" formControlName="fechaEntrega" /></div>
+          <div><label for="re">Evaluación que califica</label>
+            <select id="re" formControlName="idEvaluacion">
+              <option [ngValue]="null">Ninguna</option>
+              @for (e of evaluaciones(); track e.idEvaluacion) { <option [ngValue]="e.idEvaluacion">{{ e.nombre }} ({{ e.peso }}%)</option> }
+            </select></div>
+        </div>
+        <label class="marca-check"><input type="checkbox" formControlName="permiteTardias" /> Aceptar entregas fuera de plazo</label>
+      }
+      <div class="botones"><button class="btn" type="button" (click)="modalRecurso.set(null)">Cancelar</button><button class="btn btn-primario" type="submit" [disabled]="subiendo()">Publicar</button></div>
+    </form>
+  </cv-modal>
+}
+
+@if (modalEntrega(); as me) {
+  <cv-modal [titulo]="'Entregar · ' + me.titulo" (cerrar)="modalEntrega.set(null)">
+    @if (me.descripcion) { <p class="nota">{{ me.descripcion }}</p> }
+    @if (errorModal()) { <div class="alerta">{{ errorModal() }}</div> }
+    <div class="tarjeta">
+      <label class="subir">📎 {{ subiendo() ? 'Subiendo...' : archivo() ? archivo()!.nombreOriginal : 'Adjuntar mi trabajo' }}<input type="file" hidden (change)="subir($event)" /></label>
+      <label for="ec">Comentario o respuesta</label><textarea #com id="ec" maxlength="1000"></textarea>
+      <div class="botones"><button class="btn" type="button" (click)="modalEntrega.set(null)">Cancelar</button>
+        <button class="btn btn-primario" type="button" [disabled]="subiendo()" (click)="entregar(com.value)">Entregar</button></div>
+    </div>
+  </cv-modal>
+}
+
+@if (modalEntregas(); as mx) {
+  <cv-modal [titulo]="'Entregas · ' + mx.recurso.titulo" [ancho]="true" (cerrar)="modalEntregas.set(null)">
+    @for (e of mx.lista; track e.idEntrega) {
+      <div class="fila">
+        <div><strong>{{ mx.nombres[e.idMatricula] || 'Matrícula #' + e.idMatricula }}</strong> <span class="pill" [class.alerta-pill]="e.estado === 'TARDIA'">{{ e.estado }}</span>
+          <div class="apagado">{{ e.fechaEntrega | date: 'dd/MM/yyyy HH:mm' }}</div>
+          @if (e.comentario) { <div class="desc">{{ e.comentario }}</div> }</div>
+        @if (e.idArchivo) { <cv-descarga [idArchivo]="e.idArchivo" /> }
+      </div>
+    } @empty {
+      <p class="vacio">Nadie ha entregado todavía.</p>
+    }
+    <p class="nota">Para poner la nota, ve a la pestaña <strong>Notas</strong>.</p>
+  </cv-modal>
+}

@@ -1,0 +1,103 @@
+<div class="cabecera">
+  <h1>Usuarios</h1>
+  <button class="btn btn-primario" type="button" (click)="abrirNuevo()">+ Nuevo usuario</button>
+</div>
+<p class="subtitulo-pagina">Aprueba a los docentes nuevos, crea administradores y gestiona las cuentas.</p>
+
+@if (pendientes() > 0 && filtro().estado !== 'PENDIENTE') {
+  <button class="pendientes" type="button" (click)="filtrar('', '', 'PENDIENTE')">
+    <span class="ico">⏳</span>
+    <span><strong>{{ pendientes() }} {{ pendientes() === 1 ? 'docente espera' : 'docentes esperan' }} tu aprobación</strong><small>Haz clic para verlos</small></span>
+  </button>
+}
+@if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
+@if (exito()) { <div class="exito" role="status">{{ exito() }}</div> }
+
+<form class="filtros" (submit)="$event.preventDefault(); filtrar(q.value, rol.value, est.value)">
+  <label>Buscar <input #q class="buscador" type="search" placeholder="Nombre, apellido o correo..." [value]="filtro().q" /></label>
+  <label>Rol
+    <select #rol (change)="filtrar(q.value, rol.value, est.value)">
+      <option value="" [selected]="filtro().rol === ''">Todos</option>
+      <option value="ESTUDIANTE" [selected]="filtro().rol === 'ESTUDIANTE'">Estudiantes</option>
+      <option value="DOCENTE" [selected]="filtro().rol === 'DOCENTE'">Docentes</option>
+      <option value="ADMIN" [selected]="filtro().rol === 'ADMIN'">Administradores</option>
+    </select>
+  </label>
+  <label>Estado
+    <select #est (change)="filtrar(q.value, rol.value, est.value)">
+      <option value="" [selected]="filtro().estado === ''">Todos</option>
+      <option value="PENDIENTE" [selected]="filtro().estado === 'PENDIENTE'">Pendientes</option>
+      <option value="ACTIVO" [selected]="filtro().estado === 'ACTIVO'">Activos</option>
+      <option value="INACTIVO" [selected]="filtro().estado === 'INACTIVO'">Inactivos</option>
+    </select>
+  </label>
+  <button class="btn" type="submit">Buscar</button>
+</form>
+
+<div class="tabla-scroll">
+  <table class="tabla">
+    <thead><tr><th>Usuario</th><th>Rol</th><th>Estado</th><th>Teléfono</th><th>Registro</th><th>Acciones</th></tr></thead>
+    <tbody>
+      @for (u of usuarios(); track u.idUsuario) {
+        <tr>
+          <td><div class="persona"><span class="av">{{ iniciales(u.nombres + ' ' + u.apellidos) }}</span>
+            <div><strong>{{ u.nombres }} {{ u.apellidos }}</strong><small>{{ u.correo }}</small>@if (u.especialidad) { <small>{{ u.especialidad }}</small> }</div></div></td>
+          <td>{{ nombreRol[u.rol] }}</td>
+          <td><span class="pill" [class.inactivo]="u.estado === 'INACTIVO'" [class.alerta-pill]="u.estado === 'PENDIENTE'">{{ estados[u.estado] }}</span>
+            @if (u.bloqueado) { <span class="pill riesgo">Bloqueado</span> }</td>
+          <td>{{ u.telefono ?? '—' }}</td>
+          <td>{{ u.fechaRegistro | date: 'dd/MM/yyyy' }}</td>
+          <td><div class="acciones">
+            @if (u.estado === 'PENDIENTE') {
+              <button class="btn btn-chico btn-exito" type="button" (click)="aprobar(u)">✓ Aprobar</button>
+              <button class="btn btn-chico btn-peligro" type="button" (click)="estadoNuevo(u, 'INACTIVO')">Rechazar</button>
+            } @else if (u.idUsuario !== sesion.sesion()?.idUsuario) {
+              @if (u.estado === 'ACTIVO') { <button class="btn btn-chico btn-peligro" type="button" (click)="estadoNuevo(u, 'INACTIVO')">Desactivar</button> }
+              @else { <button class="btn btn-chico btn-exito" type="button" (click)="estadoNuevo(u, 'ACTIVO')">Activar</button> }
+            }
+            <button class="btn btn-chico" type="button" (click)="abrirClave(u)">🔑 Contraseña</button>
+          </div></td>
+        </tr>
+      } @empty {
+        <tr><td colspan="6" class="vacio">{{ cargando() ? 'Cargando...' : 'No hay usuarios con esos filtros.' }}</td></tr>
+      }
+    </tbody>
+  </table>
+</div>
+<p class="apagado">{{ total() }} usuario(s).</p>
+<cv-paginador [pagina]="pagina()" [total]="totalPaginas()" (ir)="cargar($event)" />
+
+@if (modalNuevo()) {
+  <cv-modal titulo="Nuevo usuario" (cerrar)="modalNuevo.set(false)">
+    @if (errorModal()) { <div class="alerta">{{ errorModal() }}</div> }
+    <form class="tarjeta" [formGroup]="formNuevo" (ngSubmit)="crear()" novalidate>
+      <label for="nr">Rol</label>
+      <select id="nr" formControlName="rol"><option value="ESTUDIANTE">Estudiante</option><option value="DOCENTE">Docente</option><option value="ADMIN">Administrador</option></select>
+      <div class="dos-columnas">
+        <div><label for="nn">Nombres</label><input id="nn" formControlName="nombres" />@if (err('nombres'); as m) { <small class="campo-error">{{ m }}</small> }</div>
+        <div><label for="na">Apellidos</label><input id="na" formControlName="apellidos" />@if (err('apellidos'); as m) { <small class="campo-error">{{ m }}</small> }</div>
+      </div>
+      <label for="nc">Correo electrónico</label><input id="nc" type="email" [placeholder]="'nombre' + dominioCorreo(formNuevo.controls.rol.value)" formControlName="correo" />
+      @if (err('correo', mensajeCorreo(formNuevo.controls.rol.value)); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="apagado">Debe terminar en {{ dominioCorreo(formNuevo.controls.rol.value) }}</small> }
+      <div class="dos-columnas">
+        <div><label for="nt">Teléfono</label><input id="nt" type="tel" maxlength="9" formControlName="telefono" />@if (err('telefono', msgTelefono); as m) { <small class="campo-error">{{ m }}</small> }</div>
+        @if (formNuevo.controls.rol.value === 'DOCENTE') { <div><label for="ne">Especialidad</label><input id="ne" formControlName="especialidad" /></div> }
+      </div>
+      <label for="np">Contraseña inicial</label><input id="np" type="password" autocomplete="new-password" formControlName="password" />
+      @if (err('password'); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres. La persona puede cambiarla en Mi perfil.</small> }
+      <div class="botones"><button class="btn" type="button" (click)="modalNuevo.set(false)">Cancelar</button><button class="btn btn-primario" type="submit">Crear usuario</button></div>
+    </form>
+  </cv-modal>
+}
+
+@if (modalClave(); as u) {
+  <cv-modal titulo="Nueva contraseña" (cerrar)="modalClave.set(null)">
+    <p class="apagado">Para {{ u.nombres }} {{ u.apellidos }} ({{ u.correo }}). También se quita el bloqueo por intentos fallidos.</p>
+    @if (errorModal()) { <div class="alerta">{{ errorModal() }}</div> }
+    <form class="tarjeta" [formGroup]="formClave" (ngSubmit)="guardarClave()" novalidate>
+      <label for="cl">Contraseña nueva</label><input id="cl" type="password" autocomplete="new-password" formControlName="nueva" />
+      @if (errorCampo(formClave.controls.nueva); as m) { <small class="campo-error">{{ m }}</small> }
+      <div class="botones"><button class="btn" type="button" (click)="modalClave.set(null)">Cancelar</button><button class="btn btn-primario" type="submit">Guardar</button></div>
+    </form>
+  </cv-modal>
+}
