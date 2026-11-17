@@ -7,7 +7,7 @@ import {
 } from '../modelos';
 import { params } from './parametros';
 
-/** Comunidades, membresías, solicitudes, muro y eventos. */
+
 @Injectable({ providedIn: 'root' })
 export class ComunidadApi {
   private readonly http = inject(HttpClient);
@@ -60,7 +60,7 @@ export class ComunidadApi {
     return this.http.put<Solicitud>(`${this.url}/solicitudes/${id}`, { aprobar, motivo });
   }
 
-  // Muro
+
   muro(id: number, page = 0) {
     return this.http.get<Pagina<VistaPublicacion>>(`${this.url}/comunidades/${id}/publicaciones`, { params: { page, size: 10 } });
   }

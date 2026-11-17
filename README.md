@@ -1,7 +1,7 @@
 # Comunidades Virtuales · Frontend
 
 Frontend de **Comunidades Virtuales (PerúEduca / MINEDU)** hecho en **Angular 22**.
-Consume la API REST del proyecto `comunidades-backend` (Spring Boot + Oracle).
+Consume la API REST del backend (Spring Boot + Oracle): **https://github.com/ciertoa18-commits/proyecto_bakent**
 
 ## Cómo correrlo en Visual Studio Code
 
@@ -22,7 +22,8 @@ Necesitas **Node.js 22 o superior** (`node -v` para verificar).
 
 Para detenerlo: `Ctrl + C` en la terminal.
 
-> Si el backend corre en otra dirección, cámbiala en `src/environments/environment.ts`.
+> El frontend llama a `/api/v1` y `proxy.conf.json` lo redirige a `http://127.0.0.1:8081`.
+> Si el backend corre en otra dirección o puerto, cámbiala en `proxy.conf.json` y reinicia `npm start`.
 
 ## Usuarios de prueba
 

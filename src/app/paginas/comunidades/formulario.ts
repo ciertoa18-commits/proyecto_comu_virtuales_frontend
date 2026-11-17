@@ -9,7 +9,7 @@ import { errorCampo, erroresPorCampo, textoError } from '../../core/util/errores
 import { LIMITE_FOTO } from '../../core/util/texto';
 import { ImagenArchivo } from '../../shared/imagen-archivo';
 
-/** CU05 · Crear o editar una comunidad (solo administrador). */
+
 @Component({
   selector: 'cv-formulario-comunidad',
   imports: [ReactiveFormsModule, RouterLink, AsyncPipe, ImagenArchivo],
@@ -21,7 +21,7 @@ export class FormularioComunidad implements OnInit {
   private readonly catalogo = inject(CatalogoApi);
   private readonly router = inject(Router);
 
-  /** Viene de la ruta /comunidades/:id/editar (vacío al crear). */
+  // Viene de la ruta /comunidades/:id/editar (vacío al crear).
   readonly id = input<string>();
 
   protected readonly categorias$ = this.catalogo.categorias$;

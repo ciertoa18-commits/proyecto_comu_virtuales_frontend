@@ -5,13 +5,13 @@ import { environment } from '../../../environments/environment';
 import { DatosAviso, Mensaje, Notificacion, Pagina, Persona, UsuarioResumen } from '../modelos';
 import { params } from './parametros';
 
-/** Notificaciones (campana), avisos y mensajes privados. */
+
 @Injectable({ providedIn: 'root' })
 export class ComunicacionApi {
   private readonly http = inject(HttpClient);
   private readonly url = environment.apiUrl;
 
-  /** Número rojo de la campana. */
+
   readonly sinLeer = signal(0);
 
   notificaciones(page = 0, size = 15) {
