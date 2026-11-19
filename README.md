@@ -1,7 +1,7 @@
 # Comunidades Virtuales · Frontend
 
 Frontend de **Comunidades Virtuales (PerúEduca / MINEDU)** hecho en **Angular 22**.
-Consume la API REST del backend (Spring Boot + Oracle): **https://github.com/ciertoa18-commits/proyecto_bakent**
+Consume la API REST del backend (Spring Boot + Oracle): **https://github.com/ciertoa18-commits/proyecto_comu_virtuales_backend**
 
 ## Cómo correrlo en Visual Studio Code
 
