@@ -18,7 +18,7 @@ Necesitas **Node.js 22 o superior** (`node -v` para verificar).
    ```
    npm start
    ```
-6. Entra a **http://localhost:4200**.
+6. Entra a **http://localhost:4201**.
 
 Para detenerlo: `Ctrl + C` en la terminal.
 
