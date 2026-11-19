@@ -8,7 +8,6 @@ import { Evaluacion, FilaLibreta, NOTA_APROBATORIA, Seccion, UsuarioResumen } fr
 import { SesionService } from '../../core/sesion/sesion.service';
 import { textoError } from '../../core/util/errores';
 
-/** Libreta de notas (escala 0–20). Cada nota se guarda al salir de la casilla. */
 @Component({
   selector: 'cv-tab-libreta',
   imports: [DecimalPipe],
@@ -33,7 +32,6 @@ export class TabLibreta implements OnInit {
   protected readonly bloqueada = computed(() => this.seccion().estado === 'CERRADA');
   protected readonly activos = computed(() => this.filas().filter((f) => f.matricula.estado !== 'RETIRADO'));
 
-  // Matricular alumnos (solo admin)
   protected readonly resultados = signal<UsuarioResumen[]>([]);
   private readonly busqueda = new Subject<string>();
 
@@ -69,7 +67,7 @@ export class TabLibreta implements OnInit {
     const actual = this.nota(f, e);
     if (texto === '' || Number(texto) === actual) return;
     const valor = Number(texto);
-    if (isNaN(valor) || valor < 0 || valor > 20) {
+    if (Number.isNaN(valor) || valor < 0 || valor > 20) {
       this.error.set('La nota debe estar entre 0 y 20.');
       campo.value = actual?.toString() ?? '';
       return;

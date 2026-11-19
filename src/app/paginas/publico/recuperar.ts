@@ -6,7 +6,6 @@ import { PATRON_CORREO } from '../../core/modelos';
 import { errorCampo, textoError } from '../../core/util/errores';
 import { mismasClaves } from './registro';
 
-/** CU13 · Recuperar contraseña: 1) pedir código al correo, 2) código + contraseña nueva. */
 @Component({
   selector: 'cv-recuperar',
   imports: [ReactiveFormsModule, RouterLink],

@@ -64,7 +64,8 @@
     <cv-modal titulo="Solicitar ingreso" (cerrar)="modalSolicitud.set(false)">
       <p class="apagado">Esta comunidad es privada. Cuéntale al administrador por qué quieres unirte (opcional).</p>
       <div class="tarjeta">
-        <textarea #msg maxlength="500" placeholder="Ej.: Soy docente de Matemática en Puno..."></textarea>
+        <label for="mensaje-solicitud" class="sr-only">Mensaje para el administrador</label>
+        <textarea id="mensaje-solicitud" #msg maxlength="500" placeholder="Ej.: Soy docente de Matemática en Puno..."></textarea>
         <div class="botones">
           <button class="btn" type="button" (click)="modalSolicitud.set(false)">Cancelar</button>
           <button class="btn btn-primario" type="button" [disabled]="pidiendo()" (click)="solicitar(msg.value)">Enviar solicitud</button>

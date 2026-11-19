@@ -10,10 +10,6 @@ import { errorCampo, textoError } from '../../core/util/errores';
 
 interface Opcion { valor: DestinoAviso; icono: string; titulo: string; detalle: string; soloAdmin: boolean; }
 
-/**
- * Enviar aviso. Admin: a todos, a todos los docentes, a todos los alumnos, a una sección o a una
- * persona. Docente: a los alumnos de sus secciones o a una persona.
- */
 @Component({
   selector: 'cv-enviar-aviso',
   imports: [ReactiveFormsModule],

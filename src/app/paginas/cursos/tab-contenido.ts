@@ -14,7 +14,6 @@ interface Bloque { unidad: Unidad; sesiones: Sesion[]; recursos: Recurso[]; }
 
 export const ICONO_RECURSO: Record<TipoRecurso, string> = { DOCUMENTO: '📄', VIDEO: '🎬', ENLACE: '🔗', TAREA: '📌' };
 
-/** Unidades → sesiones → recursos. El docente los crea; el estudiante los ve y entrega tareas. */
 @Component({
   selector: 'cv-tab-contenido',
   imports: [DatePipe, ReactiveFormsModule, BotonDescarga, Modal],
@@ -39,7 +38,6 @@ export class TabContenido implements OnInit {
   protected readonly cargando = signal(true);
   protected readonly cerrada = computed(() => this.seccion().estado === 'CERRADA');
 
-  // Modales
   protected readonly modalUnidad = signal<Unidad | 'nueva' | null>(null);
   protected readonly modalSesion = signal<{ unidad: Unidad; sesion: Sesion | null } | null>(null);
   protected readonly modalRecurso = signal<Bloque | null>(null);
@@ -114,7 +112,6 @@ export class TabContenido implements OnInit {
     return id ? (b.sesiones.find((s) => s.idSesion === id)?.titulo ?? '') : '';
   }
 
-  // ----- Unidad -----
   protected abrirUnidad(u: Unidad | 'nueva'): void {
     this.errorModal.set(null);
     this.formUnidad.reset(u === 'nueva' ? { orden: this.bloques().length + 1 } : { nombre: u.nombre, descripcion: u.descripcion ?? '', orden: u.orden });
@@ -137,7 +134,6 @@ export class TabContenido implements OnInit {
     this.api.eliminarUnidad(u.idUnidad).subscribe({ next: () => this.hecho('Unidad eliminada.'), error: (e) => this.error.set(textoError(e)) });
   }
 
-  // ----- Sesión -----
   protected abrirSesion(b: Bloque, s: Sesion | null): void {
     this.errorModal.set(null);
     this.formSesion.reset(
@@ -169,7 +165,6 @@ export class TabContenido implements OnInit {
       });
   }
 
-  // ----- Recurso -----
   protected abrirRecurso(b: Bloque): void {
     this.errorModal.set(null);
     this.archivo.set(null);
@@ -228,7 +223,6 @@ export class TabContenido implements OnInit {
     this.api.eliminarRecurso(r.idRecurso).subscribe({ next: () => this.hecho('Recurso eliminado.'), error: (e) => this.error.set(textoError(e)) });
   }
 
-  // ----- Tareas -----
   protected abrirEntrega(r: Recurso): void {
     this.errorModal.set(null);
     this.archivo.set(null);

@@ -2,14 +2,11 @@ import { Routes } from '@angular/router';
 import { conPermiso, conSesion, sinSesion } from './core/sesion/guardias';
 import { Portal } from './layout/portal';
 
-/** Cada pantalla se carga solo cuando se visita (lazy loading). */
 export const rutas: Routes = [
-  // ----- Públicas -----
   { path: 'login', canActivate: [sinSesion], loadComponent: () => import('./paginas/publico/login').then((m) => m.Login) },
   { path: 'registro', canActivate: [sinSesion], loadComponent: () => import('./paginas/publico/registro').then((m) => m.Registro) },
   { path: 'recuperar', canActivate: [sinSesion], loadComponent: () => import('./paginas/publico/recuperar').then((m) => m.Recuperar) },
 
-  // ----- Con sesión -----
   {
     path: '',
     component: Portal,

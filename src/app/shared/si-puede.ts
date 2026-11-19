@@ -2,7 +2,6 @@ import { Directive, effect, inject, input, TemplateRef, ViewContainerRef } from 
 import { Accion } from '../core/sesion/permisos';
 import { SesionService } from '../core/sesion/sesion.service';
 
-/** Muestra el bloque solo si el rol puede: <button *siPuede="'CURSO_GESTIONAR'">. */
 @Directive({ selector: '[siPuede]' })
 export class SiPuede {
   readonly siPuede = input.required<Accion>();

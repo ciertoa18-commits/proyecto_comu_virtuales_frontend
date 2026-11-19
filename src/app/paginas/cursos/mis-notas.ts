@@ -5,7 +5,6 @@ import { AcademicoApi } from '../../core/api/academico.api';
 import { Evaluacion, MiCurso, NOTA_APROBATORIA } from '../../core/modelos';
 import { textoError } from '../../core/util/errores';
 
-/** Libreta del estudiante: notas por evaluación y promedio de cada curso. */
 @Component({
   selector: 'cv-mis-notas',
   imports: [DecimalPipe, RouterLink],

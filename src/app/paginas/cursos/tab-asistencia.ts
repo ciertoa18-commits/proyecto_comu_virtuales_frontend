@@ -7,7 +7,6 @@ import { textoError } from '../../core/util/errores';
 
 interface Marca { idMatricula: number; nombre: string; estado: EstadoAsistencia; observacion: string; }
 
-/** Tomar asistencia por sesión. */
 @Component({
   selector: 'cv-tab-asistencia',
   imports: [DatePipe],

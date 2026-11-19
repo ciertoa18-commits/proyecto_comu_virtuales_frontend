@@ -5,12 +5,11 @@ export interface OpcionMenu {
   texto: string;
   ruta: string;
   icono: string;
-  accion?: Accion; // si se indica, solo la ven los roles que pueden
-  roles?: Rol[]; // o se limita por rol
+  accion?: Accion;
+  roles?: Rol[];
   exacta?: boolean;
 }
 
-/** Menú lateral. Agregar una pantalla = agregar una línea aquí. */
 export const MENU: { grupo: string; opciones: OpcionMenu[] }[] = [
   {
     grupo: 'Principal',

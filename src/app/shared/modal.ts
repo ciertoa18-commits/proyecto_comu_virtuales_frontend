@@ -1,6 +1,5 @@
 import { Component, HostListener, input, output } from '@angular/core';
 
-/** Ventana emergente sencilla: <cv-modal titulo="..." (cerrar)="...">contenido</cv-modal>. */
 @Component({
   selector: 'cv-modal',
   template: `

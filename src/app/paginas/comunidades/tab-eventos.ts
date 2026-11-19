@@ -8,7 +8,6 @@ import { aFechaJava } from '../../core/util/texto';
 import { Modal } from '../../shared/modal';
 import { SiPuede } from '../../shared/si-puede';
 
-/** Eventos de la comunidad (charlas, reuniones, talleres). */
 @Component({
   selector: 'cv-tab-eventos',
   imports: [DatePipe, ReactiveFormsModule, Modal, SiPuede],

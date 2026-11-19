@@ -4,7 +4,6 @@ import { environment } from '../../../environments/environment';
 import { DatosNuevoUsuario, EstadoUsuario, Pagina, ReporteDocente, ReporteIdioma, Rol, UsuarioResumen } from '../modelos';
 import { params } from './parametros';
 
-/** Panel del administrador: usuarios y reportes. */
 @Injectable({ providedIn: 'root' })
 export class AdminApi {
   private readonly http = inject(HttpClient);

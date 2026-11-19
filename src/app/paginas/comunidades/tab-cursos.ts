@@ -11,7 +11,6 @@ import { errorCampo, textoError } from '../../core/util/errores';
 import { Modal } from '../../shared/modal';
 import { SiPuede } from '../../shared/si-puede';
 
-/** Cursos de la comunidad y sus secciones. El estudiante se matricula; el admin crea cursos y secciones. */
 @Component({
   selector: 'cv-tab-cursos',
   imports: [ReactiveFormsModule, RouterLink, Modal, SiPuede],
@@ -90,12 +89,10 @@ export class TabCursos implements OnInit {
     });
   }
 
-  /** Puede abrir la sección: admin, el docente de la sección o un alumno matriculado. */
   protected puedeEntrar(s: Seccion): boolean {
     return this.esAdmin() || s.idDocente === this.sesion.sesion()?.idUsuario || this.misSecciones().has(s.idSeccion);
   }
 
-  // ----- Curso (admin) -----
   protected abrirCurso(c: Curso | 'nuevo'): void {
     this.errorModal.set(null);
     this.formCurso.reset(c === 'nuevo' ? {} : { codigo: c.codigo, nombre: c.nombre, descripcion: c.descripcion ?? '' });
@@ -122,7 +119,6 @@ export class TabCursos implements OnInit {
     this.api.eliminarCurso(c.idCurso).subscribe({ next: () => this.cargar(), error: (e) => this.error.set(textoError(e)) });
   }
 
-  // ----- Sección (admin) -----
   protected abrirSeccion(c: Curso): void {
     this.errorModal.set(null);
     this.formSeccion.reset();

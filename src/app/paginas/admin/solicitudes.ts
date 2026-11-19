@@ -8,7 +8,6 @@ import { textoError } from '../../core/util/errores';
 import { Modal } from '../../shared/modal';
 import { Paginador } from '../../shared/paginador';
 
-/** Solicitudes de ingreso a comunidades privadas (aprobar o rechazar con motivo). */
 @Component({
   selector: 'cv-solicitudes',
   imports: [DatePipe, RouterLink, Modal, Paginador],

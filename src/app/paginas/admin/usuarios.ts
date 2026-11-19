@@ -9,7 +9,6 @@ import { iniciales } from '../../core/util/texto';
 import { Modal } from '../../shared/modal';
 import { Paginador } from '../../shared/paginador';
 
-/** Panel del admin: aprobar docentes, activar/desactivar, crear usuarios y poner contraseña nueva. */
 @Component({
   selector: 'cv-usuarios',
   imports: [DatePipe, ReactiveFormsModule, Modal, Paginador],
@@ -21,7 +20,6 @@ export class Usuarios implements OnInit {
   private readonly fb = inject(FormBuilder);
   protected readonly sesion = inject(SesionService);
 
-  /** ?estado=PENDIENTE desde el aviso del inicio. */
   readonly estado = input<string>();
 
   protected readonly nombreRol = NOMBRE_ROL;
@@ -61,7 +59,6 @@ export class Usuarios implements OnInit {
   });
 
   constructor() {
-    // El dominio del correo depende del rol: estudiante @perueduca.pe, docente/admin @minedu.gob.pe
     this.formNuevo.controls.rol.valueChanges.subscribe((rol) => {
       const c = this.formNuevo.controls.correo;
       c.setValidators([Validators.required, Validators.pattern(patronCorreo(rol))]);

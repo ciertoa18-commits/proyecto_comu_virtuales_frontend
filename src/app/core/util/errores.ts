@@ -2,7 +2,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AbstractControl } from '@angular/forms';
 import { ErrorApi } from '../modelos';
 
-/** Texto amigable para mostrar cuando falla una llamada al backend. */
 export function textoError(e: unknown): string {
   if (!(e instanceof HttpErrorResponse)) return 'Ocurrió un error inesperado.';
   if (e.status === 0) return 'No hay conexión con el servidor. Revisa que el backend esté encendido (puerto 8081).';
@@ -14,7 +13,6 @@ export function textoError(e: unknown): string {
   return `Error ${e.status}.`;
 }
 
-/** El backend responde 400 VALIDACION con "campo: problema; campo: problema". */
 export function erroresPorCampo(e: unknown): Record<string, string> {
   const cuerpo = e instanceof HttpErrorResponse ? (e.error as ErrorApi | null) : null;
   const r: Record<string, string> = {};
@@ -26,7 +24,6 @@ export function erroresPorCampo(e: unknown): Record<string, string> {
   return r;
 }
 
-/** Mensaje de validación local de un campo ya tocado. */
 export function errorCampo(c: AbstractControl, formato = 'Formato no válido.'): string | null {
   if (!c.touched || !c.errors) return null;
   const e = c.errors;

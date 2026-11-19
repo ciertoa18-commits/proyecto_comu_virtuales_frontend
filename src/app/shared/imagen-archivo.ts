@@ -1,7 +1,6 @@
 import { Component, effect, inject, input, OnDestroy, signal } from '@angular/core';
 import { CatalogoApi } from '../core/api/catalogo.api';
 
-/** Muestra una imagen guardada en el backend (pide token, por eso se baja como blob). */
 @Component({
   selector: 'cv-imagen',
   template: `

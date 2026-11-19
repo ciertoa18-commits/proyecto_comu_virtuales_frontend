@@ -15,7 +15,6 @@ import { TabMuro } from './tab-muro';
 
 type Pestana = 'muro' | 'cursos' | 'eventos' | 'miembros' | 'revisar';
 
-/** Página de una comunidad: portada, botón de unirse y pestañas. */
 @Component({
   selector: 'cv-detalle-comunidad',
   imports: [RouterLink, ImagenArchivo, Modal, SiPuede, TabMuro, TabCursos, TabEventos, TabMiembros],
@@ -39,7 +38,6 @@ export class DetalleComunidad implements OnInit {
   protected readonly modalSolicitud = signal(false);
 
   protected readonly esAdmin = computed(() => this.sesion.rol() === 'ADMIN');
-  /** El admin ve todo aunque no sea miembro. */
   protected readonly puedeVer = computed(() => this.esAdmin() || this.mia()?.estado === 'MIEMBRO');
   protected readonly esModerador = computed(
     () => this.esAdmin() || (this.mia()?.estado === 'MIEMBRO' && this.mia()?.rolComunidad !== 'MIEMBRO'),

@@ -4,7 +4,6 @@ import { shareReplay } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Archivo, Categoria, Idioma, Periodo, Pueblo } from '../modelos';
 
-/** Catálogos (casi no cambian): se piden una vez y se guardan en memoria. */
 @Injectable({ providedIn: 'root' })
 export class CatalogoApi {
   private readonly http = inject(HttpClient);
@@ -22,7 +21,6 @@ export class CatalogoApi {
     f.append('archivo', archivo);
     return this.http.post<Archivo>(`${this.url}/archivos`, f);
   }
-  /** Los archivos piden token, por eso se descargan como blob. */
   descargar(idArchivo: number) {
     return this.http.get(`${this.url}/archivos/${idArchivo}/descarga`, { responseType: 'blob' });
   }

@@ -6,7 +6,6 @@ import { textoError } from '../../core/util/errores';
 import { BotonDescarga } from '../../shared/boton-descarga';
 import { ICONO_RECURSO } from './tab-contenido';
 
-/** Todos los recursos de mis cursos en un solo lugar, con filtro por tipo. */
 @Component({
   selector: 'cv-mis-recursos',
   imports: [DatePipe, BotonDescarga],

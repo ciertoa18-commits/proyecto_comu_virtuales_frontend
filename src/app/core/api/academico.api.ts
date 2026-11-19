@@ -19,13 +19,11 @@ export interface DatosRecurso {
   idEvaluacion: number | null;
 }
 
-/** Cursos → secciones → unidades → sesiones → recursos, matrículas, notas y asistencia. */
 @Injectable({ providedIn: 'root' })
 export class AcademicoApi {
   private readonly http = inject(HttpClient);
   private readonly url = environment.apiUrl;
 
-  // Cursos y secciones
   cursos(idComunidad: number) {
     return this.http.get<Curso[]>(`${this.url}/comunidades/${idComunidad}/cursos`);
   }
@@ -57,7 +55,6 @@ export class AcademicoApi {
     return this.http.post<void>(`${this.url}/secciones/${id}/cerrar`, null);
   }
 
-  // Contenido
   unidades(idSeccion: number) {
     return this.http.get<Unidad[]>(`${this.url}/secciones/${idSeccion}/unidades`);
   }
@@ -89,7 +86,6 @@ export class AcademicoApi {
     return this.http.delete<void>(`${this.url}/recursos/${id}`);
   }
 
-  // Del estudiante
   misClases() {
     return this.http.get<Clase[]>(`${this.url}/me/clases`);
   }
@@ -110,7 +106,6 @@ export class AcademicoApi {
     return this.http.post<Entrega>(`${this.url}/tareas/${idTarea}/entregas`, { idArchivo, comentario });
   }
 
-  // Del docente
   entregas(idTarea: number) {
     return this.http.get<Entrega[]>(`${this.url}/tareas/${idTarea}/entregas`);
   }

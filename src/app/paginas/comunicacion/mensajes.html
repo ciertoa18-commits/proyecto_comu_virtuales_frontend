@@ -4,7 +4,8 @@
 <div class="caja-chat">
   <aside class="bandeja">
     <div class="nuevo">
-      <input #busca type="search" autocomplete="off" placeholder="🔍 Escribir a..." (focus)="mostrarContactos.set(true)" (input)="filtro.set(busca.value)" />
+      <label for="buscar-contacto" class="sr-only">Buscar contacto</label>
+      <input id="buscar-contacto" #busca type="search" autocomplete="off" placeholder="🔍 Escribir a..." (focus)="mostrarContactos.set(true)" (input)="filtro.set(busca.value)" />
       @if (mostrarContactos() && resultados().length) {
         <div class="resultados">
           @for (p of resultados(); track p.idUsuario) { <button type="button" (click)="nueva(p, busca)">{{ p.nombres }} {{ p.apellidos }}<small>{{ rolDe(p.rol) }}</small></button> }
@@ -36,7 +37,8 @@
         <div #fin></div>
       </div>
       <footer>
-        <textarea #txt maxlength="4000" placeholder="Escribe un mensaje..." (keydown.enter)="$event.preventDefault(); enviar(txt)"></textarea>
+        <label for="texto-mensaje" class="sr-only">Mensaje</label>
+        <textarea id="texto-mensaje" #txt maxlength="4000" placeholder="Escribe un mensaje..." (keydown.enter)="$event.preventDefault(); enviar(txt)"></textarea>
         <button class="btn btn-primario" type="button" [disabled]="enviando()" (click)="enviar(txt)">Enviar</button>
       </footer>
     } @else {

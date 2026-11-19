@@ -14,7 +14,6 @@ const ICONO: Record<TipoNotificacion, string> = {
   NUEVO_RECURSO: '📚', EVENTO: '📅', MENSAJE: '✉️', SISTEMA: '⚙️', AVISO: '📣',
 };
 
-/** CU12 · Bandeja de notificaciones (la campana). */
 @Component({
   selector: 'cv-notificaciones',
   imports: [DatePipe, RouterLink, Paginador, SiPuede],
@@ -105,7 +104,6 @@ export class Notificaciones implements OnInit {
     });
   }
 
-  /** A dónde lleva cada notificación al hacer clic. */
   private destino(n: Notificacion): unknown[] | null {
     if (n.entidadTipo === 'PUBLICACION' && n.entidadId) return ['/publicaciones', n.entidadId];
     if (n.entidadTipo === 'COMENTARIO' && n.idComunidad) return ['/comunidades', n.idComunidad];

@@ -4,7 +4,6 @@ import { CatalogoApi } from '../../core/api/catalogo.api';
 import { Periodo, ReporteDocente, ReporteIdioma } from '../../core/modelos';
 import { textoError } from '../../core/util/errores';
 
-/** Reportes del administrador: comunidades y recursos por idioma, carga de los docentes. */
 @Component({
   selector: 'cv-reportes',
   template: `

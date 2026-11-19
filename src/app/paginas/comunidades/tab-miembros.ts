@@ -5,7 +5,6 @@ import { SesionService } from '../../core/sesion/sesion.service';
 import { textoError } from '../../core/util/errores';
 import { iniciales } from '../../core/util/texto';
 
-/** Lista de miembros (docentes y admin). El admin puede expulsar. */
 @Component({
   selector: 'cv-tab-miembros',
   template: `

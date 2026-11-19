@@ -8,23 +8,20 @@ import { Accion, rolPuede } from './permisos';
 
 export interface Sesion {
   token: string;
-  vence: number; // milisegundos (Date.now())
+  vence: number;
   idUsuario: number;
   rol: Rol;
   nombre: string;
   correo: string;
 }
 
-// sessionStorage: la sesión se borra al cerrar la pestaña (PCs compartidas en colegios).
 const CLAVE = 'cv.sesion';
 
-/** Lee el "exp" del JWT para saber cuándo vence (el backend lo emite por 1 hora). */
 function venceToken(token: string): number {
   try {
     const carga = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
     if (typeof carga.exp === 'number') return carga.exp * 1000;
   } catch {
-    /* token raro: se usa 1 hora */
   }
   return Date.now() + 60 * 60 * 1000;
 }
@@ -62,7 +59,6 @@ export class SesionService {
         correo,
       })),
       tap((s) => this.guardar(s)),
-      // Trae nombres y apellidos para mostrarlos en la barra.
       switchMap((s) =>
         this.http.get<{ usuario: Usuario }>(`${url}/me`).pipe(
           map(({ usuario }) => this.renombrar(`${usuario.nombres} ${usuario.apellidos}`) ?? s),
@@ -80,7 +76,6 @@ export class SesionService {
     return nueva;
   }
 
-  /** Botón "Cerrar sesión": avisa al backend (revoca el token) y vuelve al login. */
   salir(): void {
     const token = this.token();
     if (token) {
@@ -91,7 +86,6 @@ export class SesionService {
     this.terminar('salio');
   }
 
-  /** Borra la sesión local y manda al login con un aviso. */
   terminar(motivo: 'salio' | 'vencio', volverA?: string): void {
     clearTimeout(this.reloj);
     this.actual.set(null);
@@ -117,7 +111,6 @@ export class SesionService {
       const s = JSON.parse(sessionStorage.getItem(CLAVE) ?? 'null') as Sesion | null;
       if (s && typeof s.vence === 'number' && s.vence > Date.now()) return s;
     } catch {
-      /* dato dañado */
     }
     sessionStorage.removeItem(CLAVE);
     return null;

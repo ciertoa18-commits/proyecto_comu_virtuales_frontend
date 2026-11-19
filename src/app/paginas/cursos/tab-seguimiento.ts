@@ -4,7 +4,6 @@ import { AcademicoApi } from '../../core/api/academico.api';
 import { FilaRanking, FilaRiesgo, NOTA_APROBATORIA, Seccion } from '../../core/modelos';
 import { textoError } from '../../core/util/errores';
 
-/** Ranking de la sección y estudiantes en riesgo (promedio menor a 10.5). */
 @Component({
   selector: 'cv-tab-seguimiento',
   imports: [DecimalPipe],

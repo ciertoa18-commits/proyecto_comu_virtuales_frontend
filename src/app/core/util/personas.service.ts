@@ -2,10 +2,6 @@ import { inject, Injectable, signal } from '@angular/core';
 import { CuentaApi } from '../api/cuenta.api';
 import { Persona } from '../modelos';
 
-/**
- * Guarda en memoria los nombres de las personas ya consultadas para no pedirlos
- * al backend cada vez (mensajes, solicitudes, entregas...).
- */
 @Injectable({ providedIn: 'root' })
 export class PersonasService {
   private readonly api = inject(CuentaApi);

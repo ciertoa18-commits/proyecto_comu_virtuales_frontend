@@ -8,7 +8,6 @@ import { SesionService } from '../core/sesion/sesion.service';
 import { iniciales } from '../core/util/texto';
 import { MENU } from './menu';
 
-/** Estructura de las páginas internas: barra coral arriba, menú a la izquierda y contenido. */
 @Component({
   selector: 'cv-portal',
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
@@ -37,7 +36,6 @@ export class Portal implements OnInit {
     })).filter((g) => g.opciones.length > 0);
   });
 
-  /** La campana se actualiza cada minuto (no hay websockets). */
   ngOnInit(): void {
     timer(0, 60_000)
       .pipe(

@@ -10,7 +10,6 @@ import { ImagenArchivo } from '../../shared/imagen-archivo';
 import { Paginador } from '../../shared/paginador';
 import { SiPuede } from '../../shared/si-puede';
 
-/** CU04 · Buscar comunidades (por nombre, categoría e idioma) y ver a cuáles pertenezco. */
 @Component({
   selector: 'cv-lista-comunidades',
   imports: [AsyncPipe, RouterLink, ImagenArchivo, Paginador, SiPuede],

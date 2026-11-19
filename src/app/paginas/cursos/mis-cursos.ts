@@ -6,7 +6,6 @@ import { SesionService } from '../../core/sesion/sesion.service';
 import { textoError } from '../../core/util/errores';
 import { portada } from '../../core/util/texto';
 
-/** Cursos en los que estoy (estudiante), que dicto (docente) o todas las secciones (admin). */
 @Component({
   selector: 'cv-mis-cursos',
   imports: [RouterLink],

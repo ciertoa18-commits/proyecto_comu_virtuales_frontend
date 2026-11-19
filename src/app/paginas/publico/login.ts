@@ -5,7 +5,6 @@ import { PATRON_CORREO } from '../../core/modelos';
 import { SesionService } from '../../core/sesion/sesion.service';
 import { errorCampo, textoError } from '../../core/util/errores';
 
-/** CU01 · Iniciar sesión. */
 @Component({
   selector: 'cv-login',
   imports: [ReactiveFormsModule, RouterLink],
@@ -15,7 +14,6 @@ export class Login {
   private readonly sesion = inject(SesionService);
   private readonly router = inject(Router);
 
-  /** Parámetros de la URL: ?motivo=salio|vencio|restablecida &volver=/ruta */
   readonly motivo = input<string>();
   readonly volver = input<string>();
 

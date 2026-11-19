@@ -38,6 +38,10 @@
         <input type="email" autocomplete="email" [placeholder]="'nombre' + dominio" formControlName="correo" />
         @if (err('correo', msgCorreo); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">{{ docente ? 'Docente' : 'Estudiante' }}: usa tu correo institucional {{ dominio }}</small> }
       </label>
+      <label class="campo"><span>Gmail personal (para recuperar tu contraseña)</span>
+        <input type="email" autocomplete="email" placeholder="tucorreo@gmail.com" formControlName="correoRecuperacion" />
+        @if (err('correoRecuperacion', 'Escribe un correo válido, por ejemplo tucorreo@gmail.com'); as m) { <small class="campo-error">{{ m }}</small> }
+      </label>
       <div class="par">
         <label class="campo"><span>Teléfono (opcional)</span>
           <input type="tel" inputmode="numeric" maxlength="9" placeholder="987654321" formControlName="telefono" />

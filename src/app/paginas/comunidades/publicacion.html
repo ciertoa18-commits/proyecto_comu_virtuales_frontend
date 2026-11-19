@@ -16,7 +16,8 @@
 
   <h2>Comentarios ({{ comentarios().length }})</h2>
   <div class="bloque nuevo">
-    <textarea #caja maxlength="2000" placeholder="Escribe un comentario..."></textarea>
+    <label for="nuevo-comentario" class="sr-only">Comentario</label>
+    <textarea id="nuevo-comentario" #caja maxlength="2000" placeholder="Escribe un comentario..."></textarea>
     <div class="botones"><button class="btn btn-primario btn-chico" type="button" [disabled]="enviando()" (click)="comentar(caja, null)">Comentar</button></div>
   </div>
 
@@ -26,7 +27,8 @@
       <div class="respuestas">
         @for (r of h.respuestas; track r.comentario.idComentario) { <ng-container *ngTemplateOutlet="item; context: { $implicit: r }" /> }
         @if (respondiendo() === h.c.comentario.idComentario) {
-          <textarea #resp maxlength="2000" placeholder="Tu respuesta..."></textarea>
+          <label [for]="'respuesta-' + h.c.comentario.idComentario" class="sr-only">Respuesta</label>
+          <textarea [id]="'respuesta-' + h.c.comentario.idComentario" #resp maxlength="2000" placeholder="Tu respuesta..."></textarea>
           <div class="botones">
             <button class="btn btn-chico" type="button" (click)="respondiendo.set(null)">Cancelar</button>
             <button class="btn btn-chico btn-primario" type="button" [disabled]="enviando()" (click)="comentar(resp, h.c.comentario.idComentario)">Responder</button>

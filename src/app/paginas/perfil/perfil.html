@@ -35,6 +35,10 @@
       <label for="t">Teléfono (opcional)</label>
       <input id="t" type="tel" inputmode="numeric" maxlength="9" placeholder="987654321" formControlName="telefono" />
       @if (delServidor()['telefono'] ?? errorCampo(formDatos.controls.telefono, msgTelefono); as m) { <small class="campo-error">{{ m }}</small> }
+      <label for="cr">Gmail personal (para recuperar tu contraseña)</label>
+      <input id="cr" type="email" placeholder="tucorreo@gmail.com" formControlName="correoRecuperacion" />
+      @if (delServidor()['correoRecuperacion'] ?? errorCampo(formDatos.controls.correoRecuperacion, 'Escribe un correo válido, por ejemplo tucorreo@gmail.com'); as m) { <small class="campo-error">{{ m }}</small> }
+      <small class="ayuda">Aquí te llegará el código si olvidas tu contraseña.</small>
       @if (esDocente()) { <label for="e">Especialidad</label><input id="e" formControlName="especialidad" /> }
       <label for="i">Idioma preferido</label>
       <select id="i" formControlName="idIdiomaPref">

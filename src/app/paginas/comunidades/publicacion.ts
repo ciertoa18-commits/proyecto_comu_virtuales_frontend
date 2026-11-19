@@ -8,7 +8,6 @@ import { textoError } from '../../core/util/errores';
 import { iniciales } from '../../core/util/texto';
 import { BotonDescarga } from '../../shared/boton-descarga';
 
-/** Una publicación con sus comentarios y respuestas. */
 @Component({
   selector: 'cv-publicacion',
   imports: [DatePipe, NgTemplateOutlet, RouterLink, BotonDescarga],
@@ -27,7 +26,6 @@ export class PaginaPublicacion implements OnInit {
   protected readonly error = signal<string | null>(null);
   protected readonly enviando = signal(false);
 
-  /** Comentarios principales con sus respuestas debajo. */
   protected readonly hilos = computed(() => {
     const todos = this.comentarios().filter((c) => !c.comentario.eliminado);
     return todos

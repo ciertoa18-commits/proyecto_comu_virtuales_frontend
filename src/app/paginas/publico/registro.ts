@@ -15,10 +15,6 @@ export function mismasClaves(a: string, b: string) {
   };
 }
 
-/**
- * Crear cuenta. Estudiante: entra de inmediato. Docente: queda PENDIENTE hasta que
- * un administrador lo apruebe. El administrador no se registra aquí.
- */
 @Component({
   selector: 'cv-registro',
   imports: [ReactiveFormsModule, RouterLink, AsyncPipe],
@@ -44,6 +40,7 @@ export class Registro {
       apellidos: ['', [Validators.required, Validators.maxLength(100)]],
       correo: ['', [Validators.required, Validators.pattern(patronCorreo('ESTUDIANTE'))]],
       telefono: ['', Validators.pattern(PATRON_TELEFONO)],
+      correoRecuperacion: ['', [Validators.required, Validators.email, Validators.maxLength(150)]],
       especialidad: ['', Validators.maxLength(100)],
       idIdiomaPref: [1],
       password: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(72)]],
@@ -61,7 +58,6 @@ export class Registro {
     const esp = this.form.controls.especialidad;
     esp.setValidators(rol === 'DOCENTE' ? [Validators.required, Validators.maxLength(100)] : [Validators.maxLength(100)]);
     esp.updateValueAndValidity();
-    // El dominio del correo depende del rol elegido
     this.msgCorreo = mensajeCorreo(rol);
     this.dominio = dominioCorreo(rol);
     const correo = this.form.controls.correo;
@@ -89,6 +85,7 @@ export class Registro {
         apellidos: v.apellidos.trim(),
         correo: v.correo.trim().toLowerCase(),
         telefono: v.telefono.trim() || null,
+        correoRecuperacion: v.correoRecuperacion.trim().toLowerCase(),
         especialidad: v.rol === 'DOCENTE' ? v.especialidad.trim() || null : null,
         idIdiomaPref: v.idIdiomaPref,
         password: v.password,

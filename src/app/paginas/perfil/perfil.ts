@@ -10,7 +10,6 @@ import { iniciales, LIMITE_FOTO } from '../../core/util/texto';
 import { ImagenArchivo } from '../../shared/imagen-archivo';
 import { mismasClaves } from '../publico/registro';
 
-/** CU02 · Mi perfil: datos, foto, idioma, teléfono y contraseña. */
 @Component({
   selector: 'cv-perfil',
   imports: [ReactiveFormsModule, AsyncPipe, DatePipe, ImagenArchivo],
@@ -41,6 +40,7 @@ export class Perfil implements OnInit {
     apellidos: ['', [Validators.required, Validators.maxLength(100)]],
     especialidad: [null as string | null, Validators.maxLength(100)],
     telefono: [null as string | null, Validators.pattern(PATRON_TELEFONO)],
+    correoRecuperacion: [null as string | null, [Validators.email, Validators.maxLength(150)]],
     idIdiomaPref: [null as number | null],
   });
   protected readonly formClave = this.fb.nonNullable.group(
@@ -78,6 +78,7 @@ export class Perfil implements OnInit {
         apellidos: v.apellidos!.trim(),
         especialidad: v.especialidad?.trim() || null,
         telefono: v.telefono?.trim() || null,
+        correoRecuperacion: v.correoRecuperacion?.trim().toLowerCase() || null,
         idIdiomaPref: v.idIdiomaPref,
       })
       .subscribe({

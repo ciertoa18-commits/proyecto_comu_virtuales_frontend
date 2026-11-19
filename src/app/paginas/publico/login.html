@@ -14,11 +14,13 @@
     }
 
     <div class="campo">
-      <input type="email" autocomplete="username" placeholder="Correo electrónico" formControlName="correo" />
+      <label for="login-correo" class="sr-only">Correo electrónico</label>
+      <input id="login-correo" type="email" autocomplete="username" placeholder="Correo electrónico" formControlName="correo" />
       @if (err('correo'); as m) { <small class="campo-error">{{ m }}</small> }
     </div>
     <div class="campo">
-      <input type="password" autocomplete="current-password" placeholder="Contraseña" formControlName="password" />
+      <label for="login-password" class="sr-only">Contraseña</label>
+      <input id="login-password" type="password" autocomplete="current-password" placeholder="Contraseña" formControlName="password" />
       @if (err('password'); as m) { <small class="campo-error">{{ m }}</small> }
     </div>
 

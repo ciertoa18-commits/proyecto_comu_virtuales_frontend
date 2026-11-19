@@ -9,7 +9,6 @@ import { iniciales } from '../../core/util/texto';
 
 interface Conversacion { con: number; ultimo: Mensaje; sinLeer: number; }
 
-/** Mensajes privados entre usuarios (bandeja + chat). */
 @Component({
   selector: 'cv-mensajes',
   imports: [DatePipe],
@@ -39,7 +38,6 @@ export class Mensajes implements OnInit {
   });
   private readonly yo = this.sesion.sesion()?.idUsuario ?? 0;
 
-  /** Agrupa los mensajes por la otra persona, el más reciente primero. */
   protected readonly conversaciones = computed<Conversacion[]>(() => {
     const mapa = new Map<number, Conversacion>();
     for (const m of this.todos()) {
@@ -74,7 +72,6 @@ export class Mensajes implements OnInit {
       next: (p) => {
         this.chat.set([...p.content].sort((a, b) => a.fechaEnvio.localeCompare(b.fechaEnvio)));
         setTimeout(() => this.fin()?.nativeElement.scrollIntoView({ block: 'end' }));
-        // Marca como leídos los que me llegaron.
         for (const m of p.content) if (!m.leido && m.idReceptor === this.yo) this.api.marcarMensajeLeido(m.idMensaje).subscribe({ error: () => undefined });
         this.todos.update((l) => l.map((m) => (m.idEmisor === con && m.idReceptor === this.yo ? { ...m, leido: true } : m)));
       },

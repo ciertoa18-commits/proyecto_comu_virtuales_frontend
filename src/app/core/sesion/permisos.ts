@@ -1,9 +1,5 @@
 import { Rol } from '../modelos';
 
-/**
- * Qué puede hacer cada rol en la interfaz. El backend vuelve a validar todo:
- * esto solo decide qué botones y menús se muestran.
- */
 export type Accion =
   | 'COMUNIDAD_CREAR'
   | 'COMUNIDAD_UNIRSE'

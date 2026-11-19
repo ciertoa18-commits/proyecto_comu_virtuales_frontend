@@ -5,12 +5,10 @@ import { environment } from '../../../environments/environment';
 import { DatosAviso, Mensaje, Notificacion, Pagina, Persona, UsuarioResumen } from '../modelos';
 import { params } from './parametros';
 
-
 @Injectable({ providedIn: 'root' })
 export class ComunicacionApi {
   private readonly http = inject(HttpClient);
   private readonly url = environment.apiUrl;
-
 
   readonly sinLeer = signal(0);
 
@@ -32,7 +30,6 @@ export class ComunicacionApi {
     return this.http.get<UsuarioResumen[]>(`${this.url}/usuarios/buscar`, { params: { q } });
   }
 
-  /** Personas con las que comparto alguna comunidad (a quienes puedo escribir). */
   contactos() {
     return this.http.get<Persona[]>(`${this.url}/me/contactos`);
   }

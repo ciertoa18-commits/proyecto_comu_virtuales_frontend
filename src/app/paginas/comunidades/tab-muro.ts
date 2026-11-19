@@ -11,7 +11,6 @@ import { iniciales, LIMITE_ARCHIVO } from '../../core/util/texto';
 import { BotonDescarga } from '../../shared/boton-descarga';
 import { Paginador } from '../../shared/paginador';
 
-/** Muro de la comunidad: publicar (con adjuntos) y ver publicaciones. En modo revisión, aprobar o rechazar. */
 @Component({
   selector: 'cv-tab-muro',
   imports: [DatePipe, ReactiveFormsModule, RouterLink, BotonDescarga, Paginador],

@@ -6,7 +6,6 @@ import { Evaluacion, Seccion, TIPOS_EVALUACION, TipoEvaluacion, Unidad } from '.
 import { errorCampo, textoError } from '../../core/util/errores';
 import { aFechaJava } from '../../core/util/texto';
 
-/** Evaluaciones de la sección con su peso (%). La suma de pesos debe llegar a 100. */
 @Component({
   selector: 'cv-tab-evaluaciones',
   imports: [DatePipe, DecimalPipe, ReactiveFormsModule],

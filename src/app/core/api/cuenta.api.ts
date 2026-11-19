@@ -3,7 +3,6 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { DatosPerfil, DatosRegistro, Persona, RespuestaCuenta, Usuario } from '../modelos';
 
-/** Registro, recuperación de contraseña y "Mi perfil". */
 @Injectable({ providedIn: 'root' })
 export class CuentaApi {
   private readonly http = inject(HttpClient);

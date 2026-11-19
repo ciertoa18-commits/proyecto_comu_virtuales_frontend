@@ -13,7 +13,6 @@ import { TabSeguimiento } from './tab-seguimiento';
 
 type Pestana = 'contenido' | 'evaluaciones' | 'libreta' | 'asistencia' | 'seguimiento';
 
-/** CU10/CU11 · Una sección de un curso: contenido para todos; gestión académica para el docente. */
 @Component({
   selector: 'cv-seccion',
   imports: [RouterLink, TabContenido, TabEvaluaciones, TabLibreta, TabAsistencia, TabSeguimiento],

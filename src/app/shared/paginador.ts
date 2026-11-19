@@ -1,6 +1,5 @@
 import { Component, input, output } from '@angular/core';
 
-/** Anterior / Siguiente para las listas paginadas (la página empieza en 0). */
 @Component({
   selector: 'cv-paginador',
   template: `

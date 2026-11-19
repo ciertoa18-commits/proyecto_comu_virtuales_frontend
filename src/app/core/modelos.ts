@@ -1,7 +1,3 @@
-/**
- * Tipos de datos que devuelve el backend (Spring Boot + Oracle).
- * Los nombres de los campos son los mismos que las entidades JPA.
- */
 
 export type Rol = 'ESTUDIANTE' | 'DOCENTE' | 'ADMIN';
 export type EstadoUsuario = 'ACTIVO' | 'INACTIVO' | 'PENDIENTE';
@@ -16,7 +12,6 @@ export interface ErrorApi {
   mensaje: string;
 }
 
-// ---------- Cuenta ----------
 export interface RespuestaLogin {
   ok: boolean;
   token: string;
@@ -36,6 +31,7 @@ export interface DatosRegistro {
   especialidad: string | null;
   telefono: string | null;
   idIdiomaPref: number | null;
+  correoRecuperacion: string;
 }
 export interface Usuario {
   idUsuario: number;
@@ -45,6 +41,7 @@ export interface Usuario {
   apellidos: string;
   especialidad: string | null;
   telefono: string | null;
+  correoRecuperacion: string | null;
   idFotoPerfil: number | null;
   idIdiomaPref: number | null;
   estado: EstadoUsuario;
@@ -57,6 +54,7 @@ export interface DatosPerfil {
   especialidad: string | null;
   idIdiomaPref: number | null;
   telefono: string | null;
+  correoRecuperacion: string | null;
 }
 export interface Persona {
   idUsuario: number;
@@ -88,14 +86,12 @@ export interface DatosNuevoUsuario {
   telefono: string | null;
 }
 
-// ---------- Catálogos ----------
 export interface Categoria { idCategoria: number; nombre: string; descripcion: string | null; }
 export interface Idioma { idIdioma: number; codigo: string; nombre: string; }
 export interface Pueblo { idPueblo: number; nombre: string; familiaLinguistica: string | null; }
 export interface Periodo { idPeriodo: number; nombre: string; fechaInicio: string; fechaFin: string; estado: 'PLANIFICADO' | 'ABIERTO' | 'CERRADO'; }
 export interface Archivo { idArchivo: number; idSubidoPor: number; nombreOriginal: string; extension: string; tipoMime: string; tamanoBytes: number; fechaSubida: string; }
 
-// ---------- Comunidades ----------
 export type Visibilidad = 'PUBLICA' | 'PRIVADA';
 export interface Comunidad {
   idComunidad: number;
@@ -154,7 +150,6 @@ export interface Evento {
   enlace: string | null;
 }
 
-// ---------- Muro ----------
 export interface Autor { id: number; nombres: string; apellidos: string; rol: string; }
 export interface Publicacion {
   idPublicacion: number;
@@ -183,7 +178,6 @@ export interface Comentario {
 }
 export interface VistaComentario { comentario: Comentario; autor: Autor; }
 
-// ---------- Académico ----------
 export interface Curso { idCurso: number; idComunidad: number; codigo: string; nombre: string; descripcion: string | null; estado: 'ACTIVO' | 'INACTIVO'; }
 export interface Seccion {
   idSeccion: number;
@@ -233,7 +227,6 @@ export type EstadoAsistencia = 'PRESENTE' | 'TARDANZA' | 'FALTA' | 'JUSTIFICADA'
 export interface Asistencia { idAsistencia: number; idSesion: number; idMatricula: number; estado: EstadoAsistencia; observacion: string | null; }
 export interface Entrega { idEntrega: number; idRecurso: number; idMatricula: number; idArchivo: number | null; comentario: string | null; fechaEntrega: string; estado: 'ENTREGADA' | 'TARDIA' | 'CALIFICADA'; }
 
-// ---------- Comunicación ----------
 export type TipoNotificacion =
   | 'SOLICITUD_INGRESO' | 'SOLICITUD_RESPUESTA' | 'NUEVA_PUBLICACION' | 'NUEVO_COMENTARIO'
   | 'NUEVO_RECURSO' | 'EVENTO' | 'MENSAJE' | 'SISTEMA' | 'AVISO';
@@ -254,19 +247,15 @@ export type DestinoAviso = 'TODOS' | 'DOCENTES' | 'ESTUDIANTES' | 'SECCION' | 'U
 export interface DatosAviso { destino: DestinoAviso; idSeccion: number | null; idUsuario: number | null; titulo: string; contenido: string | null; }
 export interface Mensaje { idMensaje: number; idEmisor: number; idReceptor: number; contenido: string; leido: boolean; fechaEnvio: string; }
 
-// ---------- Reportes (claves en MAYÚSCULAS porque salen directo de SQL) ----------
 export interface ReporteIdioma { ID_IDIOMA: number; NOMBRE: string; COMUNIDADES: number; RECURSOS: number; }
 export interface ReporteDocente { ID_USUARIO: number; NOMBRES: string; APELLIDOS: string; SECCIONES: number; MATRICULAS: number; }
 
-// ---------- Constantes ----------
 export const NOMBRE_ROL: Record<Rol, string> = { ESTUDIANTE: 'Estudiante', DOCENTE: 'Docente', ADMIN: 'Administrador' };
 export const TIPOS_RECURSO: TipoRecurso[] = ['DOCUMENTO', 'VIDEO', 'ENLACE', 'TAREA'];
 export const TIPOS_EVALUACION: TipoEvaluacion[] = ['PRACTICA', 'TAREA', 'EXAMEN', 'PROYECTO', 'PARTICIPACION'];
 export const ESTADOS_ASISTENCIA: EstadoAsistencia[] = ['PRESENTE', 'TARDANZA', 'FALTA', 'JUSTIFICADA'];
 export const NOTA_APROBATORIA = 10.5;
-/** Correo institucional: @perueduca.pe (estudiantes) o @minedu.gob.pe (docentes y administradores). */
 export const PATRON_CORREO = /^[A-Za-z0-9._%+-]+@(perueduca\.pe|minedu\.gob\.pe)$/i;
-/** Dominio obligatorio según el rol. */
 export function dominioCorreo(rol: Rol): string {
   return rol === 'ESTUDIANTE' ? '@perueduca.pe' : '@minedu.gob.pe';
 }

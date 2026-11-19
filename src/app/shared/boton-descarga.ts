@@ -1,7 +1,6 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { CatalogoApi } from '../core/api/catalogo.api';
 
-/** Descarga un archivo del backend con su nombre original. */
 @Component({
   selector: 'cv-descarga',
   template: `

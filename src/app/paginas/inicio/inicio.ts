@@ -8,7 +8,6 @@ import { Clase, Comunidad, SeccionResumen } from '../../core/modelos';
 import { SesionService } from '../../core/sesion/sesion.service';
 import { portada } from '../../core/util/texto';
 
-/** Portada: saludo, próximas clases, mis cursos, comunidades recomendadas y avisos del admin. */
 @Component({
   selector: 'cv-inicio',
   imports: [DatePipe, RouterLink],
@@ -32,7 +31,6 @@ export class Inicio implements OnInit {
   protected readonly totalComunidades = signal(0);
 
   ngOnInit(): void {
-    // Cada bloque carga por su cuenta: si uno falla, los demás siguen.
     const rol = this.sesion.rol();
     if (rol === 'ESTUDIANTE') {
       this.academico.misClases().subscribe({
