@@ -3,15 +3,16 @@ import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { AcademicoApi } from '../../core/api/academico.api';
 import { FilaRanking, FilaRiesgo, NOTA_APROBATORIA, Seccion } from '../../core/modelos';
 import { textoError } from '../../core/util/errores';
+import { Icono } from '../../shared/icono';
 
 @Component({
   selector: 'cv-tab-seguimiento',
-  imports: [DecimalPipe],
+  imports: [Icono, DecimalPipe],
   template: `
     @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
     <div class="dos">
       <section>
-        <h2>🏆 Ranking</h2>
+        <h2><cv-icono nombre="trofeo" [tamano]="20" /> Ranking</h2>
         <div class="bloque">
           @for (r of ranking(); track r.idUsuario; let i = $index) {
             <div class="fila">
@@ -22,12 +23,12 @@ import { textoError } from '../../core/util/errores';
         </div>
       </section>
       <section>
-        <h2>⚠️ En riesgo</h2>
+        <h2><cv-icono nombre="alerta" [tamano]="20" /> En riesgo</h2>
         <p class="apagado">Estudiantes con promedio menor a {{ aprobatoria }}.</p>
         <div class="bloque">
           @for (r of riesgo(); track r.matricula.idMatricula) {
             <div class="fila"><span>{{ r.estudiante.nombres }} {{ r.estudiante.apellidos }}</span><span class="pill riesgo">{{ r.promedio | number: '1.1-2' }}</span></div>
-          } @empty { <p class="vacio">{{ cargando() ? 'Cargando...' : '🎉 Nadie está en riesgo.' }}</p> }
+          } @empty { <p class="vacio">{{ cargando() ? 'Cargando...' : 'Nadie está en riesgo.' }}</p> }
         </div>
       </section>
     </div>

@@ -9,14 +9,15 @@ import { errorCampo, textoError } from '../../core/util/errores';
 import { aFechaJava, aInputFecha, LIMITE_ARCHIVO } from '../../core/util/texto';
 import { BotonDescarga } from '../../shared/boton-descarga';
 import { Modal } from '../../shared/modal';
+import { Icono, NombreIcono } from '../../shared/icono';
 
 interface Bloque { unidad: Unidad; sesiones: Sesion[]; recursos: Recurso[]; }
 
-export const ICONO_RECURSO: Record<TipoRecurso, string> = { DOCUMENTO: '📄', VIDEO: '🎬', ENLACE: '🔗', TAREA: '📌' };
+export const ICONO_RECURSO: Record<TipoRecurso, NombreIcono> = { DOCUMENTO: 'archivo', VIDEO: 'video', ENLACE: 'enlace', TAREA: 'pin' };
 
 @Component({
   selector: 'cv-tab-contenido',
-  imports: [DatePipe, ReactiveFormsModule, BotonDescarga, Modal],
+  imports: [Icono, DatePipe, ReactiveFormsModule, BotonDescarga, Modal],
   templateUrl: './tab-contenido.html',
   styleUrl: './tab-contenido.css',
 })
@@ -235,7 +236,7 @@ export class TabContenido implements OnInit {
     this.api.entregar(r.idRecurso, this.archivo()?.idArchivo ?? null, comentario.trim() || null).subscribe({
       next: (e) => {
         this.modalEntrega.set(null);
-        this.exito.set(e.estado === 'TARDIA' ? 'Tarea entregada (fuera de plazo).' : '¡Tarea entregada! ✅');
+        this.exito.set(e.estado === 'TARDIA' ? 'Tarea entregada (fuera de plazo).' : '¡Tarea entregada!');
       },
       error: (e) => this.errorModal.set(textoError(e)),
     });

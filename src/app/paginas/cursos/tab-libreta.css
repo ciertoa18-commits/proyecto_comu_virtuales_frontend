@@ -9,3 +9,4 @@
 .lista button { display: block; width: 100%; text-align: left; padding: .55rem .8rem; border: 0; border-top: 1px solid #f0f0f0; background: #fff; font: inherit; cursor: pointer; }
 .lista button:hover { background: var(--azul-claro); }
 .lista small { color: #777; }
+.btn { display: inline-flex; align-items: center; gap: .3rem; }
