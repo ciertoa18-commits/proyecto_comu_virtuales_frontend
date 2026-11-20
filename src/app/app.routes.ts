@@ -77,7 +77,7 @@ export const rutas: Routes = [
       {
         path: 'admin/catalogos',
         canActivate: [conPermiso],
-        data: { accion: 'COMUNIDAD_CREAR' },
+        data: { accion: 'CATEGORIA_CREAR' },
         loadComponent: () => import('./paginas/admin/catalogos').then((m) => m.Catalogos),
       },
       {
