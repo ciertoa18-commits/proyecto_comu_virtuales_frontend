@@ -10,6 +10,7 @@ import { errorCampo, erroresPorCampo, textoError } from '../../core/util/errores
 import { LIMITE_FOTO } from '../../core/util/texto';
 import { Icono } from '../../shared/icono';
 import { ImagenArchivo } from '../../shared/imagen-archivo';
+import { NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 
 export const OTRA_CATEGORIA = -1;
 
@@ -19,7 +20,7 @@ function sinTildes(s: string): string {
 
 @Component({
   selector: 'cv-formulario-comunidad',
-  imports: [ReactiveFormsModule, RouterLink, Icono, ImagenArchivo],
+  imports: [ReactiveFormsModule, RouterLink, Icono, ImagenArchivo, NgSelectComponent, NgOptionTemplateDirective],
   templateUrl: './formulario.html',
   styleUrl: './formulario.css',
 })
@@ -39,8 +40,6 @@ export class FormularioComunidad implements OnInit {
   protected readonly guardando = signal(false);
   protected readonly subiendo = signal(false);
   protected readonly segundas = signal(new Set<number>());
-  protected readonly textoPueblo = signal('');
-  protected readonly listaPueblos = signal(false);
 
   protected readonly form = inject(FormBuilder).group({
     nombre: ['', [Validators.required, Validators.maxLength(150)]],
@@ -59,11 +58,10 @@ export class FormularioComunidad implements OnInit {
   private readonly idIdioma = toSignal(this.form.controls.idIdioma.valueChanges, { initialValue: null });
   protected readonly esOtra = computed(() => this.idCategoria() === OTRA_CATEGORIA);
   protected readonly lenguasDisponibles = computed(() => this.idiomas().filter((i) => i.idIdioma !== this.idIdioma()));
-  protected readonly pueblosFiltrados = computed(() => {
-    const q = sinTildes(this.textoPueblo().trim());
-    const lista = this.pueblos();
-    return (q ? lista.filter((p) => sinTildes(p.nombre).includes(q) || sinTildes(p.familiaLinguistica ?? '').includes(q)) : lista).slice(0, 60);
-  });
+  protected readonly buscarPueblo = (texto: string, p: Pueblo) => {
+    const q = sinTildes(texto.trim());
+    return sinTildes(p.nombre).includes(q) || sinTildes(p.familiaLinguistica ?? '').includes(q);
+  };
 
   constructor() {
     this.form.controls.idCategoria.valueChanges.subscribe((v) => {
@@ -79,9 +77,6 @@ export class FormularioComunidad implements OnInit {
       this.api.obtener(+id).subscribe({
         next: (c) => {
           this.form.patchValue(c);
-          const p = this.pueblos().find((x) => x.idPueblo === c.idPueblo);
-          if (p) this.textoPueblo.set(p.nombre);
-          else if (c.idPueblo) this.catalogo.pueblos$.subscribe((l) => this.textoPueblo.set(l.find((x) => x.idPueblo === c.idPueblo)?.nombre ?? ''));
         },
         error: (e) => this.error.set(textoError(e)),
       });
@@ -91,26 +86,6 @@ export class FormularioComunidad implements OnInit {
 
   protected err(c: keyof typeof this.form.controls): string | null {
     return this.delServidor()[c] ?? errorCampo(this.form.controls[c]);
-  }
-
-  protected escribirPueblo(texto: string): void {
-    this.textoPueblo.set(texto);
-    this.listaPueblos.set(true);
-    if (!texto.trim()) this.form.controls.idPueblo.setValue(null);
-  }
-
-  protected elegirPueblo(p: Pueblo | null): void {
-    this.form.controls.idPueblo.setValue(p?.idPueblo ?? null);
-    this.textoPueblo.set(p?.nombre ?? '');
-    this.listaPueblos.set(false);
-  }
-
-  protected cerrarPueblos(): void {
-    setTimeout(() => {
-      this.listaPueblos.set(false);
-      const elegido = this.pueblos().find((x) => x.idPueblo === this.form.controls.idPueblo.value);
-      this.textoPueblo.set(elegido?.nombre ?? '');
-    }, 150);
   }
 
   protected alternarLengua(id: number): void {

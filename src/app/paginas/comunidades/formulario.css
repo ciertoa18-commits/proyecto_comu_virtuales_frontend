@@ -19,9 +19,5 @@
 .chip-opcion input { position: absolute; opacity: 0; pointer-events: none; }
 .chip-opcion.sel { background: var(--coral); border-color: var(--coral); color: #fff; }
 .chip-opcion:focus-within { outline: 2px solid var(--coral-osc); outline-offset: 2px; }
-.combo { position: relative; display: flex; align-items: center; gap: .4rem; color: #777; }
-.combo input { flex: 1; }
-.opciones { position: absolute; top: 100%; left: 0; right: 0; z-index: 20; list-style: none; margin: .2rem 0 0; padding: .3rem; background: #fff; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 6px 18px rgba(0, 0, 0, .12); max-height: 260px; overflow-y: auto; }
-.opciones li { padding: .45rem .6rem; border-radius: 6px; cursor: pointer; color: #222; }
-.opciones li:hover, .opciones li.sel { background: var(--coral-claro); }
-.opciones li small { display: block; color: #888; font-size: .75rem; }
+ng-select { margin-bottom: .3rem; }
+.familia { color: #888; margin-left: .4rem; font-size: .78rem; }

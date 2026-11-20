@@ -40,7 +40,7 @@
         @if (err('nuevaCategoria'); as m) { <small class="campo-error">{{ m }}</small> }</div>
       <div><label for="dcat">Descripción de la categoría</label>
         <input id="dcat" maxlength="500" formControlName="descripcionCategoria" /></div>
-      <small class="ayuda">La categoría se crea al guardar la comunidad y quedará disponible para las demás.</small>
+      
     </div>
   }
 
@@ -55,27 +55,15 @@
         </label>
       }
     </div>
-    <small class="ayuda">Otras lenguas que también se usan en la comunidad.</small>
+    
   </fieldset>
 
   <label for="pueblo">Pueblo originario</label>
-  <div class="combo">
-    <cv-icono nombre="buscar" [tamano]="16" />
-    <input id="pueblo" type="search" autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="lista-pueblos"
-      [attr.aria-expanded]="listaPueblos()" placeholder="Escribe para buscar, por ejemplo Asháninka..."
-      [value]="textoPueblo()" (input)="escribirPueblo($any($event.target).value)" (focus)="listaPueblos.set(true)" (blur)="cerrarPueblos()" />
-    @if (listaPueblos()) {
-      <ul id="lista-pueblos" class="opciones" role="listbox">
-        <li role="option" [attr.aria-selected]="!form.controls.idPueblo.value" (mousedown)="elegirPueblo(null)"><span class="apagado">Ninguno</span></li>
-        @for (p of pueblosFiltrados(); track p.idPueblo) {
-          <li role="option" [attr.aria-selected]="form.controls.idPueblo.value === p.idPueblo" [class.sel]="form.controls.idPueblo.value === p.idPueblo" (mousedown)="elegirPueblo(p)">
-            <strong>{{ p.nombre }}</strong>@if (p.familiaLinguistica) { <small>Familia {{ p.familiaLinguistica }}</small> }
-          </li>
-        } @empty { <li class="vacio">No hay pueblos con ese nombre.</li> }
-      </ul>
-    }
-  </div>
-  <small class="ayuda">¿Falta alguna categoría, idioma o pueblo? <a routerLink="/admin/catalogos">Administrar catálogos</a></small>
+  <ng-select labelForId="pueblo" [items]="pueblos()" bindLabel="nombre" bindValue="idPueblo" formControlName="idPueblo"
+    placeholder="Buscar pueblo originario" notFoundText="Sin resultados" [searchFn]="buscarPueblo">
+    <ng-template ng-option-tmp let-item="item"><strong>{{ item.nombre }}</strong>@if (item.familiaLinguistica) { <small class="familia">{{ item.familiaLinguistica }}</small> }</ng-template>
+  </ng-select>
+  <small class="ayuda"><a routerLink="/admin/catalogos">Administrar catálogos</a></small>
 
   <div class="dos-columnas cajas">
     <div class="caja">

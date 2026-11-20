@@ -7,6 +7,7 @@ import { TipoCatalogo } from '../../core/modelos';
 import { errorCampo, erroresPorCampo, textoError } from '../../core/util/errores';
 import { Icono, NombreIcono } from '../../shared/icono';
 import { Modal } from '../../shared/modal';
+import { SesionService } from '../../core/sesion/sesion.service';
 
 interface Fila {
   id: number;
@@ -14,10 +15,10 @@ interface Fila {
   detalle: string | null;
 }
 
-const INFO: Record<TipoCatalogo, { titulo: string; singular: string; icono: NombreIcono; campo: string; ayuda: string }> = {
-  categorias: { titulo: 'Categorías', singular: 'categoría', icono: 'etiqueta', campo: 'Descripción', ayuda: 'Sirven para clasificar las comunidades.' },
-  pueblos: { titulo: 'Pueblos originarios', singular: 'pueblo originario', icono: 'ubicacion', campo: 'Familia lingüística', ayuda: 'Pueblos indígenas u originarios a los que puede pertenecer una comunidad.' },
-  idiomas: { titulo: 'Idiomas', singular: 'idioma', icono: 'idioma', campo: 'Código', ayuda: 'Lenguas que se pueden elegir como idioma dominante o segunda lengua.' },
+const INFO: Record<TipoCatalogo, { titulo: string; singular: string; icono: NombreIcono; campo: string }> = {
+  categorias: { titulo: 'Categorías', singular: 'categoría', icono: 'etiqueta', campo: 'Descripción' },
+  pueblos: { titulo: 'Pueblos originarios', singular: 'pueblo originario', icono: 'ubicacion', campo: 'Familia lingüística' },
+  idiomas: { titulo: 'Idiomas', singular: 'idioma', icono: 'idioma', campo: 'Código' },
 };
 
 function sinTildes(s: string): string {
@@ -32,30 +33,28 @@ function sinTildes(s: string): string {
       <h1>Catálogos</h1>
       <button class="btn btn-primario" type="button" (click)="nuevo()"><cv-icono nombre="mas" [tamano]="16" /> Crear {{ info().singular }}</button>
     </div>
-    <p class="subtitulo-pagina">Agrega las categorías, pueblos originarios e idiomas que se eligen al crear una comunidad.</p>
     <nav class="tabs">
-      @for (t of tipos; track t) {
+      @for (t of tipos(); track t) {
         <button class="tab" [class.activa]="tipo() === t" (click)="cambiar(t)"><cv-icono [nombre]="infoDe[t].icono" [tamano]="16" /> {{ infoDe[t].titulo }}</button>
       }
     </nav>
     @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
     @if (exito()) { <div class="exito" role="status">{{ exito() }}</div> }
-    <p class="apagado">{{ info().ayuda }}</p>
     <label class="busca"><cv-icono nombre="buscar" />
       <input type="search" autocomplete="off" [placeholder]="'Buscar ' + info().titulo.toLowerCase() + '...'" [value]="texto()" (input)="texto.set($any($event.target).value)" />
     </label>
     <div class="tabla-scroll">
       <table class="tabla">
-        <thead><tr><th>Nombre</th><th>{{ info().campo }}</th><th class="der">Acciones</th></tr></thead>
+        <thead><tr><th>Nombre</th><th>{{ info().campo }}</th>@if (esAdmin) { <th class="der">Acciones</th> }</tr></thead>
         <tbody>
           @for (f of filtradas(); track f.id) {
             <tr>
               <td><strong>{{ f.nombre }}</strong></td>
               <td>{{ f.detalle ?? '—' }}</td>
-              <td class="der"><div class="acciones">
+              @if (esAdmin) { <td class="der"><div class="acciones">
                 <button class="btn btn-chico" type="button" (click)="editar(f)"><cv-icono nombre="lapiz" [tamano]="16" /> Editar</button>
                 <button class="btn btn-chico btn-peligro" type="button" (click)="eliminar(f)"><cv-icono nombre="basura" [tamano]="16" /> Eliminar</button>
-              </div></td>
+              </div></td> }
             </tr>
           } @empty {
             <tr><td colspan="3" class="vacio">{{ texto() ? 'Nada coincide con la búsqueda.' : 'Todavía no hay registros.' }}</td></tr>
@@ -69,7 +68,6 @@ function sinTildes(s: string): string {
       <cv-modal [titulo]="(editando() ? 'Editar ' : 'Crear ') + info().singular" (cerrar)="abierto.set(false)">
         @if (errorModal()) { <div class="alerta">{{ errorModal() }}</div> }
         <form class="tarjeta" [formGroup]="form" (ngSubmit)="guardar()" novalidate>
-          <p class="ayuda">Los campos con <b class="req">*</b> son obligatorios.</p>
           <label for="cn">Nombre <b class="req">*</b></label>
           <input id="cn" formControlName="nombre" [attr.maxlength]="tipo() === 'idiomas' ? 60 : 100" />
           @if (err('nombre'); as m) { <small class="campo-error">{{ m }}</small> }
@@ -77,7 +75,6 @@ function sinTildes(s: string): string {
           <input id="cd" formControlName="detalle" [attr.maxlength]="tipo() === 'idiomas' ? 10 : tipo() === 'pueblos' ? 100 : 500"
             [placeholder]="tipo() === 'idiomas' ? 'Ej.: qu, ay, cni' : tipo() === 'pueblos' ? 'Ej.: Arawak' : ''" />
           @if (err('detalle', tipo() === 'idiomas' ? 'Usa solo letras y guiones, por ejemplo qu o es-PE.' : undefined); as m) { <small class="campo-error">{{ m }}</small> }
-          @if (tipo() === 'idiomas') { <small class="ayuda">Código corto de la lengua (ISO 639), por ejemplo qu para quechua.</small> }
           <div class="botones"><button class="btn" type="button" (click)="abierto.set(false)">Cancelar</button>
             <button class="btn btn-primario" type="submit" [disabled]="guardando()">Guardar</button></div>
         </form>
@@ -98,7 +95,8 @@ export class Catalogos implements OnInit {
 
   readonly tab = input<string>();
 
-  protected readonly tipos: TipoCatalogo[] = ['categorias', 'pueblos', 'idiomas'];
+  protected readonly esAdmin = inject(SesionService).rol() === 'ADMIN';
+  protected readonly tipos = signal<TipoCatalogo[]>(this.esAdmin ? ['categorias', 'pueblos', 'idiomas'] : ['categorias']);
   protected readonly infoDe = INFO;
   protected readonly tipo = signal<TipoCatalogo>('categorias');
   protected readonly info = computed(() => INFO[this.tipo()]);
@@ -137,7 +135,7 @@ export class Catalogos implements OnInit {
 
   ngOnInit(): void {
     const t = this.tab();
-    if (t === 'pueblos' || t === 'idiomas' || t === 'categorias') this.tipo.set(t);
+    if ((t === 'pueblos' || t === 'idiomas' || t === 'categorias') && this.tipos().includes(t)) this.tipo.set(t);
   }
 
   protected err(c: 'nombre' | 'detalle', formato?: string): string | null {
