@@ -76,3 +76,79 @@ export async function leerExcel(buffer: ArrayBuffer): Promise<string[][]> {
   }
   return filas.filter((f) => f.some((x) => x !== ''));
 }
+
+const TABLA_CRC = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+
+function crc32(datos: Uint8Array): number {
+  let c = 0xffffffff;
+  for (const b of datos) c = TABLA_CRC[(c ^ b) & 0xff] ^ (c >>> 8);
+  return (c ^ 0xffffffff) >>> 0;
+}
+
+function crearZip(archivos: [string, string][]): Blob {
+  const cod = new TextEncoder();
+  const partes: Uint8Array[] = [];
+  const central: Uint8Array[] = [];
+  let desplazamiento = 0;
+  for (const [nombre, texto] of archivos) {
+    const n = cod.encode(nombre);
+    const d = cod.encode(texto);
+    const crc = crc32(d);
+    const local = new DataView(new ArrayBuffer(30));
+    local.setUint32(0, FIRMA_LOCAL, true);
+    local.setUint16(4, 20, true);
+    local.setUint16(8, 0, true);
+    local.setUint32(14, crc, true);
+    local.setUint32(18, d.length, true);
+    local.setUint32(22, d.length, true);
+    local.setUint16(26, n.length, true);
+    partes.push(new Uint8Array(local.buffer), n, d);
+    const cab = new DataView(new ArrayBuffer(46));
+    cab.setUint32(0, FIRMA_CENTRAL, true);
+    cab.setUint16(4, 20, true);
+    cab.setUint16(6, 20, true);
+    cab.setUint32(16, crc, true);
+    cab.setUint32(20, d.length, true);
+    cab.setUint32(24, d.length, true);
+    cab.setUint16(28, n.length, true);
+    cab.setUint32(42, desplazamiento, true);
+    central.push(new Uint8Array(cab.buffer), n);
+    desplazamiento += 30 + n.length + d.length;
+  }
+  const tamCentral = central.reduce((s, p) => s + p.length, 0);
+  const fin = new DataView(new ArrayBuffer(22));
+  fin.setUint32(0, FIRMA_FIN, true);
+  fin.setUint16(8, archivos.length, true);
+  fin.setUint16(10, archivos.length, true);
+  fin.setUint32(12, tamCentral, true);
+  fin.setUint32(16, desplazamiento, true);
+  return new Blob([...partes, ...central, new Uint8Array(fin.buffer)] as BlobPart[], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  });
+}
+
+function escapar(t: string): string {
+  return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+export function crearExcel(filas: string[][]): Blob {
+  const letra = (i: number) => String.fromCharCode(65 + i);
+  const hoja = filas
+    .map((f, r) => `<row r="${r + 1}">${f.map((v, c) => `<c r="${letra(c)}${r + 1}" t="inlineStr"><is><t>${escapar(v)}</t></is></c>`).join('')}</row>`)
+    .join('');
+  return crearZip([
+    ['[Content_Types].xml', '<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>'],
+    ['_rels/.rels', '<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'],
+    ['xl/workbook.xml', '<?xml version="1.0" encoding="UTF-8"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Comunidades" sheetId="1" r:id="rId1"/></sheets></workbook>'],
+    ['xl/_rels/workbook.xml.rels', '<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>'],
+    ['xl/worksheets/sheet1.xml', `<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>${hoja}</sheetData></worksheet>`],
+  ]);
+}

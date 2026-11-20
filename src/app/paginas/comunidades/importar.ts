@@ -6,7 +6,8 @@ import { ComunidadApi } from '../../core/api/comunidad.api';
 import { ComunidadImportada, ResultadoImportacion } from '../../core/modelos';
 import { textoError } from '../../core/util/errores';
 import { Icono } from '../../shared/icono';
-import { leerExcel } from '../../core/util/excel';
+import { crearExcel, leerExcel } from '../../core/util/excel';
+import { forkJoin, take } from 'rxjs';
 
 const COLUMNAS = ['nombre', 'descripcion', 'categoria', 'idioma', 'pueblo', 'visibilidad'] as const;
 const MAX_FILAS = 200;
@@ -205,14 +206,17 @@ export class ImportarComunidades {
   }
 
   protected plantilla(): void {
-    const contenido =
-      'nombre;descripcion;categoria;idioma;pueblo;visibilidad\n' +
-      'Docentes de Matemática de Puno;Espacio para compartir estrategias de enseñanza;Educación;Quechua;Quechua;PUBLICA\n';
-    const url = URL.createObjectURL(new Blob(['﻿' + contenido], { type: 'text/csv;charset=utf-8' }));
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'plantilla-comunidades.csv';
-    a.click();
-    URL.revokeObjectURL(url);
+    forkJoin([this.categorias$.pipe(take(1)), this.idiomas$.pipe(take(1)), this.pueblos$.pipe(take(1))]).subscribe(([c, i, p]) => {
+      const blob = crearExcel([
+        ['nombre', 'descripcion', 'categoria', 'idioma', 'pueblo', 'visibilidad'],
+        ['Docentes de Matemática de Puno', 'Espacio para compartir estrategias de enseñanza', c[0]?.nombre ?? '', i[0]?.nombre ?? '', p[0]?.nombre ?? '', 'PUBLICA'],
+      ]);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'plantilla-comunidades.xlsx';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    });
   }
 }
