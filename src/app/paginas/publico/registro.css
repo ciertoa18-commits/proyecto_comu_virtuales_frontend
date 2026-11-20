@@ -2,7 +2,7 @@
 .rol { border: 2px solid #e2e2e2; border-radius: 14px; padding: .9rem; text-align: center; cursor: pointer; background: #fff; font: inherit; }
 .rol:hover { border-color: #b9c9ef; }
 .rol.sel { border-color: var(--primario); background: var(--azul-claro); }
-.rol .ico { font-size: 1.9rem; display: block; }
+.rol .ico { display: flex; justify-content: center; color: var(--coral); margin-bottom: .2rem; }
 .rol strong { display: block; margin-top: .3rem; }
 .rol small { color: #666; font-size: .76rem; }
 .par { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }

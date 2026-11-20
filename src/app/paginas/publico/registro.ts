@@ -6,6 +6,7 @@ import { CatalogoApi } from '../../core/api/catalogo.api';
 import { CuentaApi } from '../../core/api/cuenta.api';
 import { dominioCorreo, mensajeCorreo, PATRON_TELEFONO, patronCorreo, RespuestaCuenta } from '../../core/modelos';
 import { errorCampo, erroresPorCampo, textoError } from '../../core/util/errores';
+import { Icono } from '../../shared/icono';
 
 export function mismasClaves(a: string, b: string) {
   return (g: AbstractControl): ValidationErrors | null => {
@@ -17,7 +18,7 @@ export function mismasClaves(a: string, b: string) {
 
 @Component({
   selector: 'cv-registro',
-  imports: [ReactiveFormsModule, RouterLink, AsyncPipe],
+  imports: [ReactiveFormsModule, RouterLink, AsyncPipe, Icono],
   templateUrl: './registro.html',
   styleUrl: './registro.css',
 })
