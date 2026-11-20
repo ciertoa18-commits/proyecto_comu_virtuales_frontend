@@ -19,6 +19,8 @@ export class Login {
 
   protected readonly error = signal<string | null>(null);
   protected readonly enviando = signal(false);
+  protected readonly intentado = signal(false);
+  protected readonly correcto = signal<string | null>(null);
   protected readonly msgCorreo = 'Usa tu correo institucional (@perueduca.pe o @minedu.gob.pe).';
 
   protected readonly form = inject(FormBuilder).nonNullable.group({
@@ -32,6 +34,8 @@ export class Login {
 
   protected entrar(): void {
     this.error.set(null);
+    this.correcto.set(null);
+    this.intentado.set(true);
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -39,9 +43,10 @@ export class Login {
     const { correo, password } = this.form.getRawValue();
     this.enviando.set(true);
     this.sesion.ingresar(correo.trim().toLowerCase(), password).subscribe({
-      next: () => {
+      next: (s) => {
+        this.correcto.set(`Inicio de sesión correcto. Bienvenido(a), ${s.nombre.split(' ')[0]}.`);
         const v = this.volver();
-        void this.router.navigateByUrl(v && v.startsWith('/') && !v.startsWith('//') ? v : '/inicio');
+        setTimeout(() => void this.router.navigateByUrl(v && v.startsWith('/') && !v.startsWith('//') ? v : '/inicio'), 900);
       },
       error: (e) => {
         this.enviando.set(false);

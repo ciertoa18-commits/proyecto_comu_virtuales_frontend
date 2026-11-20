@@ -54,7 +54,8 @@ export interface DatosPerfil {
   especialidad: string | null;
   idIdiomaPref: number | null;
   telefono: string | null;
-  correoRecuperacion: string | null;
+  correoRecuperacion: string;
+  idiomas: number[];
 }
 export interface Persona {
   idUsuario: number;
@@ -84,6 +85,35 @@ export interface DatosNuevoUsuario {
   rol: Rol;
   especialidad: string | null;
   telefono: string | null;
+  correoRecuperacion: string;
+}
+export interface UsuarioDetalle {
+  idUsuario: number;
+  nombres: string;
+  apellidos: string;
+  correo: string;
+  correoRecuperacion: string | null;
+  rol: Rol;
+  estado: EstadoUsuario;
+  especialidad: string | null;
+  telefono: string | null;
+  idIdiomaPref: number | null;
+  idioma: string | null;
+  intentosFallidos: number | null;
+  bloqueadoHasta: string | null;
+  bloqueado: boolean;
+  fechaRegistro: string;
+  fechaActualizacion: string | null;
+}
+export interface DatosEdicionUsuario {
+  nombres: string;
+  apellidos: string;
+  correo: string;
+  rol: Rol;
+  especialidad: string | null;
+  telefono: string | null;
+  correoRecuperacion: string;
+  idIdiomaPref: number | null;
 }
 
 export interface Categoria { idCategoria: number; nombre: string; descripcion: string | null; }
@@ -134,6 +164,8 @@ export interface Miembro {
   rol: Rol;
   rolComunidad: 'MIEMBRO' | 'MODERADOR' | 'ADMINISTRADOR';
 }
+export interface ComunidadImportada { nombre: string; descripcion: string; categoria: string; idioma: string; pueblo: string; visibilidad: string; }
+export interface ResultadoImportacion { fila: number; nombre: string; ok: boolean; mensaje: string; }
 export interface Solicitud {
   idSolicitud: number;
   idComunidad: number;
@@ -225,6 +257,10 @@ export interface Evaluacion { idEvaluacion: number; idSeccion: number; idUnidad:
 export interface Nota { idNota: number; idMatricula: number; idEvaluacion: number; calificacion: number; comentarioDocente: string | null; }
 export interface Alumno { idUsuario: number; nombres: string; apellidos: string; }
 export interface FilaLibreta { matricula: Matricula; estudiante: Alumno; notas: Nota[]; promedio: number; }
+export interface Silabo { idSilabo: number; idSeccion: number; sumilla: string | null; competencias: string | null; contenidos: string | null; metodologia: string | null; evaluacion: string | null; bibliografia: string | null; idArchivo: number | null; idAutor: number; fechaActualizacion: string; }
+export interface DatosSilabo { sumilla: string | null; competencias: string | null; contenidos: string | null; metodologia: string | null; evaluacion: string | null; bibliografia: string | null; idArchivo: number | null; }
+export interface ResumenAsistencia { total: number; puntuales: number; tardanzas: number; faltas: number; justificadas: number; porcentaje: number; }
+export interface ResumenCurso { idSeccion: number; idMatricula: number | null; curso: string; codigo: string; grupo: string; docente: string; estadoSeccion: string | null; estadoMatricula: string | null; promedio: number | null; evaluaciones: number; notas: number; asistencia: ResumenAsistencia | null; recursos: number; alumnos: number; tieneSilabo: boolean; }
 export interface MiCurso { matricula: Matricula; curso: string; grupo: string; evaluaciones: Evaluacion[]; notas: Nota[]; promedio: number; }
 export interface FilaRanking { idUsuario: number; estudiante: Alumno; promedio: number; }
 export interface FilaRiesgo { matricula: Matricula; estudiante: Alumno; promedio: number; }

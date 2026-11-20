@@ -1,14 +1,14 @@
 <h1>Enviar aviso</h1>
-<p class="subtitulo-pagina">El aviso llega a la campana 🔔 de cada destinatario.</p>
+<p class="subtitulo-pagina">El aviso llega a las notificaciones de cada destinatario.</p>
 @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
-@if (exito()) { <div class="exito" role="status">✅ {{ exito() }}</div> }
+@if (exito()) { <div class="exito" role="status">{{ exito() }}</div> }
 
 <form class="tarjeta tarjeta-plana formulario" [formGroup]="form" (ngSubmit)="enviar()" novalidate>
   <h2>1. ¿A quién se lo envías?</h2>
   <div class="destinos" role="radiogroup" aria-label="Destinatarios">
     @for (o of opciones(); track o.valor) {
       <button type="button" class="destino" role="radio" [class.sel]="destino === o.valor" [attr.aria-checked]="destino === o.valor" (click)="elegir(o.valor)">
-        <span class="ico">{{ o.icono }}</span><span><strong>{{ o.titulo }}</strong><small>{{ o.detalle }}</small></span>
+        <span class="ico"><cv-icono [nombre]="o.icono" [tamano]="22" /></span><span><strong>{{ o.titulo }}</strong><small>{{ o.detalle }}</small></span>
       </button>
     }
   </div>
@@ -49,6 +49,6 @@
 
   <div class="botones">
     @if (destino) { <span class="apagado resumen">Se enviará a: <strong>{{ resumen() }}</strong></span> }
-    <button class="btn btn-primario" type="submit" [disabled]="enviando()">{{ enviando() ? 'Enviando...' : '📣 Enviar aviso' }}</button>
+    <button class="btn btn-primario" type="submit" [disabled]="enviando()">{{ enviando() ? 'Enviando...' : 'Enviar aviso' }}</button>
   </div>
 </form>

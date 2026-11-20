@@ -6,12 +6,13 @@ import { SesionService } from '../../core/sesion/sesion.service';
 import { PersonasService } from '../../core/util/personas.service';
 import { textoError } from '../../core/util/errores';
 import { iniciales } from '../../core/util/texto';
+import { Icono } from '../../shared/icono';
 
 interface Conversacion { con: number; ultimo: Mensaje; sinLeer: number; }
 
 @Component({
   selector: 'cv-mensajes',
-  imports: [DatePipe],
+  imports: [DatePipe, Icono],
   templateUrl: './mensajes.html',
   styleUrl: './mensajes.css',
 })
@@ -107,5 +108,19 @@ export class Mensajes implements OnInit {
         this.error.set(textoError(e));
       },
     });
+  }
+  protected nuevoDia(i: number): boolean {
+    const l = this.chat();
+    return i === 0 || new Date(l[i].fechaEnvio).toDateString() !== new Date(l[i - 1].fechaEnvio).toDateString();
+  }
+
+  protected etiquetaDia(fecha: string): string {
+    const d = new Date(fecha);
+    const hoy = new Date();
+    const ayer = new Date();
+    ayer.setDate(hoy.getDate() - 1);
+    if (d.toDateString() === hoy.toDateString()) return 'Hoy';
+    if (d.toDateString() === ayer.toDateString()) return 'Ayer';
+    return d.toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
   }
 }

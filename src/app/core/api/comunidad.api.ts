@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import {
-  Comentario, Comunidad, DatosComunidad, Evento, MiComunidad, Miembro, Pagina, Publicacion, Solicitud,
+  Comentario, Comunidad, ComunidadImportada, DatosComunidad, Evento, MiComunidad, Miembro, Pagina, Publicacion, ResultadoImportacion, Solicitud,
   VistaComentario, VistaPublicacion,
 } from '../modelos';
 import { params } from './parametros';
@@ -16,6 +16,9 @@ export class ComunidadApi {
     return this.http.get<Pagina<Comunidad>>(`${this.url}/comunidades`, {
       params: params({ q: f.q, categoria: f.categoria, idioma: f.idioma, page: f.page ?? 0, size: f.size ?? 12 }),
     });
+  }
+  importar(filas: ComunidadImportada[]) {
+    return this.http.post<ResultadoImportacion[]>(`${this.url}/comunidades/importar`, { filas });
   }
   recomendadas() {
     return this.http.get<Pagina<Comunidad>>(`${this.url}/comunidades/recomendadas`);
@@ -55,8 +58,8 @@ export class ComunidadApi {
     return this.http.delete<void>(`${this.url}/comunidades/${id}/miembros/${idUsuario}`);
   }
 
-  solicitudes(estado: string, page = 0) {
-    return this.http.get<Pagina<Solicitud>>(`${this.url}/solicitudes`, { params: { estado, page, size: 20 } });
+  solicitudes(estado: string, page = 0, q = '') {
+    return this.http.get<Pagina<Solicitud>>(`${this.url}/solicitudes`, { params: params({ estado, page, size: 10, q }) });
   }
   resolver(id: number, aprobar: boolean, motivo: string | null) {
     return this.http.put<Solicitud>(`${this.url}/solicitudes/${id}`, { aprobar, motivo });
