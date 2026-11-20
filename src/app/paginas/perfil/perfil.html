@@ -19,7 +19,7 @@
 
 <nav class="tabs">
   <button class="tab" [class.activa]="pestana() === 'datos'" (click)="pestana.set('datos')">Mis datos</button>
-  <button class="tab" [class.activa]="pestana() === 'seguridad'" (click)="pestana.set('seguridad')">Cambiar Contraseña</button>
+  <button class="tab" [class.activa]="pestana() === 'seguridad'" (click)="pestana.set('seguridad')">Modificar contraseña</button>
 </nav>
 
 @if (pestana() === 'datos') {
@@ -36,7 +36,6 @@
         <dl class="lectura">
           <div><dt>Nombres</dt><dd>{{ usuario()?.nombres }}</dd></div>
           <div><dt>Apellidos</dt><dd>{{ usuario()?.apellidos }}</dd></div>
-          <div><dt>Gmail personal</dt><dd>{{ usuario()?.correoRecuperacion ?? 'Sin registrar' }}</dd></div>
           <div><dt>Teléfono</dt><dd>{{ usuario()?.telefono ?? 'Sin registrar' }}</dd></div>
           @if (esDocente()) { <div><dt>Especialidad</dt><dd>{{ usuario()?.especialidad ?? 'Sin registrar' }}</dd></div> }
           <div><dt>Idioma preferido</dt><dd>{{ nombreIdioma()[usuario()?.idIdiomaPref ?? 0] ?? 'Sin preferencia' }}</dd></div>
@@ -48,7 +47,6 @@
         </dl>
       } @else {
         <form [formGroup]="formDatos" (ngSubmit)="guardar()" novalidate>
-          <p class="ayuda">Los campos con <b class="req">*</b> son obligatorios.</p>
           <div class="dos-columnas">
             <div><label for="n">Nombres <b class="req">*</b></label><input id="n" formControlName="nombres" />
               @if (errorCampo(formDatos.controls.nombres); as m) { <small class="campo-error">{{ m }}</small> }</div>
@@ -58,7 +56,6 @@
           <label for="cr">Gmail personal <b class="req">*</b></label>
           <input id="cr" type="email" placeholder="tucorreo@gmail.com" formControlName="correoRecuperacion" />
           @if (delServidor()['correoRecuperacion'] ?? errorCampo(formDatos.controls.correoRecuperacion, 'Escribe un correo válido, por ejemplo tucorreo@gmail.com'); as m) { <small class="campo-error">{{ m }}</small> }
-          @else { <small class="ayuda">Aquí te llegan los códigos para recuperar o cambiar tu contraseña.</small> }
           <label for="t">Teléfono (opcional)</label>
           <input id="t" type="tel" inputmode="numeric" maxlength="9" placeholder="987654321" formControlName="telefono" />
           @if (delServidor()['telefono'] ?? errorCampo(formDatos.controls.telefono, msgTelefono); as m) { <small class="campo-error">{{ m }}</small> }
@@ -68,7 +65,6 @@
             <option [ngValue]="null">Sin preferencia</option>
             @for (x of idiomas(); track x.idIdioma) { <option [ngValue]="x.idIdioma">{{ x.nombre }}</option> }
           </select>
-          <small class="ayuda">Te recomendamos comunidades en tu idioma.</small>
           <fieldset class="idiomas">
             <legend>Idiomas que hablo</legend>
             <div class="chips-sel">
@@ -94,11 +90,9 @@
       <ul class="filas-cuenta">
         <li><span class="ico-c"><cv-icono nombre="correo" /></span>
           <div><small>Correo institucional</small><strong>{{ usuario()?.correo }}</strong>
-            <span class="nota"><cv-icono nombre="candado" [tamano]="12" /> Asignado por la institución, no se puede cambiar</span></div></li>
+            <span class="nota"><cv-icono nombre="candado" [tamano]="12" /> No editable</span></div></li>
         <li><span class="ico-c"><cv-icono nombre="escudo" /></span>
           <div><small>Rol</small><strong><span class="badge-rol">{{ rol() }}</span></strong></div></li>
-        <li><span class="ico-c"><cv-icono nombre="check" /></span>
-          <div><small>Estado</small><strong><span class="pill" [class.inactivo]="usuario()?.estado !== 'ACTIVO'">{{ nombreEstado[usuario()?.estado ?? 'ACTIVO'] }}</span></strong></div></li>
         <li><span class="ico-c"><cv-icono nombre="calendario" /></span>
           <div><small>Miembro desde</small><strong>{{ usuario()?.fechaRegistro | date: 'longDate' }}</strong></div></li>
       </ul>
@@ -106,8 +100,8 @@
   </div>
 } @else {
   <form class="tarjeta tarjeta-plana angosta" [formGroup]="formClave" (ngSubmit)="cambiarClave()" novalidate>
-    <h2>Cambiar Contraseña</h2>
-    <p class="ayuda">Para confirmar el cambio te enviaremos un código de un solo uso a tu Gmail personal.</p>
+    <h2>Modificar contraseña</h2>
+    
     <label for="ca">Contraseña actual <b class="req">*</b></label><input id="ca" type="password" autocomplete="current-password" formControlName="actual" />
     @if (errorCampo(formClave.controls.actual); as m) { <small class="campo-error">{{ m }}</small> }
     <label for="cn">Nueva contraseña <b class="req">*</b></label><input id="cn" type="password" autocomplete="new-password" formControlName="nueva" />
@@ -116,7 +110,7 @@
     @if (formClave.errors?.['distintas'] && formClave.controls.confirmar.touched) { <small class="campo-error">Las contraseñas no coinciden.</small> }
 
     @if (destinoCodigo(); as destino) {
-      <div class="codigo-enviado"><cv-icono nombre="correo" [tamano]="16" /> Enviamos un código a <b>{{ destino }}</b>. Vence en 15 minutos.</div>
+      <div class="codigo-enviado"><cv-icono nombre="correo" [tamano]="16" /> Código enviado a <b>{{ destino }}</b></div>
       <label for="co">Código de 6 dígitos <b class="req">*</b></label>
       <input id="co" class="codigo" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000" formControlName="codigo" />
       @if (errorCampo(formClave.controls.codigo, 'Escribe los 6 dígitos del código.'); as m) { <small class="campo-error">{{ m }}</small> }
