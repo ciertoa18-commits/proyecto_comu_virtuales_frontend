@@ -19,13 +19,16 @@ export class CuentaApi {
   }
 
   yo() {
-    return this.http.get<{ usuario: Usuario; rol: string }>(`${this.url}/me`);
+    return this.http.get<{ usuario: Usuario; rol: string; idiomas: number[] }>(`${this.url}/me`);
   }
   guardarPerfil(d: DatosPerfil) {
     return this.http.put<Usuario>(`${this.url}/me`, d);
   }
-  cambiarPassword(actual: string, nueva: string) {
-    return this.http.put<void>(`${this.url}/me/password`, { actual, nueva });
+  pedirCodigoPassword() {
+    return this.http.post<{ destino: string }>(`${this.url}/me/password/codigo`, null);
+  }
+  cambiarPassword(actual: string, nueva: string, codigo: string) {
+    return this.http.put<void>(`${this.url}/me/password`, { actual, nueva, codigo });
   }
   cambiarFoto(archivo: File) {
     const f = new FormData();
