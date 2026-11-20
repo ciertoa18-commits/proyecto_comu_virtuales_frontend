@@ -18,7 +18,7 @@
       }
       <div class="pie">
         <label class="btn btn-chico"><cv-icono nombre="clip" [tamano]="16" /> {{ subiendo() ? 'Subiendo...' : 'Adjuntar' }}<input type="file" multiple hidden (change)="adjuntar($event)" /></label>
-        @if (moderada()) { <span class="apagado">Esta comunidad revisa las publicaciones antes de mostrarlas.</span> }
+        @if (moderada()) { <span class="apagado">Las publicaciones se revisan antes de mostrarse.</span> }
         <button class="btn btn-primario" type="submit" [disabled]="publicando() || subiendo()">{{ publicando() ? 'Publicando...' : 'Publicar' }}</button>
       </div>
     </div>

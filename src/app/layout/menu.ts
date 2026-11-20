@@ -37,10 +37,10 @@ export const MENU: { grupo: string; opciones: OpcionMenu[] }[] = [
       { texto: 'Usuarios', ruta: '/admin/usuarios', icono: 'birrete', accion: 'USUARIOS_GESTIONAR' },
       { texto: 'Recuperar cuenta', ruta: '/admin/recuperar-cuenta', icono: 'llave', accion: 'USUARIOS_GESTIONAR' },
       { texto: 'Solicitudes', ruta: '/admin/solicitudes', icono: 'bandeja', accion: 'SOLICITUDES_RESOLVER' },
-      { texto: 'Catálogos', ruta: '/admin/catalogos', icono: 'etiqueta', accion: 'CATEGORIA_CREAR' },
       { texto: 'Reportes', ruta: '/admin/reportes', icono: 'grafico', accion: 'REPORTES_VER' },
       { texto: 'Permisos de notas', ruta: '/admin/permisos-notas', icono: 'escudo', accion: 'USUARIOS_GESTIONAR' },
     ],
   },
+  { grupo: 'Gestión', opciones: [{ texto: 'Catálogos', ruta: '/admin/catalogos', icono: 'etiqueta', accion: 'CATEGORIA_CREAR' }] },
   { grupo: 'Cuenta', opciones: [{ texto: 'Mi perfil', ruta: '/perfil', icono: 'usuario' }] },
 ];

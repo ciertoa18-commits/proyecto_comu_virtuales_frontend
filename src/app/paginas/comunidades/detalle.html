@@ -56,13 +56,13 @@
     <div class="bloque bloqueado">
       <div class="grande-ico"><cv-icono nombre="candado" [tamano]="48" /></div>
       <h2>Únete para ver el contenido</h2>
-      <p class="apagado">El muro, los cursos y los eventos son solo para los miembros de la comunidad.</p>
+      <p class="apagado">Contenido solo para miembros.</p>
     </div>
   }
 
   @if (modalSolicitud()) {
     <cv-modal titulo="Solicitar ingreso" (cerrar)="modalSolicitud.set(false)">
-      <p class="apagado">Esta comunidad es privada. Cuéntale al administrador por qué quieres unirte (opcional).</p>
+      <p class="apagado">Comunidad privada. Mensaje para el administrador (opcional).</p>
       <div class="tarjeta">
         <label for="mensaje-solicitud" class="sr-only">Mensaje para el administrador</label>
         <textarea id="mensaje-solicitud" #msg maxlength="500" placeholder="Ej.: Soy docente de Matemática en Puno..."></textarea>

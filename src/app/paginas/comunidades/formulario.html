@@ -1,7 +1,6 @@
 <a class="volver" [routerLink]="id() ? ['/comunidades', id()] : ['/comunidades']"><cv-icono nombre="atras" [tamano]="16" /> Volver</a>
 <h1>{{ id() ? 'Editar comunidad' : 'Crear comunidad' }}</h1>
-<p class="subtitulo-pagina">Completa la información de la comunidad.</p>
-@if (!id()) { <p class="apagado">¿Necesitas crear varias a la vez? <a routerLink="/comunidades/importar">Importar comunidades desde un archivo CSV</a></p> }
+@if (!id()) { <p class="apagado"><a routerLink="/comunidades/importar">Importar varias desde Excel</a></p> }
 
 @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
 
@@ -76,7 +75,7 @@
     <div class="caja">
       <h4>Moderación</h4>
       <label class="radio"><input type="checkbox" formControlName="moderacionPrevia" />
-        <span><b>Revisar publicaciones</b><small>Un moderador aprueba cada publicación antes de mostrarla.</small></span></label>
+        <span><b>Revisar publicaciones</b><small>Se aprueban antes de mostrarse.</small></span></label>
     </div>
   </div>
 
