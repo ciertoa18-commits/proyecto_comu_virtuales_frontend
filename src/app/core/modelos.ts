@@ -54,7 +54,8 @@ export interface DatosPerfil {
   especialidad: string | null;
   idIdiomaPref: number | null;
   telefono: string | null;
-  correoRecuperacion: string | null;
+  correoRecuperacion: string;
+  idiomas: number[];
 }
 export interface Persona {
   idUsuario: number;

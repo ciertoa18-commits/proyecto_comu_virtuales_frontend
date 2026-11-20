@@ -130,7 +130,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, .btn:focus-vi
 .btn-login:hover { background: var(--coral-osc); }
 .btn-login:disabled { opacity: .6; cursor: not-allowed; }
 .auth-pie { margin-top: 1.6rem; font-size: .9rem; color: #333; text-align: center; }
-.auth-ilustracion { font-size: 3.6rem; text-align: center; margin: .3rem 0 1rem; }
+.auth-ilustracion { display: flex; justify-content: center; color: var(--coral); margin: .3rem 0 1rem; }
 .campo input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #fff inset; -webkit-text-fill-color: #1c1c1c; }
 .btn-login.enlace { display: block; text-align: center; text-decoration: none; margin-top: 1.2rem; }
 .link { background: none; border: 0; padding: 0; color: var(--azul-link); font: inherit; font-weight: 600; cursor: pointer; }
