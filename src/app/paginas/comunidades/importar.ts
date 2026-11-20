@@ -69,7 +69,7 @@ export function filasAComunidades(filas: string[][]): ComunidadImportada[] {
   template: `
     <a class="volver" routerLink="/comunidades"><cv-icono nombre="atras" [tamano]="16" /> Volver</a>
     <h1>Importar comunidades</h1>
-    <p class="subtitulo-pagina">Sube un archivo Excel (.xlsx) o CSV.</p>
+    <p class="subtitulo-pagina">Excel (.xlsx) o CSV.</p>
     @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
 
     <section class="tarjeta tarjeta-plana pasos">
