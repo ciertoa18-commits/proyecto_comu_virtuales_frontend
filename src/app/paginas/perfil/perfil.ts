@@ -28,7 +28,7 @@ export class Perfil implements OnInit {
 
   protected readonly usuario = signal<Usuario | null>(null);
   protected readonly misIdiomas = signal<number[]>([]);
-  protected readonly seleccion = signal(new Set<number>());
+  protected readonly orden = signal<number[]>([]);
   protected readonly pestana = signal<'datos' | 'seguridad'>('datos');
   protected readonly editando = signal(false);
   protected readonly error = signal<string | null>(null);
@@ -45,6 +45,11 @@ export class Perfil implements OnInit {
   protected readonly iniciales = computed(() => iniciales(this.usuario() ? `${this.usuario()!.nombres} ${this.usuario()!.apellidos}` : ''));
   protected readonly rol = computed(() => NOMBRE_ROL[this.sesion.rol() ?? 'ESTUDIANTE'].toUpperCase());
   protected readonly esDocente = computed(() => this.sesion.rol() === 'DOCENTE');
+  protected readonly idiomasOrdenados = computed(() => {
+    const pref = this.usuario()?.idIdiomaPref;
+    const lista = this.misIdiomas();
+    return pref && lista.includes(pref) ? [pref, ...lista.filter((x) => x !== pref)] : pref ? [pref, ...lista] : lista;
+  });
   protected readonly nombreIdioma = computed(() => Object.fromEntries(this.idiomas().map((i) => [i.idIdioma, i.nombre])) as Record<number, string>);
 
   protected readonly formDatos = this.fb.group({
@@ -53,7 +58,6 @@ export class Perfil implements OnInit {
     especialidad: [null as string | null, Validators.maxLength(100)],
     telefono: [null as string | null, Validators.pattern(PATRON_TELEFONO)],
     correoRecuperacion: [null as string | null, [Validators.required, Validators.email, Validators.maxLength(150)]],
-    idIdiomaPref: [null as number | null],
   });
   protected readonly formClave = this.fb.nonNullable.group(
     {
@@ -91,9 +95,8 @@ export class Perfil implements OnInit {
       especialidad: u.especialidad,
       telefono: u.telefono,
       correoRecuperacion: u.correoRecuperacion,
-      idIdiomaPref: u.idIdiomaPref,
     });
-    this.seleccion.set(new Set(this.misIdiomas()));
+    this.orden.set(this.idiomasOrdenados());
     this.editando.set(true);
   }
 
@@ -103,19 +106,18 @@ export class Perfil implements OnInit {
   }
 
   protected alternarIdioma(id: number): void {
-    this.seleccion.update((s) => {
-      const n = new Set(s);
-      if (n.has(id)) n.delete(id);
-      else n.add(id);
-      return n;
-    });
+    this.orden.update((l) => (l.includes(id) ? l.filter((x) => x !== id) : [...l, id]));
+  }
+
+  protected hacerPrincipal(id: number): void {
+    this.orden.update((l) => [id, ...l.filter((x) => x !== id)]);
   }
 
   protected guardar(): void {
     this.limpiar();
     if (this.formDatos.invalid) return this.formDatos.markAllAsTouched();
     const v = this.formDatos.getRawValue();
-    const idiomas = [...this.seleccion()];
+    const idiomas = [...this.orden()];
     this.cuenta
       .guardarPerfil({
         nombres: v.nombres!.trim(),
@@ -123,7 +125,7 @@ export class Perfil implements OnInit {
         especialidad: v.especialidad?.trim() || null,
         telefono: v.telefono?.trim() || null,
         correoRecuperacion: v.correoRecuperacion!.trim().toLowerCase(),
-        idIdiomaPref: v.idIdiomaPref,
+        idIdiomaPref: idiomas[0] ?? null,
         idiomas,
       })
       .subscribe({

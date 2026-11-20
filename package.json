@@ -6,7 +6,8 @@
     "start": "ng serve -o --port 4201",
     "start:4201": "ng serve -o --port 4201",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development"
+    "watch": "ng build --watch --configuration development",
+    "e2e": "playwright test --config=e2e/playwright.config.ts"
   },
   "private": true,
   "packageManager": "npm@10.9.7",
@@ -26,6 +27,7 @@
     "@angular/build": "^22.2.1",
     "@angular/cli": "^22.2.1",
     "@angular/compiler-cli": "^22.2.0",
+    "@playwright/test": "^1.65.1",
     "prettier": "^3.8.1",
     "typescript": "~6.0.2"
   }
