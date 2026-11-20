@@ -84,6 +84,35 @@ export interface DatosNuevoUsuario {
   rol: Rol;
   especialidad: string | null;
   telefono: string | null;
+  correoRecuperacion: string;
+}
+export interface UsuarioDetalle {
+  idUsuario: number;
+  nombres: string;
+  apellidos: string;
+  correo: string;
+  correoRecuperacion: string | null;
+  rol: Rol;
+  estado: EstadoUsuario;
+  especialidad: string | null;
+  telefono: string | null;
+  idIdiomaPref: number | null;
+  idioma: string | null;
+  intentosFallidos: number | null;
+  bloqueadoHasta: string | null;
+  bloqueado: boolean;
+  fechaRegistro: string;
+  fechaActualizacion: string | null;
+}
+export interface DatosEdicionUsuario {
+  nombres: string;
+  apellidos: string;
+  correo: string;
+  rol: Rol;
+  especialidad: string | null;
+  telefono: string | null;
+  correoRecuperacion: string;
+  idIdiomaPref: number | null;
 }
 
 export interface Categoria { idCategoria: number; nombre: string; descripcion: string | null; }
