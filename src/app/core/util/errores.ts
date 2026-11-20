@@ -4,13 +4,15 @@ import { ErrorApi } from '../modelos';
 
 export function textoError(e: unknown): string {
   if (!(e instanceof HttpErrorResponse)) return 'Ocurrió un error inesperado.';
-  if (e.status === 0) return 'No hay conexión con el servidor. Revisa que el backend esté encendido (puerto 8081).';
+  if (e.status === 0 || e.status === 502 || e.status === 503 || e.status === 504) return 'No se pudo conectar con el servidor. Intenta de nuevo en unos segundos.';
   const cuerpo = e.error as ErrorApi | null;
   if (cuerpo?.mensaje) return cuerpo.mensaje;
+  if (e.status === 401) return 'Tu sesión terminó. Vuelve a iniciar sesión.';
   if (e.status === 403) return 'No tienes permiso para hacer esto.';
   if (e.status === 404) return 'No se encontró lo que buscas.';
   if (e.status === 413) return 'El archivo es demasiado grande.';
-  return `Error ${e.status}.`;
+  if (e.status >= 500) return 'Ocurrió un problema en el servidor. Intenta de nuevo.';
+  return 'No se pudo completar la acción.';
 }
 
 export function erroresPorCampo(e: unknown): Record<string, string> {
