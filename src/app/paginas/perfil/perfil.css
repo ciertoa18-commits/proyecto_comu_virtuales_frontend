@@ -33,7 +33,6 @@
 .filas-cuenta small { display: block; color: #888; font-size: .74rem; text-transform: uppercase; letter-spacing: .04em; }
 .filas-cuenta strong { overflow-wrap: anywhere; }
 .ico-c { width: 38px; height: 38px; border-radius: 10px; background: var(--coral-claro); color: var(--coral-osc); display: flex; align-items: center; justify-content: center; flex: none; }
-.nota { display: flex; align-items: center; gap: .25rem; color: #999; font-size: .74rem; margin-top: .15rem; }
 .badge-rol { background: #333; color: #fff; border-radius: 6px; padding: .1rem .5rem; font-size: .75rem; letter-spacing: .05em; }
 .codigo-enviado { display: flex; align-items: center; gap: .4rem; background: #eef7ee; color: #2e6b30; border-radius: 8px; padding: .6rem .8rem; margin: 1rem 0 .3rem; font-size: .88rem; }
 .codigo { letter-spacing: .5em; font-size: 1.2rem; text-align: center; max-width: 220px; }
