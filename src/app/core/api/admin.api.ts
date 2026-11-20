@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { DatosNuevoUsuario, EstadoUsuario, Pagina, ReporteDocente, ReporteIdioma, Rol, UsuarioResumen } from '../modelos';
+import { DatosEdicionUsuario, DatosNuevoUsuario, EstadoUsuario, Pagina, ReporteDocente, ReporteIdioma, Rol, UsuarioDetalle, UsuarioResumen } from '../modelos';
 import { params } from './parametros';
 
 @Injectable({ providedIn: 'root' })
@@ -16,6 +16,15 @@ export class AdminApi {
   }
   crearUsuario(d: DatosNuevoUsuario) {
     return this.http.post<UsuarioResumen>(`${this.url}/admin/usuarios`, d);
+  }
+  detalle(id: number) {
+    return this.http.get<UsuarioDetalle>(`${this.url}/admin/usuarios/${id}`);
+  }
+  editar(id: number, d: DatosEdicionUsuario) {
+    return this.http.put<UsuarioDetalle>(`${this.url}/admin/usuarios/${id}`, d);
+  }
+  desbloquear(id: number) {
+    return this.http.put<UsuarioDetalle>(`${this.url}/admin/usuarios/${id}/desbloquear`, null);
   }
   aprobar(id: number) {
     return this.http.put<UsuarioResumen>(`${this.url}/admin/usuarios/${id}/aprobar`, null);

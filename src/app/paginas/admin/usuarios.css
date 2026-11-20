@@ -6,3 +6,11 @@
 .persona { display: flex; align-items: center; gap: 10px; }
 .persona small { display: block; color: #888; }
 .av { width: 34px; height: 34px; border-radius: 50%; background: #e0e0e0; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .72rem; color: #555; flex: none; }
+.acciones .btn, .cabecera .btn { display: inline-flex; align-items: center; gap: .3rem; }
+.ficha-cab { display: flex; align-items: center; gap: .8rem; margin-bottom: 1rem; }
+.ficha-cab strong { display: block; font-size: 1.05rem; }
+.ficha-cab small { color: #777; }
+.av.grande { width: 52px; height: 52px; font-size: 1rem; background: var(--coral-claro); color: var(--coral-osc); }
+.ficha dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .7rem 1.2rem; margin: 0 0 1rem; }
+.ficha dt { font-size: .75rem; color: #888; text-transform: uppercase; letter-spacing: .03em; }
+.ficha dd { margin: .15rem 0 0; font-weight: 600; word-break: break-word; }
