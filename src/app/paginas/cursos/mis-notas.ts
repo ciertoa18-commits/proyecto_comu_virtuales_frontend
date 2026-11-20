@@ -11,7 +11,7 @@ import { DialogoService } from '../../shared/dialogo';
   imports: [DecimalPipe, RouterLink],
   template: `
     <h1>Mis notas</h1>
-    <p class="subtitulo-pagina">Escala vigesimal (0 a 20). Apruebas con {{ aprobatoria }}.</p>
+    <p class="subtitulo-pagina">Apruebas con {{ aprobatoria }}.</p>
     @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
     @if (exito()) { <div class="exito" role="status">{{ exito() }}</div> }
     @for (c of cursos(); track c.matricula.idMatricula) {
