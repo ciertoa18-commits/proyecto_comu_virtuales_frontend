@@ -1,11 +1,11 @@
-<h1>Mensajes</h1>
+<h1 class="sr-only">Mensajes</h1>
 @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
 
 <div class="caja-chat">
   <aside class="bandeja">
     <div class="nuevo">
       <label for="buscar-contacto" class="sr-only">Buscar contacto</label>
-      <input id="buscar-contacto" #busca type="search" autocomplete="off" placeholder="🔍 Escribir a..." (focus)="mostrarContactos.set(true)" (input)="filtro.set(busca.value)" />
+      <input id="buscar-contacto" #busca type="search" autocomplete="off" placeholder="Escribir a..." (focus)="mostrarContactos.set(true)" (input)="filtro.set(busca.value)" />
       @if (mostrarContactos() && resultados().length) {
         <div class="resultados">
           @for (p of resultados(); track p.idUsuario) { <button type="button" (click)="nueva(p, busca)">{{ p.nombres }} {{ p.apellidos }}<small>{{ rolDe(p.rol) }}</small></button> }
@@ -27,12 +27,13 @@
     @if (con(); as otro) {
       <header><span class="av">{{ iniciales(personas.nombre(otro)) }}</span><strong>{{ personas.nombre(otro) }}</strong></header>
       <div class="burbujas">
-        @for (m of chat(); track m.idMensaje) {
+        @for (m of chat(); track m.idMensaje; let i = $index) {
+          @if (nuevoDia(i)) { <div class="dia"><span>{{ etiquetaDia(m.fechaEnvio) }}</span></div> }
           <div class="burbuja" [class.mia]="m.idEmisor === sesion.sesion()?.idUsuario">
-            <p>{{ m.contenido }}</p><small>{{ m.fechaEnvio | date: 'dd/MM HH:mm' }}</small>
+            <p>{{ m.contenido }}</p><small>{{ m.fechaEnvio | date: 'HH:mm' }}</small>
           </div>
         } @empty {
-          <p class="vacio">Escribe el primer mensaje 👋</p>
+          <p class="vacio">Escribe el primer mensaje</p>
         }
         <div #fin></div>
       </div>
@@ -42,7 +43,7 @@
         <button class="btn btn-primario" type="button" [disabled]="enviando()" (click)="enviar(txt)">Enviar</button>
       </footer>
     } @else {
-      <div class="vacio centro">💬<br />Elige una conversación</div>
+      <div class="vacio centro"><cv-icono nombre="mensaje" [tamano]="40" /><br />Elige una conversación</div>
     }
   </section>
 </div>
