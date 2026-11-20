@@ -10,6 +10,7 @@ import { aFechaJava, aInputFecha, LIMITE_ARCHIVO } from '../../core/util/texto';
 import { BotonDescarga } from '../../shared/boton-descarga';
 import { Modal } from '../../shared/modal';
 import { Icono, NombreIcono } from '../../shared/icono';
+import { DialogoService } from '../../shared/dialogo';
 
 interface Bloque { unidad: Unidad; sesiones: Sesion[]; recursos: Recurso[]; }
 
@@ -22,6 +23,7 @@ export const ICONO_RECURSO: Record<TipoRecurso, NombreIcono> = { DOCUMENTO: 'arc
   styleUrl: './tab-contenido.css',
 })
 export class TabContenido implements OnInit {
+  private readonly dialogo = inject(DialogoService);
   private readonly api = inject(AcademicoApi);
   private readonly catalogo = inject(CatalogoApi);
   private readonly fb = inject(FormBuilder);
@@ -130,8 +132,8 @@ export class TabContenido implements OnInit {
       error: (e) => this.errorModal.set(textoError(e)),
     });
   }
-  protected eliminarUnidad(u: Unidad): void {
-    if (!confirm(`¿Eliminar la unidad "${u.nombre}" y su contenido?`)) return;
+  protected async eliminarUnidad(u: Unidad): Promise<void> {
+    if (!(await this.dialogo.confirmar(`¿Eliminar la unidad "${u.nombre}" y su contenido?`, { titulo: 'Eliminar unidad', aceptar: 'Eliminar', peligro: true }))) return;
     this.api.eliminarUnidad(u.idUnidad).subscribe({ next: () => this.hecho('Unidad eliminada.'), error: (e) => this.error.set(textoError(e)) });
   }
 
@@ -219,8 +221,8 @@ export class TabContenido implements OnInit {
         error: (e) => this.errorModal.set(textoError(e)),
       });
   }
-  protected eliminarRecurso(r: Recurso): void {
-    if (!confirm(`¿Eliminar "${r.titulo}"?`)) return;
+  protected async eliminarRecurso(r: Recurso): Promise<void> {
+    if (!(await this.dialogo.confirmar(`¿Eliminar "${r.titulo}"?`, { titulo: 'Eliminar recurso', aceptar: 'Eliminar', peligro: true }))) return;
     this.api.eliminarRecurso(r.idRecurso).subscribe({ next: () => this.hecho('Recurso eliminado.'), error: (e) => this.error.set(textoError(e)) });
   }
 

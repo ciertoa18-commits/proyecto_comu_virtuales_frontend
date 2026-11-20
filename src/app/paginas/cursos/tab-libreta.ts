@@ -9,6 +9,7 @@ import { Modal } from '../../shared/modal';
 import { SesionService } from '../../core/sesion/sesion.service';
 import { textoError } from '../../core/util/errores';
 import { Icono } from '../../shared/icono';
+import { DialogoService } from '../../shared/dialogo';
 
 @Component({
   selector: 'cv-tab-libreta',
@@ -17,6 +18,7 @@ import { Icono } from '../../shared/icono';
   styleUrl: './tab-libreta.css',
 })
 export class TabLibreta implements OnInit {
+  private readonly dialogo = inject(DialogoService);
   private readonly api = inject(AcademicoApi);
   private readonly comunicacion = inject(ComunicacionApi);
   private readonly destroyRef = inject(DestroyRef);
@@ -118,13 +120,13 @@ export class TabLibreta implements OnInit {
     });
   }
 
-  protected retirar(f: FilaLibreta): void {
-    if (!confirm(`¿Retirar a ${f.estudiante.nombres} ${f.estudiante.apellidos} de la sección?`)) return;
+  protected async retirar(f: FilaLibreta): Promise<void> {
+    if (!(await this.dialogo.confirmar(`¿Retirar a ${f.estudiante.nombres} ${f.estudiante.apellidos} de la sección?`, { titulo: 'Retirar estudiante', aceptar: 'Retirar', peligro: true }))) return;
     this.api.retirar(f.matricula.idMatricula).subscribe({ next: () => this.cargar(), error: (e) => this.error.set(textoError(e)) });
   }
 
-  protected cerrar(): void {
-    if (!confirm('Al cerrar la sección se calcula la nota final de cada estudiante (aprobado/desaprobado) y ya no se podrá editar. ¿Continuar?')) return;
+  protected async cerrar(): Promise<void> {
+    if (!(await this.dialogo.confirmar('Al cerrar la sección se calcula la nota final de cada estudiante (aprobado/desaprobado) y ya no se podrá editar. ¿Continuar?', { titulo: 'Cerrar sección', aceptar: 'Cerrar sección', peligro: true }))) return;
     this.api.cerrarSeccion(this.seccion().idSeccion).subscribe({
       next: () => {
         this.exito.set('Sección cerrada. Las notas finales quedaron registradas.');

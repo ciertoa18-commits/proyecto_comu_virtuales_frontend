@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { AcademicoApi } from '../../core/api/academico.api';
 import { Evaluacion, MiCurso, NOTA_APROBATORIA } from '../../core/modelos';
 import { textoError } from '../../core/util/errores';
+import { DialogoService } from '../../shared/dialogo';
 
 @Component({
   selector: 'cv-mis-notas',
@@ -54,6 +55,7 @@ import { textoError } from '../../core/util/errores';
   `,
 })
 export class MisNotas implements OnInit {
+  private readonly dialogo = inject(DialogoService);
   private readonly api = inject(AcademicoApi);
   protected readonly aprobatoria = NOTA_APROBATORIA;
   protected readonly cursos = signal<MiCurso[]>([]);
@@ -82,8 +84,8 @@ export class MisNotas implements OnInit {
     return c.notas.find((n) => n.idEvaluacion === e.idEvaluacion) ?? null;
   }
 
-  protected retirarme(c: MiCurso): void {
-    if (!confirm(`¿Seguro que quieres retirarte de ${c.curso}?`)) return;
+  protected async retirarme(c: MiCurso): Promise<void> {
+    if (!(await this.dialogo.confirmar(`¿Seguro que quieres retirarte de ${c.curso}?`, { titulo: 'Retirarme del curso', aceptar: 'Retirarme', peligro: true }))) return;
     this.api.retirar(c.matricula.idMatricula).subscribe({
       next: () => {
         this.exito.set('Te retiraste del curso.');

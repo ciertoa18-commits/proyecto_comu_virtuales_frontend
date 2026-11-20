@@ -12,6 +12,7 @@ import { iniciales } from '../../core/util/texto';
 import { Icono } from '../../shared/icono';
 import { Modal } from '../../shared/modal';
 import { Paginador } from '../../shared/paginador';
+import { DialogoService } from '../../shared/dialogo';
 
 @Component({
   selector: 'cv-usuarios',
@@ -20,6 +21,7 @@ import { Paginador } from '../../shared/paginador';
   styleUrl: './usuarios.css',
 })
 export class Usuarios implements OnInit {
+  private readonly dialogo = inject(DialogoService);
   private readonly api = inject(AdminApi);
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
@@ -139,9 +141,9 @@ export class Usuarios implements OnInit {
     this.api.aprobar(u.idUsuario).subscribe({ next: () => this.listo(`Se aprobó a ${u.nombres} ${u.apellidos}. Ya puede ingresar.`), error: (e) => this.error.set(textoError(e)) });
   }
 
-  protected estadoNuevo(u: UsuarioResumen, estado: EstadoUsuario): void {
+  protected async estadoNuevo(u: UsuarioResumen, estado: EstadoUsuario): Promise<void> {
     const accion = u.estado === 'PENDIENTE' ? 'rechazar la solicitud de' : estado === 'INACTIVO' ? 'desactivar a' : 'activar a';
-    if (!confirm(`¿Seguro que quieres ${accion} ${u.nombres} ${u.apellidos}?`)) return;
+    if (!(await this.dialogo.confirmar(`¿Seguro que quieres ${accion} ${u.nombres} ${u.apellidos}?`, { titulo: estado === 'INACTIVO' ? (u.estado === 'PENDIENTE' ? 'Rechazar solicitud' : 'Desactivar cuenta') : 'Activar cuenta', aceptar: estado === 'INACTIVO' ? (u.estado === 'PENDIENTE' ? 'Rechazar' : 'Desactivar') : 'Activar', peligro: estado === 'INACTIVO' }))) return;
     this.api.cambiarEstado(u.idUsuario, estado).subscribe({
       next: () => this.listo(estado === 'ACTIVO' ? 'Cuenta activada.' : u.estado === 'PENDIENTE' ? 'Solicitud rechazada.' : 'Cuenta desactivada.'),
       error: (e) => this.error.set(textoError(e)),

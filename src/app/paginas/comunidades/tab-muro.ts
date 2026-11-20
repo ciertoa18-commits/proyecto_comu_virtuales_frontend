@@ -11,6 +11,7 @@ import { iniciales, LIMITE_ARCHIVO } from '../../core/util/texto';
 import { BotonDescarga } from '../../shared/boton-descarga';
 import { Paginador } from '../../shared/paginador';
 import { Icono } from '../../shared/icono';
+import { DialogoService } from '../../shared/dialogo';
 
 @Component({
   selector: 'cv-tab-muro',
@@ -19,6 +20,7 @@ import { Icono } from '../../shared/icono';
   styleUrl: './tab-muro.css',
 })
 export class TabMuro implements OnInit {
+  private readonly dialogo = inject(DialogoService);
   private readonly api = inject(ComunidadApi);
   private readonly catalogo = inject(CatalogoApi);
   protected readonly sesion = inject(SesionService);
@@ -123,8 +125,8 @@ export class TabMuro implements OnInit {
     });
   }
 
-  protected eliminar(v: VistaPublicacion): void {
-    if (!confirm('¿Eliminar esta publicación?')) return;
+  protected async eliminar(v: VistaPublicacion): Promise<void> {
+    if (!(await this.dialogo.confirmar('¿Eliminar esta publicación?', { titulo: 'Eliminar publicación', aceptar: 'Eliminar', peligro: true }))) return;
     this.api.eliminarPublicacion(v.publicacion.idPublicacion).subscribe({
       next: () => this.cargar(this.pagina()),
       error: (e) => this.error.set(textoError(e)),

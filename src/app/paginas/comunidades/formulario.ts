@@ -11,6 +11,7 @@ import { LIMITE_FOTO } from '../../core/util/texto';
 import { Icono } from '../../shared/icono';
 import { ImagenArchivo } from '../../shared/imagen-archivo';
 import { NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
+import { DialogoService } from '../../shared/dialogo';
 
 export const OTRA_CATEGORIA = -1;
 
@@ -25,6 +26,7 @@ function sinTildes(s: string): string {
   styleUrl: './formulario.css',
 })
 export class FormularioComunidad implements OnInit {
+  private readonly dialogo = inject(DialogoService);
   private readonly api = inject(ComunidadApi);
   private readonly catalogo = inject(CatalogoApi);
   private readonly router = inject(Router);
@@ -163,9 +165,9 @@ export class FormularioComunidad implements OnInit {
       });
   }
 
-  protected eliminar(): void {
+  protected async eliminar(): Promise<void> {
     const id = this.id();
-    if (!id || !confirm('¿Eliminar esta comunidad? Sus miembros ya no podrán verla.')) return;
+    if (!id || !(await this.dialogo.confirmar('¿Eliminar esta comunidad? Sus miembros ya no podrán verla.', { titulo: 'Eliminar comunidad', aceptar: 'Eliminar', peligro: true }))) return;
     this.api.eliminar(+id).subscribe({
       next: () => void this.router.navigate(['/comunidades']),
       error: (e) => this.error.set(textoError(e)),

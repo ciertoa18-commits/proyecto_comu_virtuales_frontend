@@ -8,6 +8,7 @@ import { DestinoAviso, NOMBRE_ROL, SeccionResumen, UsuarioResumen } from '../../
 import { SesionService } from '../../core/sesion/sesion.service';
 import { errorCampo, textoError } from '../../core/util/errores';
 import { Icono, NombreIcono } from '../../shared/icono';
+import { DialogoService } from '../../shared/dialogo';
 
 interface Opcion { valor: DestinoAviso; icono: NombreIcono; titulo: string; detalle: string; soloAdmin: boolean; }
 
@@ -18,6 +19,7 @@ interface Opcion { valor: DestinoAviso; icono: NombreIcono; titulo: string; deta
   styleUrl: './enviar-aviso.css',
 })
 export class EnviarAviso implements OnInit {
+  private readonly dialogo = inject(DialogoService);
   private readonly api = inject(ComunicacionApi);
   private readonly academico = inject(AcademicoApi);
   private readonly sesion = inject(SesionService);
@@ -96,14 +98,14 @@ export class EnviarAviso implements OnInit {
     }
   }
 
-  protected enviar(): void {
+  protected async enviar(): Promise<void> {
     this.error.set(null);
     this.exito.set(null);
     if (!this.destino) return this.error.set('Elige a quién enviar el aviso.');
     if (this.form.invalid) return this.form.markAllAsTouched();
     if (this.destino === 'SECCION' && !this.idSeccion()) return this.error.set('Elige la sección.');
     if (this.destino === 'USUARIO' && !this.persona()) return this.error.set('Busca y elige a la persona.');
-    if (['TODOS', 'DOCENTES', 'ESTUDIANTES'].includes(this.destino) && !confirm(`Se enviará a ${this.resumen()}. ¿Continuar?`)) return;
+    if (['TODOS', 'DOCENTES', 'ESTUDIANTES'].includes(this.destino) && !(await this.dialogo.confirmar(`Se enviará a ${this.resumen()}. ¿Continuar?`, { titulo: 'Enviar aviso', aceptar: 'Enviar' }))) return;
 
     const v = this.form.getRawValue();
     this.enviando.set(true);

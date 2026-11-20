@@ -13,6 +13,7 @@ import { TabEventos } from './tab-eventos';
 import { TabMiembros } from './tab-miembros';
 import { TabMuro } from './tab-muro';
 import { Icono } from '../../shared/icono';
+import { DialogoService } from '../../shared/dialogo';
 
 type Pestana = 'muro' | 'cursos' | 'eventos' | 'miembros' | 'revisar';
 
@@ -23,6 +24,7 @@ type Pestana = 'muro' | 'cursos' | 'eventos' | 'miembros' | 'revisar';
   styleUrl: './detalle.css',
 })
 export class DetalleComunidad implements OnInit {
+  private readonly dialogo = inject(DialogoService);
   private readonly api = inject(ComunidadApi);
   private readonly router = inject(Router);
   protected readonly sesion = inject(SesionService);
@@ -92,8 +94,8 @@ export class DetalleComunidad implements OnInit {
     });
   }
 
-  protected salir(): void {
-    if (!confirm('¿Seguro que quieres salir de esta comunidad?')) return;
+  protected async salir(): Promise<void> {
+    if (!(await this.dialogo.confirmar('¿Seguro que quieres salir de esta comunidad?', { titulo: 'Salir de la comunidad', aceptar: 'Salir', peligro: true }))) return;
     this.api.salir(+this.id()).subscribe({
       next: () => void this.router.navigate(['/comunidades']),
       error: (e) => this.error.set(textoError(e)),

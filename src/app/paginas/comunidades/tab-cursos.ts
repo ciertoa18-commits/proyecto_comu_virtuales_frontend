@@ -11,6 +11,7 @@ import { errorCampo, textoError } from '../../core/util/errores';
 import { Modal } from '../../shared/modal';
 import { SiPuede } from '../../shared/si-puede';
 import { Icono } from '../../shared/icono';
+import { DialogoService } from '../../shared/dialogo';
 
 @Component({
   selector: 'cv-tab-cursos',
@@ -19,6 +20,7 @@ import { Icono } from '../../shared/icono';
   styleUrl: './tab-cursos.css',
 })
 export class TabCursos implements OnInit {
+  private readonly dialogo = inject(DialogoService);
   private readonly api = inject(AcademicoApi);
   private readonly admin = inject(AdminApi);
   private readonly catalogo = inject(CatalogoApi);
@@ -115,8 +117,8 @@ export class TabCursos implements OnInit {
     });
   }
 
-  protected eliminarCurso(c: Curso): void {
-    if (!confirm(`¿Eliminar el curso "${c.nombre}"?`)) return;
+  protected async eliminarCurso(c: Curso): Promise<void> {
+    if (!(await this.dialogo.confirmar(`¿Eliminar el curso "${c.nombre}"?`, { titulo: 'Eliminar curso', aceptar: 'Eliminar', peligro: true }))) return;
     this.api.eliminarCurso(c.idCurso).subscribe({ next: () => this.cargar(), error: (e) => this.error.set(textoError(e)) });
   }
 
