@@ -16,8 +16,8 @@
         <div class="acciones">
           <button class="btn btn-chico" type="button" (click)="abrirSesion(b, null)">+ Sesión</button>
           <button class="btn btn-chico btn-primario" type="button" (click)="abrirRecurso(b)">+ Recurso</button>
-          <button class="btn btn-chico" type="button" aria-label="Editar unidad" (click)="abrirUnidad(b.unidad)">✏️</button>
-          <button class="btn btn-chico btn-peligro" type="button" aria-label="Eliminar unidad" (click)="eliminarUnidad(b.unidad)">🗑</button>
+          <button class="btn btn-chico" type="button" aria-label="Editar unidad" (click)="abrirUnidad(b.unidad)"><cv-icono nombre="lapiz" [tamano]="16" /></button>
+          <button class="btn btn-chico btn-peligro" type="button" aria-label="Eliminar unidad" (click)="eliminarUnidad(b.unidad)"><cv-icono nombre="basura" [tamano]="16" /></button>
         </div>
       }
     </header>
@@ -29,8 +29,8 @@
           <div><strong>{{ s.orden }}. {{ s.titulo }}</strong>
             <div class="apagado">{{ s.fechaInicio ? (s.fechaInicio | date: "EEE d MMM, HH:mm") : 'Sin fecha' }}@if (s.duracionMin) { · {{ s.duracionMin }} min }</div></div>
           <div class="acciones">
-            @if (s.enlaceClase || seccion().salaVirtual) { <a class="btn btn-chico btn-azul-borde" [href]="s.enlaceClase || seccion().salaVirtual" target="_blank" rel="noopener">🎥 Clase</a> }
-            @if (docente() && !cerrada()) { <button class="btn btn-chico" type="button" (click)="abrirSesion(b, s)">✏️</button> }
+            @if (s.enlaceClase || seccion().salaVirtual) { <a class="btn btn-chico btn-azul-borde" [href]="s.enlaceClase || seccion().salaVirtual" target="_blank" rel="noopener"><cv-icono nombre="video" [tamano]="16" /> Clase</a> }
+            @if (docente() && !cerrada()) { <button class="btn btn-chico" type="button" (click)="abrirSesion(b, s)" aria-label="Editar sesión"><cv-icono nombre="lapiz" [tamano]="16" /></button> }
           </div>
         </div>
       }
@@ -40,19 +40,19 @@
     @for (r of b.recursos; track r.idRecurso) {
       <div class="fila recurso">
         <div class="r-info">
-          <span class="r-ico">{{ icono[r.tipo] }}</span>
+          <span class="r-ico"><cv-icono [nombre]="icono[r.tipo]" [tamano]="22" /></span>
           <div><strong>{{ r.titulo }}</strong>
             <div class="apagado">{{ r.tipo }}@if (r.idSesion) { · {{ sesionDe(b, r.idSesion) }} }</div>
             @if (r.descripcion) { <div class="desc">{{ r.descripcion }}</div> }</div>
         </div>
         <div class="acciones">
           @if (r.idArchivo) { <cv-descarga [idArchivo]="r.idArchivo" /> }
-          @if (r.urlExterna) { <a class="btn btn-chico btn-azul-borde" [href]="r.urlExterna" target="_blank" rel="noopener">Abrir ↗</a> }
+          @if (r.urlExterna) { <a class="btn btn-chico btn-azul-borde" [href]="r.urlExterna" target="_blank" rel="noopener">Abrir <cv-icono nombre="externo" [tamano]="14" /></a> }
           @if (r.tipo === 'TAREA') {
-            @if (docente()) { <button class="btn btn-chico" type="button" (click)="verEntregas(r)">📥 Entregas</button> }
+            @if (docente()) { <button class="btn btn-chico" type="button" (click)="verEntregas(r)"><cv-icono nombre="bandeja" [tamano]="16" /> Entregas</button> }
             @else if (!cerrada()) { <button class="btn btn-chico btn-coral" type="button" (click)="abrirEntrega(r)">Entregar</button> }
           }
-          @if (docente() && !cerrada()) { <button class="btn btn-chico btn-peligro" type="button" aria-label="Eliminar recurso" (click)="eliminarRecurso(r)">🗑</button> }
+          @if (docente() && !cerrada()) { <button class="btn btn-chico btn-peligro" type="button" aria-label="Eliminar recurso" (click)="eliminarRecurso(r)"><cv-icono nombre="basura" [tamano]="16" /></button> }
         </div>
       </div>
     } @empty {
@@ -100,7 +100,7 @@
       <span class="rotulo">Tipo</span>
       <div class="tipos">
         @for (t of tipos; track t) {
-          <label class="tipo" [class.sel]="formRecurso.controls.tipo.value === t"><input type="radio" [value]="t" formControlName="tipo" hidden />{{ icono[t] }} {{ t }}</label>
+          <label class="tipo" [class.sel]="formRecurso.controls.tipo.value === t"><input type="radio" [value]="t" formControlName="tipo" hidden /><cv-icono [nombre]="icono[t]" [tamano]="16" /> {{ t }}</label>
         }
       </div>
       <label for="rt">Título</label><input id="rt" maxlength="200" formControlName="titulo" />
@@ -115,7 +115,7 @@
         <label for="ru">Enlace</label><input id="ru" type="url" formControlName="urlExterna" placeholder="https://..." />
       }
       <span class="rotulo">Archivo {{ formRecurso.controls.tipo.value === 'DOCUMENTO' ? '' : '(opcional)' }}</span>
-      <label class="subir">📎 {{ subiendo() ? 'Subiendo...' : archivo() ? archivo()!.nombreOriginal : 'Elegir archivo (máx. 50 MB)' }}<input type="file" hidden (change)="subir($event)" /></label>
+      <label class="subir"><cv-icono nombre="clip" [tamano]="16" /> {{ subiendo() ? 'Subiendo...' : archivo() ? archivo()!.nombreOriginal : 'Elegir archivo (máx. 50 MB)' }}<input type="file" hidden (change)="subir($event)" /></label>
       @if (formRecurso.controls.tipo.value === 'TAREA') {
         <div class="dos-columnas">
           <div><label for="rf">Fecha límite</label><input id="rf" type="datetime-local" formControlName="fechaEntrega" /></div>
@@ -137,7 +137,7 @@
     @if (me.descripcion) { <p class="nota">{{ me.descripcion }}</p> }
     @if (errorModal()) { <div class="alerta">{{ errorModal() }}</div> }
     <div class="tarjeta">
-      <label class="subir">📎 {{ subiendo() ? 'Subiendo...' : archivo() ? archivo()!.nombreOriginal : 'Adjuntar mi trabajo' }}<input type="file" hidden (change)="subir($event)" /></label>
+      <label class="subir"><cv-icono nombre="clip" [tamano]="16" /> {{ subiendo() ? 'Subiendo...' : archivo() ? archivo()!.nombreOriginal : 'Adjuntar mi trabajo' }}<input type="file" hidden (change)="subir($event)" /></label>
       <label for="ec">Comentario o respuesta</label><textarea #com id="ec" maxlength="1000"></textarea>
       <div class="botones"><button class="btn" type="button" (click)="modalEntrega.set(null)">Cancelar</button>
         <button class="btn btn-primario" type="button" [disabled]="subiendo()" (click)="entregar(com.value)">Entregar</button></div>
