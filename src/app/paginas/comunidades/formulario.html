@@ -1,4 +1,4 @@
-<a class="volver" [routerLink]="id() ? ['/comunidades', id()] : ['/comunidades']">← Volver</a>
+<a class="volver" [routerLink]="id() ? ['/comunidades', id()] : ['/comunidades']"><cv-icono nombre="atras" [tamano]="16" /> Volver</a>
 <h1>{{ id() ? 'Editar comunidad' : 'Crear comunidad' }}</h1>
 <p class="subtitulo-pagina">Completa la información de la comunidad.</p>
 
@@ -18,23 +18,63 @@
       <label for="cat">Categoría <b class="req">*</b></label>
       <select id="cat" formControlName="idCategoria">
         <option [ngValue]="null">Elige...</option>
-        @for (c of (categorias$ | async) ?? []; track c.idCategoria) { <option [ngValue]="c.idCategoria">{{ c.nombre }}</option> }
+        @for (c of categorias(); track c.idCategoria) { <option [ngValue]="c.idCategoria">{{ c.nombre }}</option> }
+        <option [ngValue]="otraCategoria">Otro (crear una categoría nueva)</option>
       </select>
       @if (err('idCategoria'); as m) { <small class="campo-error">{{ m }}</small> }
     </div>
     <div>
-      <label for="idioma">Idioma</label>
+      <label for="idioma">Idioma dominante</label>
       <select id="idioma" formControlName="idIdioma">
         <option [ngValue]="null">Sin especificar</option>
-        @for (i of (idiomas$ | async) ?? []; track i.idIdioma) { <option [ngValue]="i.idIdioma">{{ i.nombre }}</option> }
+        @for (i of idiomas(); track i.idIdioma) { <option [ngValue]="i.idIdioma">{{ i.nombre }}</option> }
       </select>
     </div>
   </div>
+
+  @if (esOtra()) {
+    <div class="nueva-categoria">
+      <div><label for="ncat">Nombre de la nueva categoría <b class="req">*</b></label>
+        <input id="ncat" maxlength="100" formControlName="nuevaCategoria" placeholder="Ej.: Lenguas originarias" />
+        @if (err('nuevaCategoria'); as m) { <small class="campo-error">{{ m }}</small> }</div>
+      <div><label for="dcat">Descripción de la categoría</label>
+        <input id="dcat" maxlength="500" formControlName="descripcionCategoria" /></div>
+      <small class="ayuda">La categoría se crea al guardar la comunidad y quedará disponible para las demás.</small>
+    </div>
+  }
+
+  <fieldset class="lenguas">
+    <legend>Segundas lenguas</legend>
+    <div class="chips-sel">
+      @for (i of lenguasDisponibles(); track i.idIdioma) {
+        <label class="chip-opcion" [class.sel]="segundas().has(i.idIdioma)">
+          <input type="checkbox" [checked]="segundas().has(i.idIdioma)" (change)="alternarLengua(i.idIdioma)" />
+          @if (segundas().has(i.idIdioma)) { <cv-icono nombre="check" [tamano]="14" /> }
+          {{ i.nombre }}
+        </label>
+      }
+    </div>
+    <small class="ayuda">Otras lenguas que también se usan en la comunidad.</small>
+  </fieldset>
+
   <label for="pueblo">Pueblo originario</label>
-  <select id="pueblo" formControlName="idPueblo">
-    <option [ngValue]="null">Ninguno</option>
-    @for (p of (pueblos$ | async) ?? []; track p.idPueblo) { <option [ngValue]="p.idPueblo">{{ p.nombre }}</option> }
-  </select>
+  <div class="combo">
+    <cv-icono nombre="buscar" [tamano]="16" />
+    <input id="pueblo" type="search" autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="lista-pueblos"
+      [attr.aria-expanded]="listaPueblos()" placeholder="Escribe para buscar, por ejemplo Asháninka..."
+      [value]="textoPueblo()" (input)="escribirPueblo($any($event.target).value)" (focus)="listaPueblos.set(true)" (blur)="cerrarPueblos()" />
+    @if (listaPueblos()) {
+      <ul id="lista-pueblos" class="opciones" role="listbox">
+        <li role="option" [attr.aria-selected]="!form.controls.idPueblo.value" (mousedown)="elegirPueblo(null)"><span class="apagado">Ninguno</span></li>
+        @for (p of pueblosFiltrados(); track p.idPueblo) {
+          <li role="option" [attr.aria-selected]="form.controls.idPueblo.value === p.idPueblo" [class.sel]="form.controls.idPueblo.value === p.idPueblo" (mousedown)="elegirPueblo(p)">
+            <strong>{{ p.nombre }}</strong>@if (p.familiaLinguistica) { <small>Familia {{ p.familiaLinguistica }}</small> }
+          </li>
+        } @empty { <li class="vacio">No hay pueblos con ese nombre.</li> }
+      </ul>
+    }
+  </div>
+  <small class="ayuda">¿Falta alguna categoría, idioma o pueblo? <a routerLink="/admin/catalogos">Administrar catálogos</a></small>
 
   <div class="dos-columnas cajas">
     <div class="caja">
@@ -56,7 +96,7 @@
     @if (form.controls.idImagen.value; as img) {
       <cv-imagen [idArchivo]="img" alt="Portada" ancho="220px" alto="110px" />
     }
-    <label class="subir">📷 {{ subiendo() ? 'Subiendo...' : form.controls.idImagen.value ? 'Cambiar imagen' : 'Subir imagen (JPG/PNG, 2 MB)' }}
+    <label class="subir"><cv-icono nombre="camara" [tamano]="16" /> {{ subiendo() ? 'Subiendo...' : form.controls.idImagen.value ? 'Cambiar imagen' : 'Subir imagen (JPG/PNG, 2 MB)' }}
       <input type="file" accept=".jpg,.jpeg,.png" (change)="subirImagen($event)" hidden />
     </label>
   </div>
