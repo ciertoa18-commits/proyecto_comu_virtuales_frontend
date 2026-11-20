@@ -7,3 +7,4 @@
 .flecha { color: #999; }
 .secciones { padding: 4px 18px 16px; border-top: 1px solid #f0f0f0; }
 .admin { margin-top: .8rem; }
+.btn { display: inline-flex; align-items: center; gap: .3rem; }

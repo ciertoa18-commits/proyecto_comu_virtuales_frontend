@@ -10,10 +10,11 @@ import { PersonasService } from '../../core/util/personas.service';
 import { errorCampo, textoError } from '../../core/util/errores';
 import { Modal } from '../../shared/modal';
 import { SiPuede } from '../../shared/si-puede';
+import { Icono } from '../../shared/icono';
 
 @Component({
   selector: 'cv-tab-cursos',
-  imports: [ReactiveFormsModule, RouterLink, Modal, SiPuede],
+  imports: [Icono, ReactiveFormsModule, RouterLink, Modal, SiPuede],
   templateUrl: './tab-cursos.html',
   styleUrl: './tab-cursos.css',
 })

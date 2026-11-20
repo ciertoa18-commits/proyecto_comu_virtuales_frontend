@@ -12,12 +12,12 @@
       @if (adjuntos().length) {
         <div class="chips">
           @for (a of adjuntos(); track a.idArchivo) {
-            <span class="chip">📎 {{ a.nombreOriginal }} <button type="button" aria-label="Quitar" (click)="quitar(a)">×</button></span>
+            <span class="chip"><cv-icono nombre="clip" [tamano]="14" /> {{ a.nombreOriginal }} <button type="button" aria-label="Quitar" (click)="quitar(a)">×</button></span>
           }
         </div>
       }
       <div class="pie">
-        <label class="btn btn-chico">📎 {{ subiendo() ? 'Subiendo...' : 'Adjuntar' }}<input type="file" multiple hidden (change)="adjuntar($event)" /></label>
+        <label class="btn btn-chico"><cv-icono nombre="clip" [tamano]="16" /> {{ subiendo() ? 'Subiendo...' : 'Adjuntar' }}<input type="file" multiple hidden (change)="adjuntar($event)" /></label>
         @if (moderada()) { <span class="apagado">Esta comunidad revisa las publicaciones antes de mostrarlas.</span> }
         <button class="btn btn-primario" type="submit" [disabled]="publicando() || subiendo()">{{ publicando() ? 'Publicando...' : 'Publicar' }}</button>
       </div>
@@ -44,10 +44,10 @@
     }
     <footer>
       @if (revision()) {
-        <button class="btn btn-chico btn-exito" type="button" (click)="moderar(v, 'APROBADA')">✓ Aprobar</button>
-        <button class="btn btn-chico btn-peligro" type="button" (click)="moderar(v, 'RECHAZADA')">✗ Rechazar</button>
+        <button class="btn btn-chico btn-exito" type="button" (click)="moderar(v, 'APROBADA')"><cv-icono nombre="check" [tamano]="16" /> Aprobar</button>
+        <button class="btn btn-chico btn-peligro" type="button" (click)="moderar(v, 'RECHAZADA')"><cv-icono nombre="cerrar" [tamano]="16" /> Rechazar</button>
       } @else {
-        <a class="link" [routerLink]="['/publicaciones', v.publicacion.idPublicacion]">💬 Comentarios</a>
+        <a class="link" [routerLink]="['/publicaciones', v.publicacion.idPublicacion]"><cv-icono nombre="mensaje" [tamano]="16" /> Comentarios</a>
       }
     </footer>
   </article>

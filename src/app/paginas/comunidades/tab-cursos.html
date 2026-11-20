@@ -36,7 +36,7 @@
         @if (esAdmin()) {
           <div class="acciones admin">
             <button class="btn btn-chico" type="button" (click)="abrirSeccion(c)">+ Sección</button>
-            <button class="btn btn-chico" type="button" (click)="abrirCurso(c)">✏️ Editar curso</button>
+            <button class="btn btn-chico" type="button" (click)="abrirCurso(c)"><cv-icono nombre="lapiz" [tamano]="16" /> Editar curso</button>
             <button class="btn btn-chico btn-peligro" type="button" (click)="eliminarCurso(c)">Eliminar</button>
           </div>
         }

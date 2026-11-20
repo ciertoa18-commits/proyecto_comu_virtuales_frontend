@@ -1,4 +1,4 @@
-<a class="volver" routerLink="/comunidades">← Comunidades</a>
+<a class="volver" routerLink="/comunidades"><cv-icono nombre="atras" [tamano]="16" /> Comunidades</a>
 
 @if (comunidad(); as c) {
   <section class="cabeza">
@@ -14,16 +14,16 @@
         <p>{{ c.descripcion }}</p>
       </div>
       <div class="acciones">
-        <a *siPuede="'COMUNIDAD_CREAR'" class="btn" [routerLink]="['/comunidades', c.idComunidad, 'editar']">✏️ Editar</a>
+        <a *siPuede="'COMUNIDAD_CREAR'" class="btn" [routerLink]="['/comunidades', c.idComunidad, 'editar']"><cv-icono nombre="lapiz" [tamano]="16" /> Editar</a>
         @if (!esAdmin()) {
           @switch (mia()?.estado) {
             @case ('MIEMBRO') { <button class="btn" type="button" (click)="salir()">Salir de la comunidad</button> }
-            @case ('SOLICITUD_PENDIENTE') { <span class="pill alerta-pill grande">⏳ Solicitud pendiente</span> }
+            @case ('SOLICITUD_PENDIENTE') { <span class="pill alerta-pill grande"><cv-icono nombre="reloj" [tamano]="14" /> Solicitud pendiente</span> }
             @default {
               @if (c.visibilidad === 'PUBLICA') {
                 <button class="btn btn-coral" type="button" [disabled]="pidiendo()" (click)="unirse()">+ Unirme</button>
               } @else {
-                <button class="btn btn-coral" type="button" (click)="modalSolicitud.set(true)">🔒 Solicitar ingreso</button>
+                <button class="btn btn-coral" type="button" (click)="modalSolicitud.set(true)"><cv-icono nombre="candado" [tamano]="16" /> Solicitar ingreso</button>
               }
             }
           }
@@ -37,12 +37,12 @@
 
   @if (puedeVer()) {
     <nav class="tabs">
-      <button class="tab" [class.activa]="pestana() === 'muro'" (click)="pestana.set('muro')">📰 Muro</button>
-      <button class="tab" [class.activa]="pestana() === 'cursos'" (click)="pestana.set('cursos')">📘 Cursos</button>
-      <button class="tab" [class.activa]="pestana() === 'eventos'" (click)="pestana.set('eventos')">📅 Eventos</button>
-      <button *siPuede="'MIEMBROS_VER'" class="tab" [class.activa]="pestana() === 'miembros'" (click)="pestana.set('miembros')">👥 Miembros</button>
+      <button class="tab" [class.activa]="pestana() === 'muro'" (click)="pestana.set('muro')"><cv-icono nombre="archivo" [tamano]="16" /> Muro</button>
+      <button class="tab" [class.activa]="pestana() === 'cursos'" (click)="pestana.set('cursos')"><cv-icono nombre="libro" [tamano]="16" /> Cursos</button>
+      <button class="tab" [class.activa]="pestana() === 'eventos'" (click)="pestana.set('eventos')"><cv-icono nombre="calendario" [tamano]="16" /> Eventos</button>
+      <button *siPuede="'MIEMBROS_VER'" class="tab" [class.activa]="pestana() === 'miembros'" (click)="pestana.set('miembros')"><cv-icono nombre="comunidades" [tamano]="16" /> Miembros</button>
       @if (esModerador() && c.moderacionPrevia) {
-        <button class="tab" [class.activa]="pestana() === 'revisar'" (click)="pestana.set('revisar')">🛡️ Por revisar</button>
+        <button class="tab" [class.activa]="pestana() === 'revisar'" (click)="pestana.set('revisar')"><cv-icono nombre="escudo" [tamano]="16" /> Por revisar</button>
       }
     </nav>
     @switch (pestana()) {
@@ -54,7 +54,7 @@
     }
   } @else {
     <div class="bloque bloqueado">
-      <div class="grande-ico">🔐</div>
+      <div class="grande-ico"><cv-icono nombre="candado" [tamano]="48" /></div>
       <h2>Únete para ver el contenido</h2>
       <p class="apagado">El muro, los cursos y los eventos son solo para los miembros de la comunidad.</p>
     </div>
