@@ -1,5 +1,5 @@
 @if (vista(); as v) {
-  <a class="volver" [routerLink]="['/comunidades', v.publicacion.idComunidad]">← Volver a la comunidad</a>
+  <a class="volver" [routerLink]="['/comunidades', v.publicacion.idComunidad]"><cv-icono nombre="atras" [tamano]="16" /> Volver a la comunidad</a>
   <article class="bloque">
     <header class="autor">
       <span class="av">{{ iniciales(v.autor.nombres + ' ' + v.autor.apellidos) }}</span>
@@ -34,7 +34,7 @@
             <button class="btn btn-chico btn-primario" type="button" [disabled]="enviando()" (click)="comentar(resp, h.c.comentario.idComentario)">Responder</button>
           </div>
         } @else {
-          <button class="link" type="button" (click)="respondiendo.set(h.c.comentario.idComentario)">↩ Responder</button>
+          <button class="link" type="button" (click)="respondiendo.set(h.c.comentario.idComentario)"><cv-icono nombre="deshacer" [tamano]="14" /> Responder</button>
         }
       </div>
     </div>
@@ -49,7 +49,7 @@
         <strong>{{ c.autor.nombres }} {{ c.autor.apellidos }}</strong> <small class="apagado">{{ c.comentario.fechaComentario | date: 'dd/MM HH:mm' }}</small>
         <p>{{ c.comentario.contenido }}</p>
       </div>
-      @if (puedeBorrar(c)) { <button class="x" type="button" aria-label="Eliminar comentario" (click)="eliminar(c)">🗑</button> }
+      @if (puedeBorrar(c)) { <button class="x" type="button" aria-label="Eliminar comentario" (click)="eliminar(c)"><cv-icono nombre="basura" [tamano]="16" /></button> }
     </div>
   </ng-template>
 } @else if (error()) {

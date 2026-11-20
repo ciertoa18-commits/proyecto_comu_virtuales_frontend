@@ -12,12 +12,13 @@ import { TabCursos } from './tab-cursos';
 import { TabEventos } from './tab-eventos';
 import { TabMiembros } from './tab-miembros';
 import { TabMuro } from './tab-muro';
+import { Icono } from '../../shared/icono';
 
 type Pestana = 'muro' | 'cursos' | 'eventos' | 'miembros' | 'revisar';
 
 @Component({
   selector: 'cv-detalle-comunidad',
-  imports: [RouterLink, ImagenArchivo, Modal, SiPuede, TabMuro, TabCursos, TabEventos, TabMiembros],
+  imports: [Icono, RouterLink, ImagenArchivo, Modal, SiPuede, TabMuro, TabCursos, TabEventos, TabMiembros],
   templateUrl: './detalle.html',
   styleUrl: './detalle.css',
 })
@@ -64,7 +65,7 @@ export class DetalleComunidad implements OnInit {
     this.api.unirse(+this.id()).subscribe({
       next: () => {
         this.pidiendo.set(false);
-        this.exito.set('¡Bienvenido a la comunidad! 🎉');
+        this.exito.set('¡Bienvenido a la comunidad!');
         this.refrescarMembresia();
       },
       error: (e) => {

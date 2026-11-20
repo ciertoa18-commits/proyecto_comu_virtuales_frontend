@@ -10,10 +10,11 @@ import { textoError } from '../../core/util/errores';
 import { iniciales, LIMITE_ARCHIVO } from '../../core/util/texto';
 import { BotonDescarga } from '../../shared/boton-descarga';
 import { Paginador } from '../../shared/paginador';
+import { Icono } from '../../shared/icono';
 
 @Component({
   selector: 'cv-tab-muro',
-  imports: [DatePipe, ReactiveFormsModule, RouterLink, BotonDescarga, Paginador],
+  imports: [Icono, DatePipe, ReactiveFormsModule, RouterLink, BotonDescarga, Paginador],
   templateUrl: './tab-muro.html',
   styleUrl: './tab-muro.css',
 })

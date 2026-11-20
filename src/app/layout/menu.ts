@@ -37,6 +37,7 @@ export const MENU: { grupo: string; opciones: OpcionMenu[] }[] = [
       { texto: 'Usuarios', ruta: '/admin/usuarios', icono: 'birrete', accion: 'USUARIOS_GESTIONAR' },
       { texto: 'Recuperar cuenta', ruta: '/admin/recuperar-cuenta', icono: 'llave', accion: 'USUARIOS_GESTIONAR' },
       { texto: 'Solicitudes', ruta: '/admin/solicitudes', icono: 'bandeja', accion: 'SOLICITUDES_RESOLVER' },
+      { texto: 'Catálogos', ruta: '/admin/catalogos', icono: 'etiqueta', accion: 'COMUNIDAD_CREAR' },
       { texto: 'Reportes', ruta: '/admin/reportes', icono: 'grafico', accion: 'REPORTES_VER' },
     ],
   },

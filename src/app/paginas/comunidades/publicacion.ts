@@ -7,10 +7,11 @@ import { SesionService } from '../../core/sesion/sesion.service';
 import { textoError } from '../../core/util/errores';
 import { iniciales } from '../../core/util/texto';
 import { BotonDescarga } from '../../shared/boton-descarga';
+import { Icono } from '../../shared/icono';
 
 @Component({
   selector: 'cv-publicacion',
-  imports: [DatePipe, NgTemplateOutlet, RouterLink, BotonDescarga],
+  imports: [Icono, DatePipe, NgTemplateOutlet, RouterLink, BotonDescarga],
   templateUrl: './publicacion.html',
   styleUrl: './publicacion.css',
 })

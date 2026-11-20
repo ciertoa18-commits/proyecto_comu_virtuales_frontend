@@ -146,7 +146,12 @@ export interface DatosComunidad {
   visibilidad: Visibilidad;
   moderacionPrevia: boolean;
   idImagen: number | null;
+  segundasLenguas: number[];
 }
+export type TipoCatalogo = 'categorias' | 'pueblos' | 'idiomas';
+export interface DatosCategoria { nombre: string; descripcion: string | null; }
+export interface DatosIdioma { codigo: string; nombre: string; }
+export interface DatosPueblo { nombre: string; familiaLinguistica: string | null; }
 export interface MiComunidad {
   idComunidad: number;
   estado: 'MIEMBRO' | 'SOLICITUD_PENDIENTE';

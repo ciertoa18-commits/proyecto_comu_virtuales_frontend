@@ -26,6 +26,9 @@ export class ComunidadApi {
   mias() {
     return this.http.get<MiComunidad[]>(`${this.url}/me/comunidades`);
   }
+  segundasLenguas(id: number) {
+    return this.http.get<number[]>(`${this.url}/comunidades/${id}/segundas-lenguas`);
+  }
   obtener(id: number) {
     return this.http.get<Comunidad>(`${this.url}/comunidades/${id}`);
   }

@@ -11,3 +11,4 @@
 .respuestas { margin-left: 44px; border-left: 2px solid #f0f0f0; padding-left: 14px; }
 .x { background: none; border: 0; cursor: pointer; opacity: .5; }
 .x:hover { opacity: 1; }
+.volver, .link, .x { display: inline-flex; align-items: center; gap: .3rem; }

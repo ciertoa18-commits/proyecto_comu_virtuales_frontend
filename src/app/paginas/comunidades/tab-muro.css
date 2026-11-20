@@ -13,3 +13,4 @@
 .texto { white-space: pre-wrap; margin: .3rem 0 .7rem; }
 .post footer { display: flex; gap: .6rem; border-top: 1px solid #f0f0f0; padding-top: .7rem; margin-top: .5rem; }
 .post footer .link { text-decoration: none; }
+.btn, .chip, .link { display: inline-flex; align-items: center; gap: .3rem; }
