@@ -52,8 +52,8 @@ export class ComunidadApi {
     return this.http.delete<void>(`${this.url}/comunidades/${id}/miembros/${idUsuario}`);
   }
 
-  solicitudes(estado: string, page = 0) {
-    return this.http.get<Pagina<Solicitud>>(`${this.url}/solicitudes`, { params: { estado, page, size: 20 } });
+  solicitudes(estado: string, page = 0, q = '') {
+    return this.http.get<Pagina<Solicitud>>(`${this.url}/solicitudes`, { params: params({ estado, page, size: 10, q }) });
   }
   resolver(id: number, aprobar: boolean, motivo: string | null) {
     return this.http.put<Solicitud>(`${this.url}/solicitudes/${id}`, { aprobar, motivo });

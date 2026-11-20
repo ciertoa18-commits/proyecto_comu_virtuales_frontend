@@ -1,11 +1,11 @@
 <header class="barra">
   <div class="lado">
-    <button class="icono" type="button" aria-label="Mostrar u ocultar el menú" (click)="alternar()">☰</button>
+    <button class="icono" type="button" aria-label="Mostrar u ocultar el menú" (click)="alternar()"><cv-icono nombre="menu" [tamano]="22" /></button>
     <a class="marca" routerLink="/inicio">COMUNIDADES VIRTUALES</a>
   </div>
   <div class="lado">
     <a class="icono campana" routerLink="/notificaciones" aria-label="Notificaciones">
-      🔔
+      <cv-icono nombre="campana" [tamano]="20" />
       @if (comunicacion.sinLeer() > 0) { <span class="globo">{{ comunicacion.sinLeer() }}</span> }
     </a>
     <a class="avatar" routerLink="/perfil" [title]="sesion.sesion()?.nombre ?? ''" aria-label="Mi perfil">{{ iniciales() }}</a>
@@ -19,7 +19,7 @@
         <p class="grupo">{{ g.grupo }}</p>
         @for (o of g.opciones; track o.texto) {
           <a class="opcion" [routerLink]="o.ruta" routerLinkActive="activa" [routerLinkActiveOptions]="{ exact: !!o.exacta }" (click)="alElegir()">
-            <span class="ico">{{ o.icono }}</span>{{ o.texto }}
+            <span class="ico"><cv-icono [nombre]="o.icono" /></span>{{ o.texto }}
           </a>
         }
       }
@@ -29,7 +29,7 @@
         <span class="mini">{{ iniciales() }}</span>
         <div><strong>{{ sesion.sesion()?.nombre }}</strong><small>{{ rolTexto() }}</small></div>
       </div>
-      <button class="salir" type="button" (click)="sesion.salir()">🚪 Cerrar sesión</button>
+      <button class="salir" type="button" (click)="sesion.salir()"><cv-icono nombre="salir" /> Cerrar sesión</button>
     </div>
   </aside>
   <main class="contenido">
