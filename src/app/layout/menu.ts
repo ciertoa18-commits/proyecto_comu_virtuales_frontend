@@ -39,6 +39,7 @@ export const MENU: { grupo: string; opciones: OpcionMenu[] }[] = [
       { texto: 'Solicitudes', ruta: '/admin/solicitudes', icono: 'bandeja', accion: 'SOLICITUDES_RESOLVER' },
       { texto: 'Catálogos', ruta: '/admin/catalogos', icono: 'etiqueta', accion: 'CATEGORIA_CREAR' },
       { texto: 'Reportes', ruta: '/admin/reportes', icono: 'grafico', accion: 'REPORTES_VER' },
+      { texto: 'Permisos de notas', ruta: '/admin/permisos-notas', icono: 'escudo', accion: 'USUARIOS_GESTIONAR' },
     ],
   },
   { grupo: 'Cuenta', opciones: [{ texto: 'Mi perfil', ruta: '/perfil', icono: 'usuario' }] },

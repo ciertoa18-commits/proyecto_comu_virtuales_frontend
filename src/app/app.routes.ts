@@ -87,6 +87,12 @@ export const rutas: Routes = [
         loadComponent: () => import('./paginas/admin/recuperar-cuenta').then((m) => m.RecuperarCuenta),
       },
       {
+        path: 'admin/permisos-notas',
+        canActivate: [conPermiso],
+        data: { accion: 'USUARIOS_GESTIONAR' },
+        loadComponent: () => import('./paginas/admin/permisos-nota').then((m) => m.PermisosNota),
+      },
+      {
         path: 'admin/solicitudes',
         canActivate: [conPermiso],
         data: { accion: 'SOLICITUDES_RESOLVER' },

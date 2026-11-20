@@ -6,6 +6,20 @@
   @if (!bloqueada()) { <button class="btn btn-peligro btn-chico" type="button" (click)="cerrar()"><cv-icono nombre="candado" [tamano]="16" /> Cerrar sección</button> }
 </div>
 
+@if (esDocente && !bloqueada()) {
+  <div class="permiso" [attr.data-estado]="permiso()?.vigente ? 'ok' : permiso()?.estado">
+    <cv-icono [nombre]="permiso()?.vigente ? 'desbloquear' : 'candado'" [tamano]="16" />
+    @if (permiso()?.vigente) {
+      <span>Puedes modificar notas hasta {{ permiso()!.vence | date: 'dd/MM h:mm a' }}</span>
+    } @else if (permiso()?.estado === 'PENDIENTE') {
+      <span>Solicitud de permiso pendiente</span>
+    } @else {
+      <span>Modificar notas ya registradas requiere permiso</span>
+      <button class="btn btn-chico" type="button" (click)="abrirPermiso()">Solicitar permiso</button>
+    }
+  </div>
+}
+
 @if (sesion.puede('MATRICULAR_OTROS') && !bloqueada()) {
   <div class="bloque matricular">
     <label for="busca">Matricular a un estudiante</label>
@@ -56,4 +70,18 @@
     </tbody>
   </table>
 </div>
-<p class="apagado">Escala vigesimal: se aprueba con {{ aprobatoria }}. Escribe la nota y presiona Enter o sal de la casilla para guardar.</p>
+<p class="apagado">Se aprueba con {{ aprobatoria }}.</p>
+
+@if (modalPermiso()) {
+  <cv-modal titulo="Permiso para modificar notas" (cerrar)="modalPermiso.set(false)">
+    <div class="tarjeta">
+      <label for="motivo-permiso">Motivo <b class="req">*</b></label>
+      <textarea #mp id="motivo-permiso" maxlength="500"></textarea>
+      @if (faltaMotivo()) { <small class="campo-error">Escribe el motivo.</small> }
+      <div class="botones">
+        <button class="btn" type="button" (click)="modalPermiso.set(false)">Cancelar</button>
+        <button class="btn btn-primario" type="button" [disabled]="enviandoPermiso()" (click)="pedirPermiso(mp.value)">Enviar</button>
+      </div>
+    </div>
+  </cv-modal>
+}
