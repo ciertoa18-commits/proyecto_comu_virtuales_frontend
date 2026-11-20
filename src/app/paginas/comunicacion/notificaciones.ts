@@ -34,7 +34,7 @@ const ICONO: Record<TipoNotificacion, NombreIcono> = {
           <span class="txt">
             <strong>{{ n.titulo }}</strong>
             @if (n.contenido) { <span class="cont">{{ n.contenido }}</span> }
-            <small class="apagado">{{ n.fechaCreacion | date: 'dd/MM/yyyy HH:mm' }}@if (n.idEmisor) { · de {{ personas.nombre(n.idEmisor) }} }</small>
+            <small class="apagado">{{ n.fechaCreacion | date: 'dd/MM/yyyy h:mm a' }}@if (n.idEmisor) { · de {{ personas.nombre(n.idEmisor) }} }</small>
           </span>
           @if (!n.leida) { <span class="punto" aria-label="Sin leer"></span> }
         </button>

@@ -6,6 +6,7 @@ import { ComunidadApi } from '../../core/api/comunidad.api';
 import { ComunidadImportada, ResultadoImportacion } from '../../core/modelos';
 import { textoError } from '../../core/util/errores';
 import { Icono } from '../../shared/icono';
+import { leerExcel } from '../../core/util/excel';
 
 const COLUMNAS = ['nombre', 'descripcion', 'categoria', 'idioma', 'pueblo', 'visibilidad'] as const;
 const MAX_FILAS = 200;
@@ -37,14 +38,18 @@ function normalizar(s: string): string {
 }
 
 export function leerCsv(texto: string): ComunidadImportada[] {
-  const lineas = texto.replace(/^﻿/, '').split(/\r?\n/).filter((l) => l.trim() !== '');
+  const lineas = texto.replace(/^\uFEFF/, '').split(/\r?\n/).filter((l) => l.trim() !== '');
   if (!lineas.length) return [];
   const sep = (lineas[0].match(/;/g)?.length ?? 0) > (lineas[0].match(/,/g)?.length ?? 0) ? ';' : ',';
-  const cabecera = separarLinea(lineas[0], sep).map(normalizar);
+  return filasAComunidades(lineas.map((l) => separarLinea(l, sep)));
+}
+
+export function filasAComunidades(filas: string[][]): ComunidadImportada[] {
+  if (!filas.length) return [];
+  const cabecera = filas[0].map(normalizar);
   const indice = Object.fromEntries(COLUMNAS.map((c) => [c, cabecera.indexOf(c)])) as Record<(typeof COLUMNAS)[number], number>;
   if (indice.nombre < 0 || indice.categoria < 0) throw new Error('El archivo debe tener al menos las columnas "nombre" y "categoria".');
-  return lineas.slice(1).map((l) => {
-    const v = separarLinea(l, sep);
+  return filas.slice(1).map((v) => {
     const tomar = (c: (typeof COLUMNAS)[number]) => (indice[c] >= 0 ? (v[indice[c]] ?? '') : '');
     return {
       nombre: tomar('nombre'),
@@ -63,7 +68,7 @@ export function leerCsv(texto: string): ComunidadImportada[] {
   template: `
     <a class="volver" routerLink="/comunidades"><cv-icono nombre="atras" [tamano]="16" /> Volver</a>
     <h1>Importar comunidades</h1>
-    <p class="subtitulo-pagina">Crea varias comunidades a la vez subiendo un archivo CSV (puedes guardarlo desde Excel como "CSV UTF-8").</p>
+    <p class="subtitulo-pagina">Sube un archivo Excel (.xlsx) o CSV.</p>
     @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
 
     <section class="tarjeta tarjeta-plana pasos">
@@ -79,9 +84,9 @@ export function leerCsv(texto: string): ComunidadImportada[] {
         <span class="num">2</span>
         <div>
           <strong>Sube el archivo</strong>
-          <p class="apagado">Máximo {{ maxFilas }} comunidades por archivo. Las categorías, idiomas y pueblos deben escribirse como aparecen en el sistema.</p>
-          <label class="btn btn-chico subir"><cv-icono nombre="subir" [tamano]="16" /> Elegir archivo CSV
-            <input type="file" accept=".csv,text/csv" (change)="elegir($any($event.target))" hidden />
+          <p class="apagado">Máximo {{ maxFilas }} filas.</p>
+          <label class="btn btn-chico subir"><cv-icono nombre="subir" [tamano]="16" /> Elegir Excel o CSV
+            <input type="file" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" (change)="elegir($any($event.target))" hidden />
           </label>
           @if (archivo()) { <span class="apagado"> {{ archivo() }}</span> }
         </div>
@@ -166,16 +171,15 @@ export class ImportarComunidades {
     if (!f) return;
     this.limpiar();
     this.archivo.set(f.name);
-    f.text().then((texto) => {
-      try {
-        const filas = leerCsv(texto);
+    const esExcel = /\.xlsx$/i.test(f.name);
+    const lectura = esExcel ? f.arrayBuffer().then((b) => leerExcel(b)).then(filasAComunidades) : f.text().then(leerCsv);
+    lectura
+      .then((filas) => {
         if (!filas.length) return this.error.set('El archivo no tiene comunidades.');
         if (filas.length > MAX_FILAS) return this.error.set(`El archivo tiene ${filas.length} filas; el máximo es ${MAX_FILAS}.`);
         this.filas.set(filas);
-      } catch (e) {
-        this.error.set(e instanceof Error ? e.message : 'No se pudo leer el archivo.');
-      }
-    });
+      })
+      .catch((e: unknown) => this.error.set(e instanceof Error ? e.message : 'No se pudo leer el archivo.'));
   }
 
   protected importar(): void {

@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
+import { Component, computed, DestroyRef, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
 import { ComunicacionApi } from '../../core/api/comunicacion.api';
 import { Mensaje, NOMBRE_ROL, Persona, Rol } from '../../core/modelos';
 import { SesionService } from '../../core/sesion/sesion.service';
@@ -7,6 +7,8 @@ import { PersonasService } from '../../core/util/personas.service';
 import { textoError } from '../../core/util/errores';
 import { iniciales } from '../../core/util/texto';
 import { Icono } from '../../shared/icono';
+import { TiempoRealService } from '../../core/util/tiempo-real.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 interface Conversacion { con: number; ultimo: Mensaje; sinLeer: number; }
 
@@ -51,7 +53,18 @@ export class Mensajes implements OnInit {
     return [...mapa.values()].sort((a, b) => b.ultimo.fechaEnvio.localeCompare(a.ultimo.fechaEnvio));
   });
 
+  private readonly tiempoReal = inject(TiempoRealService);
+  private readonly destroyRef = inject(DestroyRef);
+
   ngOnInit(): void {
+    this.tiempoReal
+      .de('MENSAJE')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.cargarBandeja();
+        const con = this.con();
+        if (con) this.abrir(con, false);
+      });
     this.cargarBandeja();
     this.api.contactos().subscribe({
       next: (l) => {
@@ -66,9 +79,9 @@ export class Mensajes implements OnInit {
     this.api.mensajes().subscribe({ next: (p) => this.todos.set(p.content), error: (e) => this.error.set(textoError(e)) });
   }
 
-  protected abrir(con: number): void {
+  protected abrir(con: number, cerrarContactos = true): void {
     this.con.set(con);
-    this.mostrarContactos.set(false);
+    if (cerrarContactos) this.mostrarContactos.set(false);
     this.api.mensajes(con).subscribe({
       next: (p) => {
         this.chat.set([...p.content].sort((a, b) => a.fechaEnvio.localeCompare(b.fechaEnvio)));

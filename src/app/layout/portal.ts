@@ -2,12 +2,13 @@ import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angula
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Icono } from '../shared/icono';
-import { catchError, EMPTY, switchMap, timer } from 'rxjs';
+import { catchError, EMPTY, merge, switchMap, timer } from 'rxjs';
 import { ComunicacionApi } from '../core/api/comunicacion.api';
 import { NOMBRE_ROL } from '../core/modelos';
 import { SesionService } from '../core/sesion/sesion.service';
 import { iniciales } from '../core/util/texto';
 import { MENU } from './menu';
+import { TiempoRealService } from '../core/util/tiempo-real.service';
 
 @Component({
   selector: 'cv-portal',
@@ -37,8 +38,10 @@ export class Portal implements OnInit {
     })).filter((g) => g.opciones.length > 0);
   });
 
+  private readonly tiempoReal = inject(TiempoRealService);
+
   ngOnInit(): void {
-    timer(0, 60_000)
+    merge(timer(0, 120_000), this.tiempoReal.de('NOTIFICACION'))
       .pipe(
         switchMap(() => this.comunicacion.notificaciones(0, 50).pipe(catchError(() => EMPTY))),
         takeUntilDestroyed(this.destroyRef),

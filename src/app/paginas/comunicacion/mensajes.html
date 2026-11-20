@@ -30,7 +30,7 @@
         @for (m of chat(); track m.idMensaje; let i = $index) {
           @if (nuevoDia(i)) { <div class="dia"><span>{{ etiquetaDia(m.fechaEnvio) }}</span></div> }
           <div class="burbuja" [class.mia]="m.idEmisor === sesion.sesion()?.idUsuario">
-            <p>{{ m.contenido }}</p><small>{{ m.fechaEnvio | date: 'HH:mm' }}</small>
+            <p>{{ m.contenido }}</p><small>{{ m.fechaEnvio | date: 'h:mm a' }}</small>
           </div>
         } @empty {
           <p class="vacio">Escribe el primer mensaje</p>
