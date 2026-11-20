@@ -3,17 +3,19 @@ import { AdminApi } from '../../core/api/admin.api';
 import { CatalogoApi } from '../../core/api/catalogo.api';
 import { Periodo, ReporteDocente, ReporteIdioma } from '../../core/modelos';
 import { textoError } from '../../core/util/errores';
+import { Icono } from '../../shared/icono';
 
 @Component({
   selector: 'cv-reportes',
+  imports: [Icono],
   template: `
     <h1>Reportes</h1>
     @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
     <div class="tarjetas">
-      <div class="bloque kpi"><span>🌎</span><b>{{ totalComunidades() }}</b><small>Comunidades activas</small></div>
-      <div class="bloque kpi"><span>📚</span><b>{{ totalRecursos() }}</b><small>Recursos publicados</small></div>
-      <div class="bloque kpi"><span>🧑‍🏫</span><b>{{ docentes().length }}</b><small>Docentes activos</small></div>
-      <div class="bloque kpi"><span>🎒</span><b>{{ totalMatriculas() }}</b><small>Matrículas</small></div>
+      <div class="bloque kpi"><span><cv-icono nombre="globo" [tamano]="26" /></span><b>{{ totalComunidades() }}</b><small>Comunidades activas</small></div>
+      <div class="bloque kpi"><span><cv-icono nombre="biblioteca" [tamano]="26" /></span><b>{{ totalRecursos() }}</b><small>Recursos publicados</small></div>
+      <div class="bloque kpi"><span><cv-icono nombre="birrete" [tamano]="26" /></span><b>{{ docentes().length }}</b><small>Docentes activos</small></div>
+      <div class="bloque kpi"><span><cv-icono nombre="mochila" [tamano]="26" /></span><b>{{ totalMatriculas() }}</b><small>Matrículas</small></div>
     </div>
 
     <section class="bloque">
@@ -55,7 +57,7 @@ import { textoError } from '../../core/util/errores';
   styles: `
     .tarjetas { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
     .kpi { display: flex; flex-direction: column; align-items: flex-start; gap: .2rem; border-left: 5px solid var(--coral); }
-    .kpi span { font-size: 1.5rem; } .kpi b { font-size: 1.8rem; } .kpi small { color: #666; }
+    .kpi span { color: var(--coral); } .kpi b { font-size: 1.8rem; } .kpi small { color: #666; }
     .barra-fila { display: grid; grid-template-columns: 110px 1fr; gap: .8rem; align-items: center; margin: .6rem 0; }
     .etq { font-weight: 600; font-size: .9rem; }
     .barras { display: flex; flex-direction: column; gap: 3px; }

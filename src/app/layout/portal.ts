@@ -1,6 +1,7 @@
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Icono } from '../shared/icono';
 import { catchError, EMPTY, switchMap, timer } from 'rxjs';
 import { ComunicacionApi } from '../core/api/comunicacion.api';
 import { NOMBRE_ROL } from '../core/modelos';
@@ -10,7 +11,7 @@ import { MENU } from './menu';
 
 @Component({
   selector: 'cv-portal',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, Icono],
   templateUrl: './portal.html',
   styleUrl: './portal.css',
 })
