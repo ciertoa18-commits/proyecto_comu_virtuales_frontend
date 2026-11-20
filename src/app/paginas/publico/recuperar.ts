@@ -4,11 +4,12 @@ import { Router, RouterLink } from '@angular/router';
 import { CuentaApi } from '../../core/api/cuenta.api';
 import { PATRON_CORREO } from '../../core/modelos';
 import { errorCampo, textoError } from '../../core/util/errores';
+import { Icono } from '../../shared/icono';
 import { mismasClaves } from './registro';
 
 @Component({
   selector: 'cv-recuperar',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, Icono],
   templateUrl: './recuperar.html',
 })
 export class Recuperar {
