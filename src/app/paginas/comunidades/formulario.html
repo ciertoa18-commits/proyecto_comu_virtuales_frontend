@@ -1,6 +1,7 @@
 <a class="volver" [routerLink]="id() ? ['/comunidades', id()] : ['/comunidades']">← Volver</a>
 <h1>{{ id() ? 'Editar comunidad' : 'Crear comunidad' }}</h1>
 <p class="subtitulo-pagina">Completa la información de la comunidad.</p>
+@if (!id()) { <p class="apagado">¿Necesitas crear varias a la vez? <a routerLink="/comunidades/importar">Importar comunidades desde un archivo CSV</a></p> }
 
 @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
 

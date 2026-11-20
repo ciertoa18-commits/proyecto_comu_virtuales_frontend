@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import {
-  Comentario, Comunidad, DatosComunidad, Evento, MiComunidad, Miembro, Pagina, Publicacion, Solicitud,
+  Comentario, Comunidad, ComunidadImportada, DatosComunidad, Evento, MiComunidad, Miembro, Pagina, Publicacion, ResultadoImportacion, Solicitud,
   VistaComentario, VistaPublicacion,
 } from '../modelos';
 import { params } from './parametros';
@@ -16,6 +16,9 @@ export class ComunidadApi {
     return this.http.get<Pagina<Comunidad>>(`${this.url}/comunidades`, {
       params: params({ q: f.q, categoria: f.categoria, idioma: f.idioma, page: f.page ?? 0, size: f.size ?? 12 }),
     });
+  }
+  importar(filas: ComunidadImportada[]) {
+    return this.http.post<ResultadoImportacion[]>(`${this.url}/comunidades/importar`, { filas });
   }
   recomendadas() {
     return this.http.get<Pagina<Comunidad>>(`${this.url}/comunidades/recomendadas`);

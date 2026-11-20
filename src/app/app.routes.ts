@@ -24,6 +24,12 @@ export const rutas: Routes = [
         loadComponent: () => import('./paginas/comunidades/formulario').then((m) => m.FormularioComunidad),
       },
       {
+        path: 'comunidades/importar',
+        canActivate: [conPermiso],
+        data: { accion: 'COMUNIDAD_CREAR' },
+        loadComponent: () => import('./paginas/comunidades/importar').then((m) => m.ImportarComunidades),
+      },
+      {
         path: 'comunidades/:id/editar',
         canActivate: [conPermiso],
         data: { accion: 'COMUNIDAD_CREAR' },

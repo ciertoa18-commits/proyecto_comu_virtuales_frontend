@@ -129,6 +129,8 @@ export interface Miembro {
   rol: Rol;
   rolComunidad: 'MIEMBRO' | 'MODERADOR' | 'ADMINISTRADOR';
 }
+export interface ComunidadImportada { nombre: string; descripcion: string; categoria: string; idioma: string; pueblo: string; visibilidad: string; }
+export interface ResultadoImportacion { fila: number; nombre: string; ok: boolean; mensaje: string; }
 export interface Solicitud {
   idSolicitud: number;
   idComunidad: number;
