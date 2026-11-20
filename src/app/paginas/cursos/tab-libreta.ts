@@ -1,17 +1,18 @@
-import { DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { Component, computed, DestroyRef, inject, input, OnInit, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, debounceTime, distinctUntilChanged, forkJoin, of, Subject, switchMap } from 'rxjs';
 import { AcademicoApi } from '../../core/api/academico.api';
 import { ComunicacionApi } from '../../core/api/comunicacion.api';
-import { Evaluacion, FilaLibreta, NOTA_APROBATORIA, Seccion, UsuarioResumen } from '../../core/modelos';
+import { Evaluacion, FilaLibreta, NOTA_APROBATORIA, PermisoNota, Seccion, UsuarioResumen } from '../../core/modelos';
+import { Modal } from '../../shared/modal';
 import { SesionService } from '../../core/sesion/sesion.service';
 import { textoError } from '../../core/util/errores';
 import { Icono } from '../../shared/icono';
 
 @Component({
   selector: 'cv-tab-libreta',
-  imports: [Icono, DecimalPipe],
+  imports: [Icono, DatePipe, DecimalPipe, Modal],
   templateUrl: './tab-libreta.html',
   styleUrl: './tab-libreta.css',
 })
@@ -35,9 +36,15 @@ export class TabLibreta implements OnInit {
 
   protected readonly resultados = signal<UsuarioResumen[]>([]);
   private readonly busqueda = new Subject<string>();
+  protected readonly esDocente = this.sesion.rol() === 'DOCENTE';
+  protected readonly permiso = signal<PermisoNota | null>(null);
+  protected readonly modalPermiso = signal(false);
+  protected readonly faltaMotivo = signal(false);
+  protected readonly enviandoPermiso = signal(false);
 
   ngOnInit(): void {
     this.cargar();
+    if (this.esDocente) this.api.permisoNota(this.seccion().idSeccion).subscribe({ next: (p) => this.permiso.set(p), error: () => undefined });
     this.busqueda
       .pipe(
         debounceTime(300),
@@ -73,6 +80,10 @@ export class TabLibreta implements OnInit {
       campo.value = actual?.toString() ?? '';
       return;
     }
+    if (actual !== null && this.esDocente && !this.permiso()?.vigente) {
+      campo.value = actual.toString();
+      return this.abrirPermiso();
+    }
     this.error.set(null);
     const clave = `${f.matricula.idMatricula}-${e.idEvaluacion}`;
     this.guardando.set(clave);
@@ -83,8 +94,10 @@ export class TabLibreta implements OnInit {
       },
       error: (er) => {
         this.guardando.set(null);
-        this.error.set(textoError(er));
         campo.value = actual?.toString() ?? '';
+        const msg = textoError(er);
+        if (msg.includes('permiso del administrador')) this.abrirPermiso();
+        else this.error.set(msg);
       },
     });
   }
@@ -119,6 +132,29 @@ export class TabLibreta implements OnInit {
         this.cargar();
       },
       error: (e) => this.error.set(textoError(e)),
+    });
+  }
+
+  protected abrirPermiso(): void {
+    this.faltaMotivo.set(false);
+    this.modalPermiso.set(true);
+  }
+
+  protected pedirPermiso(motivo: string): void {
+    if (!motivo.trim()) return this.faltaMotivo.set(true);
+    this.enviandoPermiso.set(true);
+    this.api.solicitarPermisoNota(this.seccion().idSeccion, motivo.trim()).subscribe({
+      next: (p) => {
+        this.enviandoPermiso.set(false);
+        this.permiso.set(p);
+        this.modalPermiso.set(false);
+        this.exito.set('Solicitud enviada al administrador.');
+      },
+      error: (e) => {
+        this.enviandoPermiso.set(false);
+        this.modalPermiso.set(false);
+        this.error.set(textoError(e));
+      },
     });
   }
 }

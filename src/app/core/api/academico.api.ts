@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import {
   Asistencia, Clase, Curso, DatosSilabo, Entrega, EstadoAsistencia, Evaluacion, FilaLibreta, FilaRanking, FilaRiesgo,
-  Matricula, MiCurso, Nota, Recurso, ResumenCurso, Seccion, SeccionResumen, Sesion, Silabo, TipoEvaluacion, TipoRecurso, Unidad,
+  Matricula, MiCurso, Nota, PermisoNota, Recurso, ResumenCurso, Seccion, SeccionResumen, Sesion, Silabo, TipoEvaluacion, TipoRecurso, Unidad,
 } from '../modelos';
 
 export interface DatosRecurso {
@@ -94,6 +94,18 @@ export class AcademicoApi {
   }
   misCursosResumen() {
     return this.http.get<ResumenCurso[]>(`${this.url}/me/cursos-resumen`);
+  }
+  permisoNota(idSeccion: number) {
+    return this.http.get<PermisoNota | null>(`${this.url}/secciones/${idSeccion}/permisos-nota/estado`);
+  }
+  solicitarPermisoNota(idSeccion: number, motivo: string) {
+    return this.http.post<PermisoNota>(`${this.url}/secciones/${idSeccion}/permisos-nota`, { motivo });
+  }
+  permisosNota(estado: string) {
+    return this.http.get<PermisoNota[]>(`${this.url}/permisos-nota`, { params: { estado } });
+  }
+  resolverPermisoNota(id: number, aprobar: boolean, respuesta: string | null) {
+    return this.http.put<PermisoNota>(`${this.url}/permisos-nota/${id}`, { aprobar, respuesta });
   }
   silabo(idSeccion: number) {
     return this.http.get<Silabo | null>(`${this.url}/secciones/${idSeccion}/silabo`);

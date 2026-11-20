@@ -257,6 +257,7 @@ export interface Evaluacion { idEvaluacion: number; idSeccion: number; idUnidad:
 export interface Nota { idNota: number; idMatricula: number; idEvaluacion: number; calificacion: number; comentarioDocente: string | null; }
 export interface Alumno { idUsuario: number; nombres: string; apellidos: string; }
 export interface FilaLibreta { matricula: Matricula; estudiante: Alumno; notas: Nota[]; promedio: number; }
+export interface PermisoNota { idPermiso: number; idSeccion: number; curso: string; grupo: string; idDocente: number; docente: string; motivo: string; estado: 'PENDIENTE' | 'APROBADO' | 'RECHAZADO'; fechaSolicitud: string; respuesta: string | null; fechaRespuesta: string | null; vence: string | null; vigente: boolean; }
 export interface Silabo { idSilabo: number; idSeccion: number; sumilla: string | null; competencias: string | null; contenidos: string | null; metodologia: string | null; evaluacion: string | null; bibliografia: string | null; idArchivo: number | null; idAutor: number; fechaActualizacion: string; }
 export interface DatosSilabo { sumilla: string | null; competencias: string | null; contenidos: string | null; metodologia: string | null; evaluacion: string | null; bibliografia: string | null; idArchivo: number | null; }
 export interface ResumenAsistencia { total: number; puntuales: number; tardanzas: number; faltas: number; justificadas: number; porcentaje: number; }
