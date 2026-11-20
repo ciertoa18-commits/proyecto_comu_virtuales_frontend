@@ -6,7 +6,7 @@
       } @else {
         <span class="avatar-grande">{{ iniciales() }}</span>
       }
-      <span class="camara">{{ subiendo() ? '⏳' : '📷' }}</span>
+      <span class="camara"><cv-icono [nombre]="subiendo() ? 'reloj' : 'camara'" [tamano]="18" /></span>
       <input type="file" accept=".jpg,.jpeg,.png" hidden (change)="foto($event)" />
     </label>
     <h2>{{ usuario()?.nombres }} {{ usuario()?.apellidos }}</h2>
@@ -19,53 +19,113 @@
 
 <nav class="tabs">
   <button class="tab" [class.activa]="pestana() === 'datos'" (click)="pestana.set('datos')">Mis datos</button>
-  <button class="tab" [class.activa]="pestana() === 'seguridad'" (click)="pestana.set('seguridad')">Contraseña</button>
+  <button class="tab" [class.activa]="pestana() === 'seguridad'" (click)="pestana.set('seguridad')">Cambiar Contraseña</button>
 </nav>
 
 @if (pestana() === 'datos') {
   <div class="dos">
-    <form class="tarjeta tarjeta-plana" [formGroup]="formDatos" (ngSubmit)="guardar()" novalidate>
-      <h2>Datos personales</h2>
-      <div class="dos-columnas">
-        <div><label for="n">Nombres</label><input id="n" formControlName="nombres" />
-          @if (errorCampo(formDatos.controls.nombres); as m) { <small class="campo-error">{{ m }}</small> }</div>
-        <div><label for="a">Apellidos</label><input id="a" formControlName="apellidos" />
-          @if (errorCampo(formDatos.controls.apellidos); as m) { <small class="campo-error">{{ m }}</small> }</div>
+    <section class="tarjeta tarjeta-plana">
+      <div class="cab-tarjeta">
+        <h2>Datos personales</h2>
+        @if (!editando()) {
+          <button class="btn btn-chico" type="button" (click)="editar()"><cv-icono nombre="lapiz" [tamano]="16" /> Editar</button>
+        }
       </div>
-      <label for="t">Teléfono (opcional)</label>
-      <input id="t" type="tel" inputmode="numeric" maxlength="9" placeholder="987654321" formControlName="telefono" />
-      @if (delServidor()['telefono'] ?? errorCampo(formDatos.controls.telefono, msgTelefono); as m) { <small class="campo-error">{{ m }}</small> }
-      <label for="cr">Gmail personal (para recuperar tu contraseña)</label>
-      <input id="cr" type="email" placeholder="tucorreo@gmail.com" formControlName="correoRecuperacion" />
-      @if (delServidor()['correoRecuperacion'] ?? errorCampo(formDatos.controls.correoRecuperacion, 'Escribe un correo válido, por ejemplo tucorreo@gmail.com'); as m) { <small class="campo-error">{{ m }}</small> }
-      <small class="ayuda">Aquí te llegará el código si olvidas tu contraseña.</small>
-      @if (esDocente()) { <label for="e">Especialidad</label><input id="e" formControlName="especialidad" /> }
-      <label for="i">Idioma preferido</label>
-      <select id="i" formControlName="idIdiomaPref">
-        <option [ngValue]="null">Sin preferencia</option>
-        @for (x of (idiomas$ | async) ?? []; track x.idIdioma) { <option [ngValue]="x.idIdioma">{{ x.nombre }}</option> }
-      </select>
-      <small class="ayuda">Te recomendamos comunidades en tu idioma.</small>
-      <div class="botones"><button class="btn btn-primario" type="submit">Guardar cambios</button></div>
-    </form>
-    <div class="bloque">
-      <h2>Cuenta</h2>
-      <div class="datos">
-        <span>Correo</span><strong>{{ usuario()?.correo }}</strong>
-        <span>Rol</span><strong>{{ rol() }}</strong>
-        <span>Estado</span><strong>{{ usuario()?.estado }}</strong>
-        <span>Miembro desde</span><strong>{{ usuario()?.fechaRegistro | date: 'longDate' }}</strong>
-      </div>
-    </div>
+
+      @if (!editando()) {
+        <dl class="lectura">
+          <div><dt>Nombres</dt><dd>{{ usuario()?.nombres }}</dd></div>
+          <div><dt>Apellidos</dt><dd>{{ usuario()?.apellidos }}</dd></div>
+          <div><dt>Gmail personal</dt><dd>{{ usuario()?.correoRecuperacion ?? 'Sin registrar' }}</dd></div>
+          <div><dt>Teléfono</dt><dd>{{ usuario()?.telefono ?? 'Sin registrar' }}</dd></div>
+          @if (esDocente()) { <div><dt>Especialidad</dt><dd>{{ usuario()?.especialidad ?? 'Sin registrar' }}</dd></div> }
+          <div><dt>Idioma preferido</dt><dd>{{ nombreIdioma()[usuario()?.idIdiomaPref ?? 0] ?? 'Sin preferencia' }}</dd></div>
+          <div class="ancho"><dt>Idiomas que hablo</dt>
+            <dd>
+              @for (id of misIdiomas(); track id) { <span class="chip">{{ nombreIdioma()[id] }}</span> }
+              @empty { <span class="apagado">Aún no agregas idiomas</span> }
+            </dd></div>
+        </dl>
+      } @else {
+        <form [formGroup]="formDatos" (ngSubmit)="guardar()" novalidate>
+          <p class="ayuda">Los campos con <b class="req">*</b> son obligatorios.</p>
+          <div class="dos-columnas">
+            <div><label for="n">Nombres <b class="req">*</b></label><input id="n" formControlName="nombres" />
+              @if (errorCampo(formDatos.controls.nombres); as m) { <small class="campo-error">{{ m }}</small> }</div>
+            <div><label for="a">Apellidos <b class="req">*</b></label><input id="a" formControlName="apellidos" />
+              @if (errorCampo(formDatos.controls.apellidos); as m) { <small class="campo-error">{{ m }}</small> }</div>
+          </div>
+          <label for="cr">Gmail personal <b class="req">*</b></label>
+          <input id="cr" type="email" placeholder="tucorreo@gmail.com" formControlName="correoRecuperacion" />
+          @if (delServidor()['correoRecuperacion'] ?? errorCampo(formDatos.controls.correoRecuperacion, 'Escribe un correo válido, por ejemplo tucorreo@gmail.com'); as m) { <small class="campo-error">{{ m }}</small> }
+          @else { <small class="ayuda">Aquí te llegan los códigos para recuperar o cambiar tu contraseña.</small> }
+          <label for="t">Teléfono (opcional)</label>
+          <input id="t" type="tel" inputmode="numeric" maxlength="9" placeholder="987654321" formControlName="telefono" />
+          @if (delServidor()['telefono'] ?? errorCampo(formDatos.controls.telefono, msgTelefono); as m) { <small class="campo-error">{{ m }}</small> }
+          @if (esDocente()) { <label for="e">Especialidad</label><input id="e" formControlName="especialidad" /> }
+          <label for="i">Idioma preferido</label>
+          <select id="i" formControlName="idIdiomaPref">
+            <option [ngValue]="null">Sin preferencia</option>
+            @for (x of idiomas(); track x.idIdioma) { <option [ngValue]="x.idIdioma">{{ x.nombre }}</option> }
+          </select>
+          <small class="ayuda">Te recomendamos comunidades en tu idioma.</small>
+          <fieldset class="idiomas">
+            <legend>Idiomas que hablo</legend>
+            <div class="chips-sel">
+              @for (x of idiomas(); track x.idIdioma) {
+                <label class="chip-opcion" [class.sel]="seleccion().has(x.idIdioma)">
+                  <input type="checkbox" [checked]="seleccion().has(x.idIdioma)" (change)="alternarIdioma(x.idIdioma)" />
+                  @if (seleccion().has(x.idIdioma)) { <cv-icono nombre="check" [tamano]="14" /> }
+                  {{ x.nombre }}
+                </label>
+              }
+            </div>
+          </fieldset>
+          <div class="botones">
+            <button class="btn" type="button" (click)="cancelar()">Cancelar</button>
+            <button class="btn btn-primario" type="submit">Guardar cambios</button>
+          </div>
+        </form>
+      }
+    </section>
+
+    <section class="bloque cuenta">
+      <h2>Mi cuenta</h2>
+      <ul class="filas-cuenta">
+        <li><span class="ico-c"><cv-icono nombre="correo" /></span>
+          <div><small>Correo institucional</small><strong>{{ usuario()?.correo }}</strong>
+            <span class="nota"><cv-icono nombre="candado" [tamano]="12" /> Asignado por la institución, no se puede cambiar</span></div></li>
+        <li><span class="ico-c"><cv-icono nombre="escudo" /></span>
+          <div><small>Rol</small><strong><span class="badge-rol">{{ rol() }}</span></strong></div></li>
+        <li><span class="ico-c"><cv-icono nombre="check" /></span>
+          <div><small>Estado</small><strong><span class="pill" [class.inactivo]="usuario()?.estado !== 'ACTIVO'">{{ nombreEstado[usuario()?.estado ?? 'ACTIVO'] }}</span></strong></div></li>
+        <li><span class="ico-c"><cv-icono nombre="calendario" /></span>
+          <div><small>Miembro desde</small><strong>{{ usuario()?.fechaRegistro | date: 'longDate' }}</strong></div></li>
+      </ul>
+    </section>
   </div>
 } @else {
   <form class="tarjeta tarjeta-plana angosta" [formGroup]="formClave" (ngSubmit)="cambiarClave()" novalidate>
-    <h2>Cambiar contraseña</h2>
-    <label for="ca">Contraseña actual</label><input id="ca" type="password" autocomplete="current-password" formControlName="actual" />
-    <label for="cn">Nueva contraseña</label><input id="cn" type="password" autocomplete="new-password" formControlName="nueva" />
+    <h2>Cambiar Contraseña</h2>
+    <p class="ayuda">Para confirmar el cambio te enviaremos un código de un solo uso a tu Gmail personal.</p>
+    <label for="ca">Contraseña actual <b class="req">*</b></label><input id="ca" type="password" autocomplete="current-password" formControlName="actual" />
+    @if (errorCampo(formClave.controls.actual); as m) { <small class="campo-error">{{ m }}</small> }
+    <label for="cn">Nueva contraseña <b class="req">*</b></label><input id="cn" type="password" autocomplete="new-password" formControlName="nueva" />
     @if (errorCampo(formClave.controls.nueva); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres.</small> }
-    <label for="cc">Repite la nueva contraseña</label><input id="cc" type="password" autocomplete="new-password" formControlName="confirmar" />
+    <label for="cc">Repite la nueva contraseña <b class="req">*</b></label><input id="cc" type="password" autocomplete="new-password" formControlName="confirmar" />
     @if (formClave.errors?.['distintas'] && formClave.controls.confirmar.touched) { <small class="campo-error">Las contraseñas no coinciden.</small> }
-    <div class="botones"><button class="btn btn-primario" type="submit">Cambiar contraseña</button></div>
+
+    @if (destinoCodigo(); as destino) {
+      <div class="codigo-enviado"><cv-icono nombre="correo" [tamano]="16" /> Enviamos un código a <b>{{ destino }}</b>. Vence en 15 minutos.</div>
+      <label for="co">Código de 6 dígitos <b class="req">*</b></label>
+      <input id="co" class="codigo" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000" formControlName="codigo" />
+      @if (errorCampo(formClave.controls.codigo, 'Escribe los 6 dígitos del código.'); as m) { <small class="campo-error">{{ m }}</small> }
+      <div class="botones">
+        <button class="btn" type="button" [disabled]="espera() > 0" (click)="pedirCodigo()">{{ espera() > 0 ? 'Reenviar en ' + espera() + ' s' : 'Reenviar código' }}</button>
+        <button class="btn btn-primario" type="submit">Confirmar cambio</button>
+      </div>
+    } @else {
+      <div class="botones"><button class="btn btn-primario" type="button" [disabled]="enviandoCodigo()" (click)="pedirCodigo()"><cv-icono nombre="correo" [tamano]="16" /> {{ enviandoCodigo() ? 'Enviando...' : 'Enviar código a mi Gmail' }}</button></div>
+    }
   </form>
 }
