@@ -3,7 +3,7 @@
 
 <div class="cabecera">
   <h2>Notas · {{ activos().length }} estudiante(s)</h2>
-  @if (!bloqueada()) { <button class="btn btn-peligro btn-chico" type="button" (click)="cerrar()">🔒 Cerrar sección</button> }
+  @if (!bloqueada()) { <button class="btn btn-peligro btn-chico" type="button" (click)="cerrar()"><cv-icono nombre="candado" [tamano]="16" /> Cerrar sección</button> }
 </div>
 
 @if (sesion.puede('MATRICULAR_OTROS') && !bloqueada()) {

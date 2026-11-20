@@ -7,10 +7,11 @@ import { ComunicacionApi } from '../../core/api/comunicacion.api';
 import { Evaluacion, FilaLibreta, NOTA_APROBATORIA, Seccion, UsuarioResumen } from '../../core/modelos';
 import { SesionService } from '../../core/sesion/sesion.service';
 import { textoError } from '../../core/util/errores';
+import { Icono } from '../../shared/icono';
 
 @Component({
   selector: 'cv-tab-libreta',
-  imports: [DecimalPipe],
+  imports: [Icono, DecimalPipe],
   templateUrl: './tab-libreta.html',
   styleUrl: './tab-libreta.css',
 })
