@@ -8,6 +8,7 @@ import { errorCampo, erroresPorCampo, textoError } from '../../core/util/errores
 import { Icono, NombreIcono } from '../../shared/icono';
 import { Modal } from '../../shared/modal';
 import { SesionService } from '../../core/sesion/sesion.service';
+import { DialogoService } from '../../shared/dialogo';
 
 interface Fila {
   id: number;
@@ -90,6 +91,7 @@ function sinTildes(s: string): string {
   `,
 })
 export class Catalogos implements OnInit {
+  private readonly dialogo = inject(DialogoService);
   private readonly api = inject(CatalogoApi);
   private readonly fb = inject(FormBuilder);
 
@@ -208,8 +210,8 @@ export class Catalogos implements OnInit {
     });
   }
 
-  protected eliminar(f: Fila): void {
-    if (!confirm(`¿Eliminar "${f.nombre}"? Solo se puede si ninguna comunidad o usuario lo usa.`)) return;
+  protected async eliminar(f: Fila): Promise<void> {
+    if (!(await this.dialogo.confirmar(`¿Eliminar "${f.nombre}"? Solo se puede si ninguna comunidad o usuario lo usa.`, { titulo: 'Eliminar', aceptar: 'Eliminar', peligro: true }))) return;
     this.api.eliminar(this.tipo(), f.id).subscribe({
       next: () => {
         this.error.set(null);

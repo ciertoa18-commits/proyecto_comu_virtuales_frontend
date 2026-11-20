@@ -4,6 +4,7 @@ import { Miembro, NOMBRE_ROL } from '../../core/modelos';
 import { SesionService } from '../../core/sesion/sesion.service';
 import { textoError } from '../../core/util/errores';
 import { iniciales } from '../../core/util/texto';
+import { DialogoService } from '../../shared/dialogo';
 
 @Component({
   selector: 'cv-tab-miembros',
@@ -35,6 +36,7 @@ import { iniciales } from '../../core/util/texto';
   styles: `.av { display: inline-flex; width: 30px; height: 30px; border-radius: 50%; background: #e0e0e0; align-items: center; justify-content: center; font-size: .7rem; font-weight: 700; margin-right: .5rem; }`,
 })
 export class TabMiembros implements OnInit {
+  private readonly dialogo = inject(DialogoService);
   private readonly api = inject(ComunidadApi);
   protected readonly sesion = inject(SesionService);
   readonly idComunidad = input.required<number>();
@@ -52,8 +54,8 @@ export class TabMiembros implements OnInit {
     this.api.miembros(this.idComunidad()).subscribe({ next: (m) => this.miembros.set(m), error: (e) => this.error.set(textoError(e)) });
   }
 
-  protected expulsar(m: Miembro): void {
-    if (!confirm(`¿Expulsar a ${m.nombres} ${m.apellidos} de la comunidad?`)) return;
+  protected async expulsar(m: Miembro): Promise<void> {
+    if (!(await this.dialogo.confirmar(`¿Expulsar a ${m.nombres} ${m.apellidos} de la comunidad?`, { titulo: 'Expulsar miembro', aceptar: 'Expulsar', peligro: true }))) return;
     this.api.expulsar(this.idComunidad(), m.idUsuario).subscribe({ next: () => this.cargar(), error: (e) => this.error.set(textoError(e)) });
   }
 }

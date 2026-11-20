@@ -8,6 +8,7 @@ import { textoError } from '../../core/util/errores';
 import { iniciales } from '../../core/util/texto';
 import { BotonDescarga } from '../../shared/boton-descarga';
 import { Icono } from '../../shared/icono';
+import { DialogoService } from '../../shared/dialogo';
 
 @Component({
   selector: 'cv-publicacion',
@@ -16,6 +17,7 @@ import { Icono } from '../../shared/icono';
   styleUrl: './publicacion.css',
 })
 export class PaginaPublicacion implements OnInit {
+  private readonly dialogo = inject(DialogoService);
   private readonly api = inject(ComunidadApi);
   protected readonly sesion = inject(SesionService);
   readonly id = input.required<string>();
@@ -61,8 +63,8 @@ export class PaginaPublicacion implements OnInit {
     });
   }
 
-  protected eliminar(c: VistaComentario): void {
-    if (!confirm('¿Eliminar este comentario?')) return;
+  protected async eliminar(c: VistaComentario): Promise<void> {
+    if (!(await this.dialogo.confirmar('¿Eliminar este comentario?', { titulo: 'Eliminar comentario', aceptar: 'Eliminar', peligro: true }))) return;
     this.api.eliminarComentario(c.comentario.idComentario).subscribe({ next: () => this.cargar(), error: (e) => this.error.set(textoError(e)) });
   }
 
