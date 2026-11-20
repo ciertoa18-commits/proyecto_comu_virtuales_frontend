@@ -5,3 +5,6 @@
 .DS_Store
 *.log
 iniciar-frontend.bat
+
+/test-results
+/e2e/reporte

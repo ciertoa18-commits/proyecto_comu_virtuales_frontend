@@ -38,10 +38,9 @@
           <div><dt>Apellidos</dt><dd>{{ usuario()?.apellidos }}</dd></div>
           <div><dt>Teléfono</dt><dd>{{ usuario()?.telefono ?? 'Sin registrar' }}</dd></div>
           @if (esDocente()) { <div><dt>Especialidad</dt><dd>{{ usuario()?.especialidad ?? 'Sin registrar' }}</dd></div> }
-          <div><dt>Idioma preferido</dt><dd>{{ nombreIdioma()[usuario()?.idIdiomaPref ?? 0] ?? 'Sin preferencia' }}</dd></div>
           <div class="ancho"><dt>Idiomas que hablo</dt>
             <dd>
-              @for (id of misIdiomas(); track id) { <span class="chip">{{ nombreIdioma()[id] }}</span> }
+              @for (id of idiomasOrdenados(); track id; let i = $index) { <span class="chip" [class.principal]="i === 0">@if (i === 0) { <cv-icono nombre="estrella" [tamano]="12" /> }{{ nombreIdioma()[id] }}</span> }
               @empty { <span class="apagado">Aún no agregas idiomas</span> }
             </dd></div>
         </dl>
@@ -60,22 +59,21 @@
           <input id="t" type="tel" inputmode="numeric" maxlength="9" placeholder="987654321" formControlName="telefono" />
           @if (delServidor()['telefono'] ?? errorCampo(formDatos.controls.telefono, msgTelefono); as m) { <small class="campo-error">{{ m }}</small> }
           @if (esDocente()) { <label for="e">Especialidad</label><input id="e" formControlName="especialidad" /> }
-          <label for="i">Idioma preferido</label>
-          <select id="i" formControlName="idIdiomaPref">
-            <option [ngValue]="null">Sin preferencia</option>
-            @for (x of idiomas(); track x.idIdioma) { <option [ngValue]="x.idIdioma">{{ x.nombre }}</option> }
-          </select>
           <fieldset class="idiomas">
             <legend>Idiomas que hablo</legend>
             <div class="chips-sel">
               @for (x of idiomas(); track x.idIdioma) {
-                <label class="chip-opcion" [class.sel]="seleccion().has(x.idIdioma)">
-                  <input type="checkbox" [checked]="seleccion().has(x.idIdioma)" (change)="alternarIdioma(x.idIdioma)" />
-                  @if (seleccion().has(x.idIdioma)) { <cv-icono nombre="check" [tamano]="14" /> }
-                  {{ x.nombre }}
-                </label>
+                <span class="chip-opcion" [class.sel]="orden().includes(x.idIdioma)">
+                  <button type="button" class="chip-btn" [attr.aria-pressed]="orden().includes(x.idIdioma)" (click)="alternarIdioma(x.idIdioma)">
+                    @if (orden().includes(x.idIdioma)) { <cv-icono nombre="check" [tamano]="14" /> }{{ x.nombre }}
+                  </button>
+                  @if (orden().includes(x.idIdioma)) {
+                    <button type="button" class="estrella" [class.principal]="orden()[0] === x.idIdioma" [attr.aria-label]="'Marcar ' + x.nombre + ' como principal'" [title]="orden()[0] === x.idIdioma ? 'Idioma principal' : 'Marcar como principal'" (click)="hacerPrincipal(x.idIdioma)"><cv-icono nombre="estrella" [tamano]="13" /></button>
+                  }
+                </span>
               }
             </div>
+            <small class="ayuda">La estrella marca tu idioma principal.</small>
           </fieldset>
           <div class="botones">
             <button class="btn" type="button" (click)="cancelar()">Cancelar</button>
