@@ -46,7 +46,7 @@
             </dd></div>
         </dl>
       } @else {
-        <form [formGroup]="formDatos" (ngSubmit)="guardar()" novalidate>
+        <form class="form-datos" [formGroup]="formDatos" (ngSubmit)="guardar()" novalidate>
           <div class="dos-columnas">
             <div><label for="n">Nombres <b class="req">*</b></label><input id="n" formControlName="nombres" />
               @if (errorCampo(formDatos.controls.nombres); as m) { <small class="campo-error">{{ m }}</small> }</div>

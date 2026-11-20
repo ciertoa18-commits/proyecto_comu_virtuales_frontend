@@ -36,3 +36,5 @@
 .badge-rol { background: #333; color: #fff; border-radius: 6px; padding: .1rem .5rem; font-size: .75rem; letter-spacing: .05em; }
 .codigo-enviado { display: flex; align-items: center; gap: .4rem; background: #eef7ee; color: #2e6b30; border-radius: 8px; padding: .6rem .8rem; margin: 1rem 0 .3rem; font-size: .88rem; }
 .codigo { letter-spacing: .5em; font-size: 1.2rem; text-align: center; max-width: 220px; }
+.form-datos { display: flex; flex-direction: column; gap: .35rem; }
+.form-datos .botones { margin-top: 1rem; }
