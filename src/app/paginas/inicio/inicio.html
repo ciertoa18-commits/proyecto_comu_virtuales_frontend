@@ -1,6 +1,6 @@
 <section class="hero">
   <div>
-    <h1>Hola, {{ nombre() }} 👋</h1>
+    <h1>Hola, {{ nombre() }}</h1>
     <p>Las Comunidades Virtuales son grupos de personas que, desde la red, intercambian voluntariamente información. Aprende y comparte con tu comunidad.</p>
   </div>
   <a class="btn-grande" routerLink="/comunidades">Ver comunidades</a>
@@ -10,16 +10,16 @@
   <h2>Panel de administración</h2>
   <div class="panel">
     <a class="bloque kpi" routerLink="/admin/usuarios" [queryParams]="{ estado: 'PENDIENTE' }" [class.alerta-kpi]="docentesPendientes() > 0">
-      <span>⏳</span><b>{{ docentesPendientes() }}</b><small>Docentes por aprobar</small></a>
+      <span><cv-icono nombre="reloj" [tamano]="26" /></span><b>{{ docentesPendientes() }}</b><small>Docentes por aprobar</small></a>
     <a class="bloque kpi" routerLink="/admin/solicitudes" [class.alerta-kpi]="solicitudesPendientes() > 0">
-      <span>📥</span><b>{{ solicitudesPendientes() }}</b><small>Solicitudes de ingreso</small></a>
-    <a class="bloque kpi" routerLink="/admin/usuarios"><span>👥</span><b>{{ totalUsuarios() }}</b><small>Usuarios</small></a>
-    <a class="bloque kpi" routerLink="/comunidades"><span>🌎</span><b>{{ totalComunidades() }}</b><small>Comunidades</small></a>
+      <span><cv-icono nombre="bandeja" [tamano]="26" /></span><b>{{ solicitudesPendientes() }}</b><small>Solicitudes de ingreso</small></a>
+    <a class="bloque kpi" routerLink="/admin/usuarios"><span><cv-icono nombre="comunidades" [tamano]="26" /></span><b>{{ totalUsuarios() }}</b><small>Usuarios</small></a>
+    <a class="bloque kpi" routerLink="/comunidades"><span><cv-icono nombre="globo" [tamano]="26" /></span><b>{{ totalComunidades() }}</b><small>Comunidades</small></a>
   </div>
   <div class="accesos">
-    <a class="btn btn-primario" routerLink="/comunidades/nueva">+ Crear comunidad</a>
-    <a class="btn" routerLink="/notificaciones/enviar">📣 Enviar aviso</a>
-    <a class="btn" routerLink="/admin/reportes">📊 Ver reportes</a>
+    <a class="btn btn-primario" routerLink="/comunidades/nueva"><cv-icono nombre="mas" [tamano]="16" /> Crear comunidad</a>
+    <a class="btn" routerLink="/notificaciones/enviar"><cv-icono nombre="megafono" [tamano]="16" /> Enviar aviso</a>
+    <a class="btn" routerLink="/admin/reportes"><cv-icono nombre="grafico" [tamano]="16" /> Ver reportes</a>
   </div>
 } @else {
   <div class="columnas">
@@ -74,10 +74,10 @@
 
 <h2 class="titulo-centro">Además debes saber</h2>
 <div class="tres">
-  <article class="bloque"><div class="ilustra">💻</div><h3>Dinámica de temas</h3>
+  <article class="bloque"><div class="ilustra"><cv-icono nombre="computadora" [tamano]="40" /></div><h3>Dinámica de temas</h3>
     <ul><li>Experiencias pedagógicas compartidas.</li><li>Desafíos similares.</li><li>Temas relacionados a la práctica docente.</li></ul></article>
-  <article class="bloque"><div class="ilustra">💬</div><h3>Dinámica en la comunidad</h3>
+  <article class="bloque"><div class="ilustra"><cv-icono nombre="mensaje" [tamano]="40" /></div><h3>Dinámica en la comunidad</h3>
     <p>Los participantes pueden compartir documentos y enlaces, así como producciones propias.</p></article>
-  <article class="bloque"><div class="ilustra">🎓</div><h3>Beneficios</h3>
+  <article class="bloque"><div class="ilustra"><cv-icono nombre="birrete" [tamano]="40" /></div><h3>Beneficios</h3>
     <ul><li>Desarrollo profesional.</li><li>Contactos profesionales.</li><li>Desarrollo de espíritu colaborativo.</li></ul></article>
 </div>

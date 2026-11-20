@@ -7,12 +7,13 @@ import { ComunicacionApi } from '../../core/api/comunicacion.api';
 import { DestinoAviso, NOMBRE_ROL, SeccionResumen, UsuarioResumen } from '../../core/modelos';
 import { SesionService } from '../../core/sesion/sesion.service';
 import { errorCampo, textoError } from '../../core/util/errores';
+import { Icono, NombreIcono } from '../../shared/icono';
 
-interface Opcion { valor: DestinoAviso; icono: string; titulo: string; detalle: string; soloAdmin: boolean; }
+interface Opcion { valor: DestinoAviso; icono: NombreIcono; titulo: string; detalle: string; soloAdmin: boolean; }
 
 @Component({
   selector: 'cv-enviar-aviso',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, Icono],
   templateUrl: './enviar-aviso.html',
   styleUrl: './enviar-aviso.css',
 })
@@ -25,11 +26,11 @@ export class EnviarAviso implements OnInit {
   protected readonly nombreRol = NOMBRE_ROL;
   protected readonly errorCampo = errorCampo;
   private readonly todas: Opcion[] = [
-    { valor: 'TODOS', icono: '🌎', titulo: 'Todos', detalle: 'Docentes, estudiantes y administradores', soloAdmin: true },
-    { valor: 'DOCENTES', icono: '🧑‍🏫', titulo: 'Todos los docentes', detalle: 'Cuentas de docente activas', soloAdmin: true },
-    { valor: 'ESTUDIANTES', icono: '🎒', titulo: 'Todos los alumnos', detalle: 'Cuentas de estudiante activas', soloAdmin: true },
-    { valor: 'SECCION', icono: '🏫', titulo: 'Alumnos de una sección', detalle: 'Los matriculados en un curso', soloAdmin: false },
-    { valor: 'USUARIO', icono: '👤', titulo: 'Una persona', detalle: 'Búscala por nombre o correo', soloAdmin: false },
+    { valor: 'TODOS', icono: 'globo', titulo: 'Todos', detalle: 'Docentes, estudiantes y administradores', soloAdmin: true },
+    { valor: 'DOCENTES', icono: 'birrete', titulo: 'Todos los docentes', detalle: 'Cuentas de docente activas', soloAdmin: true },
+    { valor: 'ESTUDIANTES', icono: 'mochila', titulo: 'Todos los alumnos', detalle: 'Cuentas de estudiante activas', soloAdmin: true },
+    { valor: 'SECCION', icono: 'escuela', titulo: 'Alumnos de una sección', detalle: 'Los matriculados en un curso', soloAdmin: false },
+    { valor: 'USUARIO', icono: 'usuario', titulo: 'Una persona', detalle: 'Búscala por nombre o correo', soloAdmin: false },
   ];
   protected readonly opciones = computed(() => this.todas.filter((o) => !o.soloAdmin || this.sesion.rol() === 'ADMIN'));
 
