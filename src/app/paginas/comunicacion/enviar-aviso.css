@@ -3,7 +3,7 @@
 .destino { border: 2px solid #e2e2e2; border-radius: 14px; padding: .9rem; background: #fff; cursor: pointer; text-align: left; font: inherit; display: flex; gap: .7rem; align-items: flex-start; }
 .destino:hover { border-color: #b9c9ef; }
 .destino.sel { border-color: var(--primario); background: var(--azul-claro); }
-.destino .ico { font-size: 1.6rem; }
+.destino .ico { display: inline-flex; color: var(--coral); }
 .destino strong { display: block; font-size: .92rem; }
 .destino small { color: #666; font-size: .76rem; }
 .resultados { border: 1px solid var(--line); border-radius: 10px; margin-top: .3rem; max-height: 240px; overflow-y: auto; }

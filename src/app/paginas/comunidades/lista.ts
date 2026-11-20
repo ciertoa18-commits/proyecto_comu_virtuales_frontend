@@ -1,23 +1,29 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { debounceTime, Subject } from 'rxjs';
 import { CatalogoApi } from '../../core/api/catalogo.api';
 import { ComunidadApi } from '../../core/api/comunidad.api';
 import { Comunidad, MiComunidad } from '../../core/modelos';
 import { textoError } from '../../core/util/errores';
 import { portada } from '../../core/util/texto';
+import { Icono } from '../../shared/icono';
 import { ImagenArchivo } from '../../shared/imagen-archivo';
 import { Paginador } from '../../shared/paginador';
 import { SiPuede } from '../../shared/si-puede';
 
 @Component({
   selector: 'cv-lista-comunidades',
-  imports: [AsyncPipe, RouterLink, ImagenArchivo, Paginador, SiPuede],
+  imports: [AsyncPipe, RouterLink, Icono, ImagenArchivo, Paginador, SiPuede],
   templateUrl: './lista.html',
+  styles: `.acciones-cab { display: flex; gap: .5rem; flex-wrap: wrap; } .acciones-cab .btn { display: inline-flex; align-items: center; gap: .3rem; }`,
 })
 export class ListaComunidades implements OnInit {
   private readonly api = inject(ComunidadApi);
   private readonly catalogo = inject(CatalogoApi);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly tecleo = new Subject<[string, string, string]>();
   protected readonly categorias$ = this.catalogo.categorias$;
   protected readonly idiomas$ = this.catalogo.idiomas$;
   protected readonly portada = portada;
@@ -42,6 +48,7 @@ export class ListaComunidades implements OnInit {
 
   ngOnInit(): void {
     this.api.mias().subscribe({ next: (m) => this.mias.set(m), error: () => undefined });
+    this.tecleo.pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef)).subscribe(([q, c, i]) => this.buscar(q, c, i));
     this.cargar(0);
   }
 
@@ -60,6 +67,10 @@ export class ListaComunidades implements OnInit {
         this.error.set(textoError(e));
       },
     });
+  }
+
+  protected escribir(q: string, categoria: string, idioma: string): void {
+    this.tecleo.next([q, categoria, idioma]);
   }
 
   protected buscar(q: string, categoria: string, idioma: string): void {
