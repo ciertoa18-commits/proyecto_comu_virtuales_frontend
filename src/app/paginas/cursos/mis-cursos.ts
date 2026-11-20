@@ -120,8 +120,8 @@ export class MisCursos implements OnInit {
   protected readonly titulo = this.rol === 'DOCENTE' ? 'Mis clases' : 'Mis cursos';
   protected readonly subtitulo =
     this.rol === 'DOCENTE'
-      ? 'Las secciones que dictas: sílabo, contenido, evaluaciones, notas y asistencia.'
-      : 'Tus cursos con tus notas, asistencia, sílabos y recursos. Para matricularte en otro, entra a una comunidad y abre Cursos.';
+      ? 'Secciones que dictas.'
+      : 'Notas, asistencia, sílabo y recursos de cada curso.';
 
   protected readonly promedioGeneral = computed(() => {
     const con = this.cursos().filter((c) => c.notas > 0 && c.promedio !== null);

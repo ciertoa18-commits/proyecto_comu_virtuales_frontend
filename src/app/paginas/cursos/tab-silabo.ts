@@ -29,11 +29,10 @@ const SECCIONES: { campo: Campo; titulo: string; icono: NombreIcono; ayuda: stri
     @if (editando()) {
       <form class="tarjeta tarjeta-plana" [formGroup]="form" (ngSubmit)="guardar()" novalidate>
         <h2>{{ silabo() ? 'Editar sílabo' : 'Crear sílabo' }}</h2>
-        <p class="ayuda">Completa al menos la sumilla o los contenidos, o adjunta el sílabo en PDF. Los demás campos son opcionales.</p>
         @for (s of secciones; track s.campo) {
           <label [for]="'s-' + s.campo">{{ s.titulo }}</label>
-          <textarea [id]="'s-' + s.campo" maxlength="4000" [rows]="s.campo === 'contenidos' ? 8 : 4" [formControlName]="s.campo"></textarea>
-          <small class="ayuda">{{ s.ayuda }} ({{ form.controls[s.campo].value.length }}/4000)</small>
+          <textarea [id]="'s-' + s.campo" maxlength="4000" [placeholder]="s.ayuda" [rows]="s.campo === 'contenidos' ? 8 : 4" [formControlName]="s.campo"></textarea>
+          <small class="ayuda">{{ form.controls[s.campo].value.length }}/4000</small>
         }
         <span class="rotulo">Sílabo en PDF (opcional)</span>
         <div class="adjunto">

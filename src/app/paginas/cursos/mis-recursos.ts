@@ -50,10 +50,9 @@ interface Grupo { unidad: Unidad | null; recursos: Recurso[]; }
       } @empty {
         <p class="vacio">{{ cargandoRecursos() ? 'Cargando recursos...' : 'Este curso todavía no tiene recursos.' }}</p>
       }
-      <p class="apagado">Para entregar una tarea, entra al curso.</p>
     } @else {
       <h1>Mis recursos</h1>
-      <p class="subtitulo-pagina">Elige un curso para ver sus documentos, videos, enlaces y tareas.</p>
+      <p class="subtitulo-pagina">Elige un curso.</p>
       @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
       <div class="rejilla">
         @for (c of cursos(); track c.idSeccion) {
