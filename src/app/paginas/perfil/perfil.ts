@@ -36,6 +36,7 @@ export class Perfil implements OnInit {
   protected readonly delServidor = signal<Record<string, string>>({});
   protected readonly subiendo = signal(false);
   protected readonly destinoCodigo = signal<string | null>(null);
+  protected readonly correoActivo = signal(true);
   protected readonly enviandoCodigo = signal(false);
   protected readonly espera = signal(0);
   protected readonly msgTelefono = 'Debe tener 9 dígitos.';
@@ -172,9 +173,10 @@ export class Perfil implements OnInit {
     }
     this.enviandoCodigo.set(true);
     this.cuenta.pedirCodigoPassword().subscribe({
-      next: ({ destino }) => {
+      next: ({ destino, correoActivo }) => {
         this.enviandoCodigo.set(false);
         this.destinoCodigo.set(destino);
+        this.correoActivo.set(correoActivo !== false);
         this.iniciarEspera();
       },
       error: (e) => {
