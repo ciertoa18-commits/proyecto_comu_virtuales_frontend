@@ -1,11 +1,13 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { CatalogoApi } from '../core/api/catalogo.api';
+import { Icono } from './icono';
 
 @Component({
   selector: 'cv-descarga',
+  imports: [Icono],
   template: `
-    <button class="btn btn-chico btn-azul-borde" type="button" [disabled]="bajando()" (click)="bajar()">
-      {{ bajando() ? 'Descargando...' : '⬇ ' + texto() }}
+    <button class="btn btn-chico btn-azul-borde" style="display: inline-flex; align-items: center; gap: .3rem" type="button" [disabled]="bajando()" (click)="bajar()">
+      @if (!bajando()) { <cv-icono nombre="descargar" [tamano]="14" /> } {{ bajando() ? 'Descargando...' : texto() }}
     </button>
   `,
 })

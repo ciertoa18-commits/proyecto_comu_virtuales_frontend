@@ -10,17 +10,19 @@ import { TabContenido } from './tab-contenido';
 import { TabEvaluaciones } from './tab-evaluaciones';
 import { TabLibreta } from './tab-libreta';
 import { TabSeguimiento } from './tab-seguimiento';
+import { TabSilabo } from './tab-silabo';
+import { Icono } from '../../shared/icono';
 
-type Pestana = 'contenido' | 'evaluaciones' | 'libreta' | 'asistencia' | 'seguimiento';
+type Pestana = 'contenido' | 'silabo' | 'evaluaciones' | 'libreta' | 'asistencia' | 'seguimiento';
 
 @Component({
   selector: 'cv-seccion',
-  imports: [RouterLink, TabContenido, TabEvaluaciones, TabLibreta, TabAsistencia, TabSeguimiento],
+  imports: [Icono, RouterLink, TabContenido, TabEvaluaciones, TabLibreta, TabAsistencia, TabSeguimiento, TabSilabo],
   template: `
     @if (esAdmin) {
-      <a class="volver" [routerLink]="idComunidad() ? ['/comunidades', idComunidad()] : ['/comunidades']">← Volver a la comunidad</a>
+      <a class="volver" [routerLink]="idComunidad() ? ['/comunidades', idComunidad()] : ['/comunidades']"><cv-icono nombre="atras" [tamano]="16" /> Volver a la comunidad</a>
     } @else {
-      <a class="volver" routerLink="/mis-cursos">← {{ esDocenteRol ? 'Mis clases' : 'Mis cursos' }}</a>
+      <a class="volver" routerLink="/mis-cursos"><cv-icono nombre="atras" [tamano]="16" /> {{ esDocenteRol ? 'Mis clases' : 'Mis cursos' }}</a>
     }
     @if (seccion(); as s) {
       <section class="cabeza-seccion">
@@ -28,22 +30,24 @@ type Pestana = 'contenido' | 'evaluaciones' | 'libreta' | 'asistencia' | 'seguim
           <h1>{{ curso() || 'Sección' }} <span class="grupo">Grupo {{ s.grupo }}</span></h1>
           <p class="apagado">Docente: <strong>{{ personas.nombre(s.idDocente) }}</strong> · <span class="pill" [class.inactivo]="s.estado === 'CERRADA'">{{ s.estado }}</span></p>
         </div>
-        @if (s.salaVirtual) { <a class="btn btn-coral" [href]="s.salaVirtual" target="_blank" rel="noopener">🎥 Sala virtual</a> }
+        @if (s.salaVirtual) { <a class="btn btn-coral" [href]="s.salaVirtual" target="_blank" rel="noopener"><cv-icono nombre="video" [tamano]="16" /> Sala virtual</a> }
       </section>
 
       @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
 
       <nav class="tabs">
-        <button class="tab" [class.activa]="pestana() === 'contenido'" (click)="pestana.set('contenido')">📚 Contenido</button>
+        <button class="tab" [class.activa]="pestana() === 'contenido'" (click)="pestana.set('contenido')"><cv-icono nombre="biblioteca" [tamano]="16" /> Contenido</button>
+        <button class="tab" [class.activa]="pestana() === 'silabo'" (click)="pestana.set('silabo')"><cv-icono nombre="portapapeles" [tamano]="16" /> Sílabo</button>
         @if (esDocente()) {
-          <button class="tab" [class.activa]="pestana() === 'evaluaciones'" (click)="pestana.set('evaluaciones')">🧮 Evaluaciones</button>
-          <button class="tab" [class.activa]="pestana() === 'libreta'" (click)="pestana.set('libreta')">📝 Notas</button>
-          <button class="tab" [class.activa]="pestana() === 'asistencia'" (click)="pestana.set('asistencia')">✅ Asistencia</button>
-          <button class="tab" [class.activa]="pestana() === 'seguimiento'" (click)="pestana.set('seguimiento')">📈 Seguimiento</button>
+          <button class="tab" [class.activa]="pestana() === 'evaluaciones'" (click)="pestana.set('evaluaciones')"><cv-icono nombre="calculadora" [tamano]="16" /> Evaluaciones</button>
+          <button class="tab" [class.activa]="pestana() === 'libreta'" (click)="pestana.set('libreta')"><cv-icono nombre="archivo" [tamano]="16" /> Notas</button>
+          <button class="tab" [class.activa]="pestana() === 'asistencia'" (click)="pestana.set('asistencia')"><cv-icono nombre="check" [tamano]="16" /> Asistencia</button>
+          <button class="tab" [class.activa]="pestana() === 'seguimiento'" (click)="pestana.set('seguimiento')"><cv-icono nombre="tendencia" [tamano]="16" /> Seguimiento</button>
         }
       </nav>
       @switch (pestana()) {
         @case ('contenido') { <cv-tab-contenido [seccion]="s" [docente]="esDocente()" /> }
+        @case ('silabo') { <cv-tab-silabo [seccion]="s" [docente]="esDocente()" /> }
         @case ('evaluaciones') { <cv-tab-evaluaciones [seccion]="s" /> }
         @case ('libreta') { <cv-tab-libreta [seccion]="s" (cerrada)="recargar()" /> }
         @case ('asistencia') { <cv-tab-asistencia [seccion]="s" /> }
@@ -60,6 +64,7 @@ type Pestana = 'contenido' | 'evaluaciones' | 'libreta' | 'asistencia' | 'seguim
     .cabeza-seccion h1 { margin: 0 0 .3rem; font-size: 1.6rem; }
     .grupo { font-size: .9rem; background: var(--azul-claro); color: var(--primario); border-radius: 8px; padding: .2rem .6rem; vertical-align: middle; }
     .cabeza-seccion p { margin: 0; }
+    .tab, .btn, .volver { display: inline-flex; align-items: center; gap: .3rem; }
   `,
 })
 export class PaginaSeccion implements OnInit {
@@ -67,6 +72,7 @@ export class PaginaSeccion implements OnInit {
   private readonly sesion = inject(SesionService);
   protected readonly personas = inject(PersonasService);
   readonly id = input.required<string>();
+  readonly tab = input<string>();
 
   protected readonly seccion = signal<Seccion | null>(null);
   protected readonly curso = signal('');
@@ -81,6 +87,8 @@ export class PaginaSeccion implements OnInit {
   });
 
   ngOnInit(): void {
+    const t = this.tab();
+    if (t === 'silabo' || t === 'contenido') this.pestana.set(t);
     this.recargar();
     this.api.misSecciones().subscribe({
       next: (l) => this.curso.set(l.find((x) => x.idSeccion === +this.id())?.curso ?? ''),

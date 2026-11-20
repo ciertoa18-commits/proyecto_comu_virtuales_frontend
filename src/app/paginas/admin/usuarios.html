@@ -1,20 +1,20 @@
 <div class="cabecera">
   <h1>Usuarios</h1>
-  <button class="btn btn-primario" type="button" (click)="abrirNuevo()">+ Nuevo usuario</button>
+  <button class="btn btn-primario" type="button" (click)="abrirNuevo()"><cv-icono nombre="mas" [tamano]="16" /> Nuevo usuario</button>
 </div>
-<p class="subtitulo-pagina">Aprueba a los docentes nuevos, crea administradores y gestiona las cuentas.</p>
+<p class="subtitulo-pagina">Aprueba a los docentes nuevos, crea cuentas y revisa o edita todos los datos de cada usuario.</p>
 
 @if (pendientes() > 0 && filtro().estado !== 'PENDIENTE') {
   <button class="pendientes" type="button" (click)="filtrar('', '', 'PENDIENTE')">
-    <span class="ico">⏳</span>
+    <span class="ico"><cv-icono nombre="reloj" [tamano]="22" /></span>
     <span><strong>{{ pendientes() }} {{ pendientes() === 1 ? 'docente espera' : 'docentes esperan' }} tu aprobación</strong><small>Haz clic para verlos</small></span>
   </button>
 }
 @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
 @if (exito()) { <div class="exito" role="status">{{ exito() }}</div> }
 
-<form class="filtros" (submit)="$event.preventDefault(); filtrar(q.value, rol.value, est.value)">
-  <label>Buscar <input #q class="buscador" type="search" placeholder="Nombre, apellido o correo..." [value]="filtro().q" /></label>
+<div class="filtros">
+  <label>Buscar <input #q class="buscador" type="search" autocomplete="off" placeholder="Nombre, apellido o correo..." [value]="filtro().q" (input)="escribir(q.value)" /></label>
   <label>Rol
     <select #rol (change)="filtrar(q.value, rol.value, est.value)">
       <option value="" [selected]="filtro().rol === ''">Todos</option>
@@ -31,8 +31,7 @@
       <option value="INACTIVO" [selected]="filtro().estado === 'INACTIVO'">Inactivos</option>
     </select>
   </label>
-  <button class="btn" type="submit">Buscar</button>
-</form>
+</div>
 
 <div class="tabla-scroll">
   <table class="tabla">
@@ -48,14 +47,16 @@
           <td>{{ u.telefono ?? '—' }}</td>
           <td>{{ u.fechaRegistro | date: 'dd/MM/yyyy' }}</td>
           <td><div class="acciones">
+            <button class="btn btn-chico" type="button" title="Ver todos los datos" (click)="ver(u)"><cv-icono nombre="ojo" [tamano]="16" /> Ver</button>
+            <button class="btn btn-chico" type="button" title="Editar datos" (click)="abrirEdicion(u)"><cv-icono nombre="lapiz" [tamano]="16" /> Editar</button>
             @if (u.estado === 'PENDIENTE') {
-              <button class="btn btn-chico btn-exito" type="button" (click)="aprobar(u)">✓ Aprobar</button>
+              <button class="btn btn-chico btn-exito" type="button" (click)="aprobar(u)"><cv-icono nombre="check" [tamano]="16" /> Aprobar</button>
               <button class="btn btn-chico btn-peligro" type="button" (click)="estadoNuevo(u, 'INACTIVO')">Rechazar</button>
             } @else if (u.idUsuario !== sesion.sesion()?.idUsuario) {
               @if (u.estado === 'ACTIVO') { <button class="btn btn-chico btn-peligro" type="button" (click)="estadoNuevo(u, 'INACTIVO')">Desactivar</button> }
               @else { <button class="btn btn-chico btn-exito" type="button" (click)="estadoNuevo(u, 'ACTIVO')">Activar</button> }
             }
-            <button class="btn btn-chico" type="button" (click)="abrirClave(u)">🔑 Contraseña</button>
+            <button class="btn btn-chico" type="button" (click)="abrirClave(u)"><cv-icono nombre="llave" [tamano]="16" /> Contraseña</button>
           </div></td>
         </tr>
       } @empty {
@@ -67,23 +68,78 @@
 <p class="apagado">{{ total() }} usuario(s).</p>
 <cv-paginador [pagina]="pagina()" [total]="totalPaginas()" (ir)="cargar($event)" />
 
+@if (detalle(); as d) {
+  <cv-modal titulo="Datos del usuario" (cerrar)="detalle.set(null)">
+    <div class="ficha">
+      <div class="ficha-cab">
+        <span class="av grande">{{ iniciales(d.nombres + ' ' + d.apellidos) }}</span>
+        <div><strong>{{ d.nombres }} {{ d.apellidos }}</strong><small>{{ nombreRol[d.rol] }} · {{ estados[d.estado] }}</small></div>
+      </div>
+      <dl>
+        <div><dt>Correo institucional</dt><dd>{{ d.correo }}</dd></div>
+        <div><dt>Gmail personal</dt><dd>{{ d.correoRecuperacion ?? '—' }}</dd></div>
+        <div><dt>Teléfono</dt><dd>{{ d.telefono ?? '—' }}</dd></div>
+        <div><dt>Especialidad</dt><dd>{{ d.especialidad ?? '—' }}</dd></div>
+        <div><dt>Idioma preferido</dt><dd>{{ d.idioma ?? '—' }}</dd></div>
+        <div><dt>Intentos fallidos</dt><dd>{{ d.intentosFallidos ?? 0 }}</dd></div>
+        <div><dt>Bloqueo</dt><dd>{{ d.bloqueado ? 'Bloqueado hasta ' + (d.bloqueadoHasta | date: 'dd/MM/yyyy HH:mm') : 'Sin bloqueo' }}</dd></div>
+        <div><dt>Fecha de registro</dt><dd>{{ d.fechaRegistro | date: 'dd/MM/yyyy HH:mm' }}</dd></div>
+        <div><dt>Última actualización</dt><dd>{{ d.fechaActualizacion ? (d.fechaActualizacion | date: 'dd/MM/yyyy HH:mm') : '—' }}</dd></div>
+      </dl>
+      <div class="botones"><button class="btn" type="button" (click)="detalle.set(null)">Cerrar</button><button class="btn btn-primario" type="button" (click)="editarDesdeDetalle(d)"><cv-icono nombre="lapiz" [tamano]="16" /> Editar</button></div>
+    </div>
+  </cv-modal>
+}
+
+@if (editando(); as d) {
+  <cv-modal titulo="Editar usuario" (cerrar)="editando.set(null)">
+    @if (errorModal()) { <div class="alerta">{{ errorModal() }}</div> }
+    <form class="tarjeta" [formGroup]="formEdicion" (ngSubmit)="guardarEdicion(d)" novalidate>
+      <p class="ayuda">Los campos con <b class="req">*</b> son obligatorios.</p>
+      <label for="er">Rol <b class="req">*</b></label>
+      <select id="er" formControlName="rol"><option value="ESTUDIANTE">Estudiante</option><option value="DOCENTE">Docente</option><option value="ADMIN">Administrador</option></select>
+      <div class="dos-columnas">
+        <div><label for="en">Nombres <b class="req">*</b></label><input id="en" formControlName="nombres" />@if (errE('nombres'); as m) { <small class="campo-error">{{ m }}</small> }</div>
+        <div><label for="ea">Apellidos <b class="req">*</b></label><input id="ea" formControlName="apellidos" />@if (errE('apellidos'); as m) { <small class="campo-error">{{ m }}</small> }</div>
+      </div>
+      <label for="ec">Correo institucional <b class="req">*</b></label><input id="ec" type="email" formControlName="correo" />
+      @if (errE('correo', mensajeCorreo(formEdicion.controls.rol.value)); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="apagado">Debe terminar en {{ dominioCorreo(formEdicion.controls.rol.value) }}</small> }
+      <label for="eg">Gmail personal <b class="req">*</b></label><input id="eg" type="email" placeholder="tucorreo@gmail.com" formControlName="correoRecuperacion" />
+      @if (errE('correoRecuperacion', msgGmail); as m) { <small class="campo-error">{{ m }}</small> }
+      <div class="dos-columnas">
+        <div><label for="et">Teléfono (opcional)</label><input id="et" type="tel" maxlength="9" formControlName="telefono" />@if (errE('telefono', msgTelefono); as m) { <small class="campo-error">{{ m }}</small> }</div>
+        <div><label for="ei">Idioma preferido</label>
+          <select id="ei" formControlName="idIdiomaPref">
+            <option [ngValue]="null">Sin idioma</option>
+            @for (i of (idiomas$ | async) ?? []; track i.idIdioma) { <option [ngValue]="i.idIdioma">{{ i.nombre }}</option> }
+          </select></div>
+      </div>
+      @if (formEdicion.controls.rol.value === 'DOCENTE') { <label for="ee">Especialidad</label><input id="ee" formControlName="especialidad" /> }
+      <div class="botones"><button class="btn" type="button" (click)="editando.set(null)">Cancelar</button><button class="btn btn-primario" type="submit">Guardar cambios</button></div>
+    </form>
+  </cv-modal>
+}
+
 @if (modalNuevo()) {
   <cv-modal titulo="Nuevo usuario" (cerrar)="modalNuevo.set(false)">
     @if (errorModal()) { <div class="alerta">{{ errorModal() }}</div> }
     <form class="tarjeta" [formGroup]="formNuevo" (ngSubmit)="crear()" novalidate>
-      <label for="nr">Rol</label>
+      <p class="ayuda">Los campos con <b class="req">*</b> son obligatorios.</p>
+      <label for="nr">Rol <b class="req">*</b></label>
       <select id="nr" formControlName="rol"><option value="ESTUDIANTE">Estudiante</option><option value="DOCENTE">Docente</option><option value="ADMIN">Administrador</option></select>
       <div class="dos-columnas">
-        <div><label for="nn">Nombres</label><input id="nn" formControlName="nombres" />@if (err('nombres'); as m) { <small class="campo-error">{{ m }}</small> }</div>
-        <div><label for="na">Apellidos</label><input id="na" formControlName="apellidos" />@if (err('apellidos'); as m) { <small class="campo-error">{{ m }}</small> }</div>
+        <div><label for="nn">Nombres <b class="req">*</b></label><input id="nn" formControlName="nombres" />@if (err('nombres'); as m) { <small class="campo-error">{{ m }}</small> }</div>
+        <div><label for="na">Apellidos <b class="req">*</b></label><input id="na" formControlName="apellidos" />@if (err('apellidos'); as m) { <small class="campo-error">{{ m }}</small> }</div>
       </div>
-      <label for="nc">Correo electrónico</label><input id="nc" type="email" [placeholder]="'nombre' + dominioCorreo(formNuevo.controls.rol.value)" formControlName="correo" />
+      <label for="nc">Correo institucional <b class="req">*</b></label><input id="nc" type="email" [placeholder]="'nombre' + dominioCorreo(formNuevo.controls.rol.value)" formControlName="correo" />
       @if (err('correo', mensajeCorreo(formNuevo.controls.rol.value)); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="apagado">Debe terminar en {{ dominioCorreo(formNuevo.controls.rol.value) }}</small> }
+      <label for="ng">Gmail personal <b class="req">*</b></label><input id="ng" type="email" placeholder="tucorreo@gmail.com" formControlName="correoRecuperacion" />
+      @if (err('correoRecuperacion', msgGmail); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Se usa para recuperar la cuenta.</small> }
       <div class="dos-columnas">
-        <div><label for="nt">Teléfono</label><input id="nt" type="tel" maxlength="9" formControlName="telefono" />@if (err('telefono', msgTelefono); as m) { <small class="campo-error">{{ m }}</small> }</div>
+        <div><label for="nt">Teléfono (opcional)</label><input id="nt" type="tel" maxlength="9" formControlName="telefono" />@if (err('telefono', msgTelefono); as m) { <small class="campo-error">{{ m }}</small> }</div>
         @if (formNuevo.controls.rol.value === 'DOCENTE') { <div><label for="ne">Especialidad</label><input id="ne" formControlName="especialidad" /></div> }
       </div>
-      <label for="np">Contraseña inicial</label><input id="np" type="password" autocomplete="new-password" formControlName="password" />
+      <label for="np">Contraseña inicial <b class="req">*</b></label><input id="np" type="password" autocomplete="new-password" formControlName="password" />
       @if (err('password'); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres. La persona puede cambiarla en Mi perfil.</small> }
       <div class="botones"><button class="btn" type="button" (click)="modalNuevo.set(false)">Cancelar</button><button class="btn btn-primario" type="submit">Crear usuario</button></div>
     </form>
@@ -95,7 +151,7 @@
     <p class="apagado">Para {{ u.nombres }} {{ u.apellidos }} ({{ u.correo }}). También se quita el bloqueo por intentos fallidos.</p>
     @if (errorModal()) { <div class="alerta">{{ errorModal() }}</div> }
     <form class="tarjeta" [formGroup]="formClave" (ngSubmit)="guardarClave()" novalidate>
-      <label for="cl">Contraseña nueva</label><input id="cl" type="password" autocomplete="new-password" formControlName="nueva" />
+      <label for="cl">Contraseña nueva <b class="req">*</b></label><input id="cl" type="password" autocomplete="new-password" formControlName="nueva" />
       @if (errorCampo(formClave.controls.nueva); as m) { <small class="campo-error">{{ m }}</small> }
       <div class="botones"><button class="btn" type="button" (click)="modalClave.set(null)">Cancelar</button><button class="btn btn-primario" type="submit">Guardar</button></div>
     </form>

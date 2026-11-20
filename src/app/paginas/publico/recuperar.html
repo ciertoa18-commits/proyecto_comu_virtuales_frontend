@@ -1,6 +1,6 @@
 <main class="auth-fondo">
   <section class="auth-card">
-    <div class="auth-ilustracion">{{ paso() === 1 ? '🔑' : '📩' }}</div>
+    <div class="auth-ilustracion"><cv-icono [nombre]="paso() === 1 ? 'llave' : 'correo'" [tamano]="56" /></div>
     <h1 class="auth-titulo">Recuperar contraseña</h1>
     @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
 
@@ -34,6 +34,6 @@
       </form>
       <p class="auth-pie"><button class="link" type="button" (click)="otroCodigo()">¿No te llegó? Pedir otro código</button></p>
     }
-    <p class="auth-pie"><a routerLink="/login">← Volver a iniciar sesión</a></p>
+    <p class="auth-pie"><a routerLink="/login"><cv-icono nombre="atras" [tamano]="14" /> Volver a iniciar sesión</a></p>
   </section>
 </main>

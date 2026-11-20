@@ -1,19 +1,22 @@
 <div class="cabecera">
   <h1>Comunidades</h1>
-  <a *siPuede="'COMUNIDAD_CREAR'" class="btn btn-primario" routerLink="/comunidades/nueva">+ Crear comunidad</a>
+  <div class="acciones-cab" *siPuede="'COMUNIDAD_CREAR'">
+    <a class="btn" routerLink="/comunidades/importar"><cv-icono nombre="subir" [tamano]="16" /> Importar comunidades</a>
+    <a class="btn btn-primario" routerLink="/comunidades/nueva"><cv-icono nombre="mas" [tamano]="16" /> Crear comunidad</a>
+  </div>
 </div>
 
 <div class="info-banners">
   <button type="button" class="info-banner" [class.sel]="!soloMias()" (click)="verMias(false)">
-    <span class="ib-ico">🌎</span><span><strong>Todas las comunidades</strong><small>Explora y únete a nuevas comunidades</small></span>
+    <span class="ib-ico"><cv-icono nombre="globo" [tamano]="24" /></span><span><strong>Todas las comunidades</strong><small>Explora y únete a nuevas comunidades</small></span>
   </button>
   <button type="button" class="info-banner" [class.sel]="soloMias()" (click)="verMias(true)">
-    <span class="ib-ico">⭐</span><span><strong>Mis comunidades</strong><small>{{ mias().length }} en las que participas</small></span>
+    <span class="ib-ico"><cv-icono nombre="estrella" [tamano]="24" /></span><span><strong>Mis comunidades</strong><small>{{ mias().length }} en las que participas</small></span>
   </button>
 </div>
 
 <form class="filtros" (submit)="$event.preventDefault(); buscar(q.value, cat.value, idi.value)">
-  <label>Buscar <input #q class="buscador" type="search" placeholder="Nombre de la comunidad..." /></label>
+  <label>Buscar <input #q class="buscador" type="search" autocomplete="off" placeholder="Nombre de la comunidad..." (input)="escribir(q.value, cat.value, idi.value)" /></label>
   <label>Categoría
     <select #cat (change)="buscar(q.value, cat.value, idi.value)">
       <option value="">Todas</option>
@@ -26,7 +29,6 @@
       @for (i of (idiomas$ | async) ?? []; track i.idIdioma) { <option [value]="i.idIdioma">{{ i.nombre }}</option> }
     </select>
   </label>
-  <button class="btn" type="submit">Buscar</button>
 </form>
 
 @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
@@ -46,7 +48,7 @@
         </div>
         <p class="com-desc">{{ c.descripcion }}</p>
         @switch (estadoDe()[c.idComunidad]?.estado) {
-          @case ('MIEMBRO') { <span class="pill">✓ Eres miembro</span> }
+          @case ('MIEMBRO') { <span class="pill"><cv-icono nombre="check" [tamano]="14" /> Eres miembro</span> }
           @case ('SOLICITUD_PENDIENTE') { <span class="pill alerta-pill">Solicitud enviada</span> }
         }
       </div>

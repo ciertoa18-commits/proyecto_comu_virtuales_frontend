@@ -6,22 +6,23 @@ import { Notificacion, TipoNotificacion } from '../../core/modelos';
 import { SesionService } from '../../core/sesion/sesion.service';
 import { PersonasService } from '../../core/util/personas.service';
 import { textoError } from '../../core/util/errores';
+import { Icono, NombreIcono } from '../../shared/icono';
 import { Paginador } from '../../shared/paginador';
 import { SiPuede } from '../../shared/si-puede';
 
-const ICONO: Record<TipoNotificacion, string> = {
-  SOLICITUD_INGRESO: '📥', SOLICITUD_RESPUESTA: '✅', NUEVA_PUBLICACION: '📰', NUEVO_COMENTARIO: '💬',
-  NUEVO_RECURSO: '📚', EVENTO: '📅', MENSAJE: '✉️', SISTEMA: '⚙️', AVISO: '📣',
+const ICONO: Record<TipoNotificacion, NombreIcono> = {
+  SOLICITUD_INGRESO: 'bandeja', SOLICITUD_RESPUESTA: 'check', NUEVA_PUBLICACION: 'archivo', NUEVO_COMENTARIO: 'mensaje',
+  NUEVO_RECURSO: 'biblioteca', EVENTO: 'calendario', MENSAJE: 'correo', SISTEMA: 'ajustes', AVISO: 'megafono',
 };
 
 @Component({
   selector: 'cv-notificaciones',
-  imports: [DatePipe, RouterLink, Paginador, SiPuede],
+  imports: [DatePipe, RouterLink, Icono, Paginador, SiPuede],
   template: `
     <div class="cabecera">
       <h1>Notificaciones</h1>
       <div class="acciones">
-        <a *siPuede="'AVISO_ENVIAR'" class="btn btn-primario" routerLink="/notificaciones/enviar">📣 Enviar aviso</a>
+        <a *siPuede="'AVISO_ENVIAR'" class="btn btn-primario" routerLink="/notificaciones/enviar"><cv-icono nombre="megafono" [tamano]="16" /> Enviar aviso</a>
         <button class="btn" type="button" (click)="todas()">Marcar todas como leídas</button>
       </div>
     </div>
@@ -29,7 +30,7 @@ const ICONO: Record<TipoNotificacion, string> = {
     <div class="bloque">
       @for (n of lista(); track n.idNotificacion) {
         <button class="noti" type="button" [class.nueva]="!n.leida" (click)="abrir(n)">
-          <span class="ico">{{ icono[n.tipo] }}</span>
+          <span class="ico"><cv-icono [nombre]="icono[n.tipo]" [tamano]="20" /></span>
           <span class="txt">
             <strong>{{ n.titulo }}</strong>
             @if (n.contenido) { <span class="cont">{{ n.contenido }}</span> }
@@ -38,7 +39,7 @@ const ICONO: Record<TipoNotificacion, string> = {
           @if (!n.leida) { <span class="punto" aria-label="Sin leer"></span> }
         </button>
       } @empty {
-        <p class="vacio">{{ cargando() ? 'Cargando...' : 'No tienes notificaciones. 🎉' }}</p>
+        <p class="vacio">{{ cargando() ? 'Cargando...' : 'No tienes notificaciones.' }}</p>
       }
     </div>
     <cv-paginador [pagina]="pagina()" [total]="totalPaginas()" (ir)="cargar($event)" />
@@ -48,7 +49,8 @@ const ICONO: Record<TipoNotificacion, string> = {
     .noti:first-child { border-top: 0; }
     .noti:hover { background: #fafafa; }
     .noti.nueva { background: #fff8f7; }
-    .ico { font-size: 1.4rem; }
+    .ico { width: 38px; height: 38px; border-radius: 50%; background: var(--coral-claro); color: var(--coral-osc); display: flex; align-items: center; justify-content: center; flex: none; }
+    .acciones .btn { display: inline-flex; align-items: center; gap: .3rem; }
     .txt { flex: 1; display: flex; flex-direction: column; gap: .15rem; }
     .cont { color: #444; font-size: .9rem; white-space: pre-wrap; }
     .punto { width: 10px; height: 10px; border-radius: 50%; background: var(--coral); margin-top: .4rem; }

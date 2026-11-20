@@ -24,6 +24,12 @@ export const rutas: Routes = [
         loadComponent: () => import('./paginas/comunidades/formulario').then((m) => m.FormularioComunidad),
       },
       {
+        path: 'comunidades/importar',
+        canActivate: [conPermiso],
+        data: { accion: 'COMUNIDAD_CREAR' },
+        loadComponent: () => import('./paginas/comunidades/importar').then((m) => m.ImportarComunidades),
+      },
+      {
         path: 'comunidades/:id/editar',
         canActivate: [conPermiso],
         data: { accion: 'COMUNIDAD_CREAR' },
@@ -73,6 +79,12 @@ export const rutas: Routes = [
         canActivate: [conPermiso],
         data: { accion: 'COMUNIDAD_CREAR' },
         loadComponent: () => import('./paginas/admin/catalogos').then((m) => m.Catalogos),
+      },
+      {
+        path: 'admin/recuperar-cuenta',
+        canActivate: [conPermiso],
+        data: { accion: 'USUARIOS_GESTIONAR' },
+        loadComponent: () => import('./paginas/admin/recuperar-cuenta').then((m) => m.RecuperarCuenta),
       },
       {
         path: 'admin/solicitudes',

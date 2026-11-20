@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import {
-  Asistencia, Clase, Curso, Entrega, EstadoAsistencia, Evaluacion, FilaLibreta, FilaRanking, FilaRiesgo,
-  Matricula, MiCurso, Nota, Recurso, Seccion, SeccionResumen, Sesion, TipoEvaluacion, TipoRecurso, Unidad,
+  Asistencia, Clase, Curso, DatosSilabo, Entrega, EstadoAsistencia, Evaluacion, FilaLibreta, FilaRanking, FilaRiesgo,
+  Matricula, MiCurso, Nota, Recurso, ResumenCurso, Seccion, SeccionResumen, Sesion, Silabo, TipoEvaluacion, TipoRecurso, Unidad,
 } from '../modelos';
 
 export interface DatosRecurso {
@@ -89,8 +89,17 @@ export class AcademicoApi {
   misClases() {
     return this.http.get<Clase[]>(`${this.url}/me/clases`);
   }
-  misRecursos() {
-    return this.http.get<Recurso[]>(`${this.url}/me/recursos`);
+  misRecursos(seccion?: number) {
+    return this.http.get<Recurso[]>(`${this.url}/me/recursos`, { params: seccion ? { seccion } : {} });
+  }
+  misCursosResumen() {
+    return this.http.get<ResumenCurso[]>(`${this.url}/me/cursos-resumen`);
+  }
+  silabo(idSeccion: number) {
+    return this.http.get<Silabo | null>(`${this.url}/secciones/${idSeccion}/silabo`);
+  }
+  guardarSilabo(idSeccion: number, d: DatosSilabo) {
+    return this.http.put<Silabo>(`${this.url}/secciones/${idSeccion}/silabo`, d);
   }
   misNotas() {
     return this.http.get<MiCurso[]>(`${this.url}/me/notas`);
