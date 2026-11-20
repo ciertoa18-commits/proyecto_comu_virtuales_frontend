@@ -131,6 +131,7 @@ export class Usuarios implements OnInit {
   private listo(msg: string): void {
     this.error.set(null);
     this.exito.set(msg);
+    setTimeout(() => this.exito.set(null), 4000);
     this.cargar(this.pagina());
   }
 
