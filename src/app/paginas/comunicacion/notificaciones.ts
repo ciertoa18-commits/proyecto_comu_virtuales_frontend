@@ -1,5 +1,7 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TiempoRealService } from '../../core/util/tiempo-real.service';
 import { Router, RouterLink } from '@angular/router';
 import { ComunicacionApi } from '../../core/api/comunicacion.api';
 import { Notificacion, TipoNotificacion } from '../../core/modelos';
@@ -68,8 +70,15 @@ export class Notificaciones implements OnInit {
   protected readonly cargando = signal(true);
   protected readonly error = signal<string | null>(null);
 
+  private readonly tiempoReal = inject(TiempoRealService);
+  private readonly destroyRef = inject(DestroyRef);
+
   ngOnInit(): void {
     this.cargar(0);
+    this.tiempoReal
+      .de('NOTIFICACION')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.cargar(this.pagina()));
   }
 
   protected cargar(p: number): void {
