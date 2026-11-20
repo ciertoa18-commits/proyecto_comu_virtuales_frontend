@@ -5,7 +5,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { interval, takeWhile } from 'rxjs';
 import { CatalogoApi } from '../../core/api/catalogo.api';
 import { CuentaApi } from '../../core/api/cuenta.api';
-import { EstadoUsuario, NOMBRE_ROL, PATRON_TELEFONO, Usuario } from '../../core/modelos';
+import { NOMBRE_ROL, PATRON_TELEFONO, Usuario } from '../../core/modelos';
 import { SesionService } from '../../core/sesion/sesion.service';
 import { errorCampo, erroresPorCampo, textoError } from '../../core/util/errores';
 import { iniciales, LIMITE_FOTO } from '../../core/util/texto';
@@ -40,7 +40,6 @@ export class Perfil implements OnInit {
   protected readonly espera = signal(0);
   protected readonly msgTelefono = 'Debe tener 9 dígitos.';
   protected readonly errorCampo = errorCampo;
-  protected readonly nombreEstado: Record<EstadoUsuario, string> = { ACTIVO: 'Activa', INACTIVO: 'Inactiva', PENDIENTE: 'Pendiente' };
 
   protected readonly iniciales = computed(() => iniciales(this.usuario() ? `${this.usuario()!.nombres} ${this.usuario()!.apellidos}` : ''));
   protected readonly rol = computed(() => NOMBRE_ROL[this.sesion.rol() ?? 'ESTUDIANTE'].toUpperCase());
