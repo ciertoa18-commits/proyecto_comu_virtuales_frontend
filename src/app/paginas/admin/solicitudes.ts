@@ -18,46 +18,57 @@ type Estado = 'PENDIENTE' | 'APROBADA' | 'RECHAZADA';
   imports: [DatePipe, RouterLink, Icono, Modal, Paginador],
   template: `
     <h1>Solicitudes de ingreso</h1>
-    <p class="subtitulo-pagina">Personas que quieren entrar a una comunidad privada.</p>
     <nav class="tabs">
       @for (e of estados; track e) { <button class="tab" [class.activa]="estado() === e" (click)="cambiar(e)">{{ nombreEstado[e] }}</button> }
     </nav>
     @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
     @if (exito()) { <div class="exito" role="status">{{ exito() }}</div> }
-    <div class="filtros">
+    <div class="barra">
       <label class="busca"><cv-icono nombre="buscar" />
-        <input type="search" autocomplete="off" placeholder="Buscar por persona, correo o comunidad..." [value]="texto()" (input)="buscar($any($event.target).value)" />
+        <input type="search" autocomplete="off" placeholder="Buscar persona o comunidad" [value]="texto()" (input)="buscar($any($event.target).value)" />
       </label>
-      <span class="apagado">{{ total() }} solicitud(es)</span>
+      <label class="filas">Filas
+        <select (change)="cambiarTamano(+$any($event.target).value)">
+          @for (t of tamanos; track t) { <option [value]="t" [selected]="t === tamano()">{{ t }}</option> }
+        </select>
+      </label>
+      <span class="apagado">{{ total() }} en total</span>
     </div>
-    <div class="bloque">
-      @for (s of lista(); track s.idSolicitud) {
-        <div class="fila">
-          <div>
-            <strong>{{ personas.nombre(s.idUsuario) }}</strong> quiere entrar a
-            <a [routerLink]="['/comunidades', s.idComunidad]">{{ nombreComunidad()[s.idComunidad] ?? 'la comunidad #' + s.idComunidad }}</a>
-            <div class="apagado">{{ s.fechaSolicitud | date: 'dd/MM/yyyy HH:mm' }}</div>
-            @if (s.mensaje) { <p class="msj">“{{ s.mensaje }}”</p> }
-            @if (s.motivoRechazo) { <p class="msj"><b>Motivo:</b> {{ s.motivoRechazo }}</p> }
-          </div>
-          @if (s.estado === 'PENDIENTE') {
-            <div class="acciones">
-              <button class="btn btn-chico btn-exito" type="button" [disabled]="enCurso()" (click)="abrir(s, true)"><cv-icono nombre="check" [tamano]="16" /> Aceptar</button>
-              <button class="btn btn-chico btn-peligro" type="button" [disabled]="enCurso()" (click)="abrir(s, false)"><cv-icono nombre="cerrar" [tamano]="16" /> Rechazar</button>
-            </div>
+    <div class="tabla-scroll">
+      <table class="tabla hoja">
+        <thead>
+          <tr><th class="num">#</th><th>Persona</th><th>Comunidad</th><th>Fecha</th><th>Mensaje</th>@if (estado() !== 'PENDIENTE') { <th>Motivo</th> }@if (estado() === 'PENDIENTE') { <th class="der">Acción</th> }</tr>
+        </thead>
+        <tbody>
+          @for (s of lista(); track s.idSolicitud; let i = $index) {
+            <tr>
+              <td class="num">{{ pagina() * tamano() + i + 1 }}</td>
+              <td><strong>{{ personas.nombre(s.idUsuario) }}</strong></td>
+              <td><a [routerLink]="['/comunidades', s.idComunidad]">{{ nombreComunidad()[s.idComunidad] ?? '#' + s.idComunidad }}</a></td>
+              <td class="fecha">{{ s.fechaSolicitud | date: 'dd/MM/yy h:mm a' }}</td>
+              <td class="msj" [title]="s.mensaje ?? ''">{{ s.mensaje || '—' }}</td>
+              @if (estado() !== 'PENDIENTE') { <td class="msj" [title]="s.motivoRechazo ?? ''">{{ s.motivoRechazo || '—' }}</td> }
+              @if (estado() === 'PENDIENTE') {
+                <td class="der"><div class="acciones">
+                  <button class="btn btn-chico btn-exito" type="button" title="Aceptar" [disabled]="enCurso()" (click)="abrir(s, true)"><cv-icono nombre="check" [tamano]="15" /></button>
+                  <button class="btn btn-chico btn-peligro" type="button" title="Rechazar" [disabled]="enCurso()" (click)="abrir(s, false)"><cv-icono nombre="cerrar" [tamano]="15" /></button>
+                </div></td>
+              }
+            </tr>
+          } @empty {
+            <tr><td colspan="6" class="vacio">{{ cargando() ? 'Cargando...' : 'Sin resultados' }}</td></tr>
           }
-        </div>
-      } @empty { <p class="vacio">{{ cargando() ? 'Cargando...' : texto() ? 'Ninguna solicitud coincide con la búsqueda.' : 'No hay solicitudes ' + nombreEstado[estado()].toLowerCase() + '.' }}</p> }
+        </tbody>
+      </table>
     </div>
     <cv-paginador [pagina]="pagina()" [total]="totalPaginas()" (ir)="cargar($event)" />
     @if (resolviendo(); as r) {
       <cv-modal [titulo]="r.aprobar ? 'Aceptar solicitud' : 'Rechazar solicitud'" (cerrar)="resolviendo.set(null)">
         <div class="tarjeta">
           <p class="apagado">{{ personas.nombre(r.s.idUsuario) }} · {{ nombreComunidad()[r.s.idComunidad] ?? 'Comunidad #' + r.s.idComunidad }}</p>
-          <label for="mo">Motivo @if (r.aprobar) { (opcional) } @else { <b class="req">*</b> }</label>
-          <textarea #mo id="mo" maxlength="500" [placeholder]="r.aprobar ? 'Ejemplo: cumple con el perfil de la comunidad' : 'Ejemplo: la comunidad es solo para docentes de la región'"></textarea>
-          <small class="ayuda">La persona verá este motivo en su notificación.</small>
-          @if (faltaMotivo()) { <small class="campo-error">Escribe el motivo del rechazo.</small> }
+          <label for="mo">Motivo @if (!r.aprobar) { <b class="req">*</b> }</label>
+          <textarea #mo id="mo" maxlength="500"></textarea>
+          @if (faltaMotivo()) { <small class="campo-error">Escribe el motivo.</small> }
           <div class="botones"><button class="btn" type="button" (click)="resolviendo.set(null)">Cancelar</button>
             <button class="btn" [class.btn-exito]="r.aprobar" [class.btn-peligro]="!r.aprobar" type="button" [disabled]="enCurso()" (click)="resolver(r.s, r.aprobar, mo.value)">{{ r.aprobar ? 'Aceptar' : 'Rechazar' }}</button></div>
         </div>
@@ -65,11 +76,21 @@ type Estado = 'PENDIENTE' | 'APROBADA' | 'RECHAZADA';
     }
   `,
   styles: `
-    .msj { margin: .3rem 0 0; color: #444; }
-    .filtros { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin: .8rem 0; }
-    .busca { display: flex; align-items: center; gap: .5rem; flex: 1; min-width: 240px; max-width: 480px; color: #777; }
+    .barra { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin: .8rem 0; }
+    .busca { display: flex; align-items: center; gap: .5rem; flex: 1; min-width: 220px; max-width: 420px; color: #777; }
     .busca input { flex: 1; }
-    .acciones .btn { display: inline-flex; align-items: center; gap: .3rem; }
+    .filas { display: flex; align-items: center; gap: .4rem; font-size: .85rem; color: #666; }
+    .filas select { width: auto; }
+    .hoja { font-size: .86rem; }
+    .hoja th, .hoja td { padding: .4rem .6rem; border: 1px solid #eee; white-space: nowrap; }
+    .hoja thead th { background: #f7f7f7; position: sticky; top: 0; }
+    .hoja tbody tr:nth-child(even) { background: #fcfcfc; }
+    .hoja tbody tr:hover { background: var(--coral-claro); }
+    .num { width: 3rem; text-align: right; color: #999; }
+    .msj { max-width: 260px; overflow: hidden; text-overflow: ellipsis; }
+    .der { text-align: right; }
+    .acciones { display: inline-flex; gap: .3rem; }
+    .acciones .btn { display: inline-flex; align-items: center; padding: .2rem .45rem; }
   `,
 })
 export class Solicitudes implements OnInit {
@@ -78,6 +99,8 @@ export class Solicitudes implements OnInit {
   protected readonly personas = inject(PersonasService);
   protected readonly estados: Estado[] = ['PENDIENTE', 'APROBADA', 'RECHAZADA'];
   protected readonly nombreEstado: Record<Estado, string> = { PENDIENTE: 'Pendientes', APROBADA: 'Aceptadas', RECHAZADA: 'Rechazadas' };
+  protected readonly tamanos = [10, 20, 50];
+  protected readonly tamano = signal(10);
   protected readonly estado = signal<Estado>('PENDIENTE');
   protected readonly texto = signal('');
   protected readonly lista = signal<Solicitud[]>([]);
@@ -93,8 +116,10 @@ export class Solicitudes implements OnInit {
   protected readonly resolviendo = signal<{ s: Solicitud; aprobar: boolean } | null>(null);
   protected readonly nombreComunidad = computed(() => Object.fromEntries(this.comunidades().map((c) => [c.idComunidad, c.nombre])) as Record<number, string>);
   private readonly busqueda = new Subject<string>();
+  private aviso?: ReturnType<typeof setTimeout>;
 
   ngOnInit(): void {
+    this.destroyRef.onDestroy(() => clearTimeout(this.aviso));
     this.api.listar({ size: 100 }).subscribe({ next: (p) => this.comunidades.set(p.content), error: () => undefined });
     this.busqueda.pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef)).subscribe((q) => {
       this.texto.set(q);
@@ -103,19 +128,33 @@ export class Solicitudes implements OnInit {
     this.cargar(0);
   }
 
+  private avisar(tipo: 'exito' | 'error', msg: string): void {
+    clearTimeout(this.aviso);
+    this.exito.set(tipo === 'exito' ? msg : null);
+    this.error.set(tipo === 'error' ? msg : null);
+    this.aviso = setTimeout(() => {
+      this.exito.set(null);
+      this.error.set(null);
+    }, 4000);
+  }
+
   protected buscar(q: string): void {
     this.busqueda.next(q.trim());
   }
 
   protected cambiar(e: Estado): void {
     this.estado.set(e);
-    this.exito.set(null);
+    this.cargar(0);
+  }
+
+  protected cambiarTamano(t: number): void {
+    this.tamano.set(t);
     this.cargar(0);
   }
 
   protected cargar(p: number): void {
     this.cargando.set(true);
-    this.api.solicitudes(this.estado(), p, this.texto()).subscribe({
+    this.api.solicitudes(this.estado(), p, this.texto(), this.tamano()).subscribe({
       next: (r) => {
         this.lista.set(r.content);
         this.pagina.set(r.page.number);
@@ -125,7 +164,7 @@ export class Solicitudes implements OnInit {
       },
       error: (e) => {
         this.cargando.set(false);
-        this.error.set(textoError(e));
+        this.avisar('error', textoError(e));
       },
     });
   }
@@ -143,14 +182,13 @@ export class Solicitudes implements OnInit {
       next: () => {
         this.enCurso.set(false);
         this.resolviendo.set(null);
-        this.error.set(null);
-        this.exito.set(aprobar ? 'Solicitud aceptada: ya es miembro de la comunidad.' : 'Solicitud rechazada.');
+        this.avisar('exito', aprobar ? 'Solicitud aceptada.' : 'Solicitud rechazada.');
         this.lista.update((l) => l.filter((x) => x.idSolicitud !== s.idSolicitud));
         this.cargar(this.pagina());
       },
       error: (e) => {
         this.enCurso.set(false);
-        this.error.set(textoError(e));
+        this.avisar('error', textoError(e));
       },
     });
   }

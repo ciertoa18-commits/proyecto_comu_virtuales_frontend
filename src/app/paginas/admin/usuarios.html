@@ -2,7 +2,6 @@
   <h1>Usuarios</h1>
   <button class="btn btn-primario" type="button" (click)="abrirNuevo()"><cv-icono nombre="mas" [tamano]="16" /> Nuevo usuario</button>
 </div>
-<p class="subtitulo-pagina">Aprueba a los docentes nuevos, crea cuentas y revisa o edita todos los datos de cada usuario.</p>
 
 @if (pendientes() > 0 && filtro().estado !== 'PENDIENTE') {
   <button class="pendientes" type="button" (click)="filtrar('', '', 'PENDIENTE')">
@@ -95,7 +94,6 @@
   <cv-modal titulo="Editar usuario" (cerrar)="editando.set(null)">
     @if (errorModal()) { <div class="alerta">{{ errorModal() }}</div> }
     <form class="tarjeta" [formGroup]="formEdicion" (ngSubmit)="guardarEdicion(d)" novalidate>
-      <p class="ayuda">Los campos con <b class="req">*</b> son obligatorios.</p>
       <label for="er">Rol <b class="req">*</b></label>
       <select id="er" formControlName="rol"><option value="ESTUDIANTE">Estudiante</option><option value="DOCENTE">Docente</option><option value="ADMIN">Administrador</option></select>
       <div class="dos-columnas">
@@ -124,7 +122,6 @@
   <cv-modal titulo="Nuevo usuario" (cerrar)="modalNuevo.set(false)">
     @if (errorModal()) { <div class="alerta">{{ errorModal() }}</div> }
     <form class="tarjeta" [formGroup]="formNuevo" (ngSubmit)="crear()" novalidate>
-      <p class="ayuda">Los campos con <b class="req">*</b> son obligatorios.</p>
       <label for="nr">Rol <b class="req">*</b></label>
       <select id="nr" formControlName="rol"><option value="ESTUDIANTE">Estudiante</option><option value="DOCENTE">Docente</option><option value="ADMIN">Administrador</option></select>
       <div class="dos-columnas">
@@ -134,13 +131,13 @@
       <label for="nc">Correo institucional <b class="req">*</b></label><input id="nc" type="email" [placeholder]="'nombre' + dominioCorreo(formNuevo.controls.rol.value)" formControlName="correo" />
       @if (err('correo', mensajeCorreo(formNuevo.controls.rol.value)); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="apagado">Debe terminar en {{ dominioCorreo(formNuevo.controls.rol.value) }}</small> }
       <label for="ng">Gmail personal <b class="req">*</b></label><input id="ng" type="email" placeholder="tucorreo@gmail.com" formControlName="correoRecuperacion" />
-      @if (err('correoRecuperacion', msgGmail); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Se usa para recuperar la cuenta.</small> }
+      @if (err('correoRecuperacion', msgGmail); as m) { <small class="campo-error">{{ m }}</small> }
       <div class="dos-columnas">
         <div><label for="nt">Teléfono (opcional)</label><input id="nt" type="tel" maxlength="9" formControlName="telefono" />@if (err('telefono', msgTelefono); as m) { <small class="campo-error">{{ m }}</small> }</div>
         @if (formNuevo.controls.rol.value === 'DOCENTE') { <div><label for="ne">Especialidad</label><input id="ne" formControlName="especialidad" /></div> }
       </div>
       <label for="np">Contraseña inicial <b class="req">*</b></label><input id="np" type="password" autocomplete="new-password" formControlName="password" />
-      @if (err('password'); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres. La persona puede cambiarla en Mi perfil.</small> }
+      @if (err('password'); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres.</small> }
       <div class="botones"><button class="btn" type="button" (click)="modalNuevo.set(false)">Cancelar</button><button class="btn btn-primario" type="submit">Crear usuario</button></div>
     </form>
   </cv-modal>
@@ -148,7 +145,7 @@
 
 @if (modalClave(); as u) {
   <cv-modal titulo="Nueva contraseña" (cerrar)="modalClave.set(null)">
-    <p class="apagado">Para {{ u.nombres }} {{ u.apellidos }} ({{ u.correo }}). También se quita el bloqueo por intentos fallidos.</p>
+    <p class="apagado">Para {{ u.nombres }} {{ u.apellidos }} ({{ u.correo }}).</p>
     @if (errorModal()) { <div class="alerta">{{ errorModal() }}</div> }
     <form class="tarjeta" [formGroup]="formClave" (ngSubmit)="guardarClave()" novalidate>
       <label for="cl">Contraseña nueva <b class="req">*</b></label><input id="cl" type="password" autocomplete="new-password" formControlName="nueva" />

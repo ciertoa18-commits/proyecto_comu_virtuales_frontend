@@ -17,7 +17,6 @@ const CARACTERES = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$
   imports: [DatePipe, ReactiveFormsModule, Icono],
   template: `
     <h1>Recuperar cuenta</h1>
-    <p class="subtitulo-pagina">Busca a la persona, revisa el estado de su cuenta y asígnale una contraseña nueva o quítale el bloqueo.</p>
     @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
     @if (exito()) { <div class="exito" role="status">{{ exito() }}</div> }
 
@@ -70,11 +69,11 @@ const CARACTERES = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$
               <button class="btn btn-chico" type="button" [title]="ver() ? 'Ocultar' : 'Mostrar'" (click)="ver.set(!ver())"><cv-icono nombre="ojo" [tamano]="16" /></button>
               <button class="btn btn-chico" type="button" (click)="generar()">Generar</button>
             </div>
-            @if (errorCampo(form.controls.nueva); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres. También se quita el bloqueo por intentos fallidos.</small> }
+            @if (errorCampo(form.controls.nueva); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres.</small> }
             <div class="botones"><button class="btn btn-primario" type="submit"><cv-icono nombre="llave" [tamano]="16" /> Guardar contraseña</button></div>
           </form>
         } @else {
-          <p class="vacio">Elige a una persona de la lista para ver su cuenta.</p>
+          <p class="vacio">Elige una persona.</p>
         }
       </section>
     </div>
@@ -160,14 +159,14 @@ export class RecuperarCuenta implements OnInit {
 
   protected desbloquear(d: UsuarioDetalle): void {
     this.api.desbloquear(d.idUsuario).subscribe({
-      next: (n) => this.listo(n, `Se quitó el bloqueo de ${n.nombres}. Ya puede intentar ingresar de nuevo.`),
+      next: (n) => this.listo(n, `Bloqueo quitado.`),
       error: (e) => this.error.set(textoError(e)),
     });
   }
 
   protected reactivar(d: UsuarioDetalle): void {
     this.api.cambiarEstado(d.idUsuario, 'ACTIVO').subscribe({
-      next: () => this.recargar(d.idUsuario, `La cuenta de ${d.nombres} está activa otra vez.`),
+      next: () => this.recargar(d.idUsuario, `Cuenta reactivada.`),
       error: (e) => this.error.set(textoError(e)),
     });
   }
@@ -178,7 +177,7 @@ export class RecuperarCuenta implements OnInit {
       next: () => {
         this.form.reset();
         this.ver.set(false);
-        this.recargar(d.idUsuario, `Contraseña de ${d.nombres} cambiada. Compártela por un medio seguro.`);
+        this.recargar(d.idUsuario, `Contraseña cambiada.`);
       },
       error: (e) => this.error.set(textoError(e)),
     });
@@ -191,6 +190,7 @@ export class RecuperarCuenta implements OnInit {
   private listo(d: UsuarioDetalle, mensaje: string): void {
     this.error.set(null);
     this.exito.set(mensaje);
+    setTimeout(() => this.exito.set(null), 4000);
     this.elegido.set(d);
     this.resultados.update((l) => l.map((u) => (u.idUsuario === d.idUsuario ? { ...u, estado: d.estado, bloqueado: d.bloqueado } : u)));
   }
