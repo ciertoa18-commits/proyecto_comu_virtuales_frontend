@@ -14,6 +14,9 @@ export class CuentaApi {
   pedirCodigo(correo: string) {
     return this.http.post<RespuestaCuenta>(`${this.url}/auth/recuperacion`, { correo });
   }
+  verificarCodigo(correo: string, codigo: string) {
+    return this.http.post<RespuestaCuenta>(`${this.url}/auth/verificar-codigo`, { correo, codigo });
+  }
   restablecer(correo: string, codigo: string, nueva: string) {
     return this.http.post<RespuestaCuenta>(`${this.url}/auth/restablecer`, { correo, codigo, nueva });
   }
