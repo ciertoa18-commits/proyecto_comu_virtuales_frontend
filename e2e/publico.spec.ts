@@ -35,7 +35,7 @@ test.describe('Pantallas públicas', () => {
 
   test('recuperar contraseña explica que el código llega al Gmail', async ({ page }) => {
     await page.goto('/recuperar');
-    await expect(page.getByText(/Gmail de recuperación/)).toBeVisible();
+    await expect(page.getByText(/Gmail personal/)).toBeVisible();
     await expect(page.getByLabel('Correo electrónico')).toBeVisible();
   });
 });

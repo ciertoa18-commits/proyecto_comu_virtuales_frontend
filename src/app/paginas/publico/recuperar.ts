@@ -2,7 +2,6 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CuentaApi } from '../../core/api/cuenta.api';
-import { PATRON_CORREO } from '../../core/modelos';
 import { errorCampo, textoError } from '../../core/util/errores';
 import { Icono } from '../../shared/icono';
 import { mismasClaves } from './registro';
@@ -23,8 +22,8 @@ export class Recuperar {
   protected readonly enviando = signal(false);
   protected readonly errorCampo = errorCampo;
 
-  protected readonly msgCorreo = 'Escribe tu correo institucional (@perueduca.pe o @minedu.gob.pe).';
-  protected readonly formCorreo = this.fb.nonNullable.group({ correo: ['', [Validators.required, Validators.pattern(PATRON_CORREO)]] });
+  protected readonly msgCorreo = 'Escribe un correo válido, por ejemplo tucorreo@gmail.com.';
+  protected readonly formCorreo = this.fb.nonNullable.group({ correo: ['', [Validators.required, Validators.email, Validators.maxLength(150)]] });
   protected readonly formClave = this.fb.nonNullable.group(
     {
       codigo: ['', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]],
