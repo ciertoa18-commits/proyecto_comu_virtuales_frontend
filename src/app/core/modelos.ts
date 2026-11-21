@@ -21,6 +21,7 @@ export interface RespuestaLogin {
 export interface RespuestaCuenta {
   estado: string;
   mensaje: string;
+  codigoDemo?: string | null;
 }
 export interface DatosRegistro {
   nombres: string;
