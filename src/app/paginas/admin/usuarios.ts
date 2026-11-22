@@ -12,6 +12,7 @@ import { iniciales } from '../../core/util/texto';
 import { Icono } from '../../shared/icono';
 import { Modal } from '../../shared/modal';
 import { Paginador } from '../../shared/paginador';
+import { OTRO_IDIOMA } from '../publico/registro';
 import { DialogoService } from '../../shared/dialogo';
 
 @Component({
@@ -65,6 +66,9 @@ export class Usuarios implements OnInit {
     correoRecuperacion: ['', [Validators.required, Validators.email, Validators.maxLength(150)]],
     telefono: ['', Validators.pattern(PATRON_TELEFONO)],
     especialidad: ['', Validators.maxLength(100)],
+    idIdiomaPref: [1 as number | null],
+    idiomaOtro: ['', Validators.maxLength(60)],
+    idSegundaLengua: [null as number | null],
     password: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(72)]],
   });
   protected readonly formEdicion = this.fb.nonNullable.group({
@@ -150,6 +154,15 @@ export class Usuarios implements OnInit {
     });
   }
 
+  protected readonly otroIdioma = OTRO_IDIOMA;
+
+  protected cambiarIdiomaNuevo(): void {
+    const otro = this.formNuevo.controls.idIdiomaPref.value === OTRO_IDIOMA;
+    const c = this.formNuevo.controls.idiomaOtro;
+    c.setValidators(otro ? [Validators.required, Validators.maxLength(60)] : [Validators.maxLength(60)]);
+    c.updateValueAndValidity();
+  }
+
   protected abrirNuevo(): void {
     this.formNuevo.reset();
     this.errorModal.set(null);
@@ -173,6 +186,9 @@ export class Usuarios implements OnInit {
         telefono: v.telefono.trim() || null,
         correoRecuperacion: v.correoRecuperacion.trim().toLowerCase(),
         especialidad: v.rol === 'DOCENTE' ? v.especialidad.trim() || null : null,
+        idIdiomaPref: v.idIdiomaPref === OTRO_IDIOMA ? null : v.idIdiomaPref,
+        idiomaOtro: v.idIdiomaPref === OTRO_IDIOMA ? v.idiomaOtro.trim() : null,
+        idSegundaLengua: v.idSegundaLengua,
       })
       .subscribe({
         next: (u) => {

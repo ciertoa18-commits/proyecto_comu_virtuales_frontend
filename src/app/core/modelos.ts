@@ -89,6 +89,9 @@ export interface DatosNuevoUsuario {
   especialidad: string | null;
   telefono: string | null;
   correoRecuperacion: string;
+  idIdiomaPref: number | null;
+  idiomaOtro: string | null;
+  idSegundaLengua: number | null;
 }
 export interface UsuarioDetalle {
   idUsuario: number;
