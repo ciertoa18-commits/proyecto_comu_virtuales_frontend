@@ -42,5 +42,4 @@ export const MENU: { grupo: string; opciones: OpcionMenu[] }[] = [
     ],
   },
   { grupo: 'Gestión', opciones: [{ texto: 'Catálogos', ruta: '/admin/catalogos', icono: 'etiqueta', accion: 'CATEGORIA_CREAR' }] },
-  { grupo: 'Cuenta', opciones: [{ texto: 'Mi perfil', ruta: '/perfil', icono: 'usuario' }] },
 ];
