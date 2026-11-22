@@ -136,6 +136,22 @@
         <div><label for="nt">Teléfono (opcional)</label><input id="nt" type="tel" maxlength="9" formControlName="telefono" />@if (err('telefono', msgTelefono); as m) { <small class="campo-error">{{ m }}</small> }</div>
         @if (formNuevo.controls.rol.value === 'DOCENTE') { <div><label for="ne">Especialidad</label><input id="ne" formControlName="especialidad" /></div> }
       </div>
+      <div class="dos-columnas">
+        <div><label for="nidi">Idioma preferido</label>
+          <select id="nidi" formControlName="idIdiomaPref" (change)="cambiarIdiomaNuevo()">
+            @for (i of (idiomas$ | async) ?? []; track i.idIdioma) { <option [ngValue]="i.idIdioma">{{ i.nombre }}</option> }
+            <option [ngValue]="otroIdioma">Otro</option>
+          </select></div>
+        <div><label for="nseg">Segunda lengua (opcional)</label>
+          <select id="nseg" formControlName="idSegundaLengua">
+            <option [ngValue]="null">Ninguna</option>
+            @for (i of (idiomas$ | async) ?? []; track i.idIdioma) { <option [ngValue]="i.idIdioma">{{ i.nombre }}</option> }
+          </select></div>
+      </div>
+      @if (formNuevo.controls.idIdiomaPref.value === otroIdioma) {
+        <label for="notro">¿Cuál idioma? <b class="req">*</b></label><input id="notro" maxlength="60" placeholder="Ej.: Awajún" formControlName="idiomaOtro" />
+        @if (err('idiomaOtro'); as m) { <small class="campo-error">{{ m }}</small> }
+      }
       <label for="np">Contraseña inicial <b class="req">*</b></label><input id="np" type="password" autocomplete="new-password" formControlName="password" />
       @if (err('password'); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres.</small> }
       <div class="botones"><button class="btn" type="button" (click)="modalNuevo.set(false)">Cancelar</button><button class="btn btn-primario" type="submit">Crear usuario</button></div>
