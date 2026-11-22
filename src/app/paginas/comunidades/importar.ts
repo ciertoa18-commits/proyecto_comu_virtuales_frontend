@@ -7,6 +7,7 @@ import { ComunidadImportada, ResultadoImportacion } from '../../core/modelos';
 import { textoError } from '../../core/util/errores';
 import { Icono } from '../../shared/icono';
 import { crearExcel, leerExcel } from '../../core/util/excel';
+import { EtiquetaPipe } from '../../shared/etiqueta.pipe';
 import { forkJoin, take } from 'rxjs';
 
 const COLUMNAS = ['nombre', 'descripcion', 'categoria', 'idioma', 'pueblo', 'visibilidad'] as const;
@@ -65,7 +66,7 @@ export function filasAComunidades(filas: string[][]): ComunidadImportada[] {
 
 @Component({
   selector: 'cv-importar-comunidades',
-  imports: [AsyncPipe, RouterLink, Icono],
+  imports: [EtiquetaPipe, AsyncPipe, RouterLink, Icono],
   template: `
     <a class="volver" routerLink="/comunidades"><cv-icono nombre="atras" [tamano]="16" /> Volver</a>
     <h1>Importar comunidades</h1>
@@ -115,7 +116,7 @@ export function filasAComunidades(filas: string[][]): ComunidadImportada[] {
                 <td>{{ f.categoria || '—' }}</td>
                 <td>{{ f.idioma || '—' }}</td>
                 <td>{{ f.pueblo || '—' }}</td>
-                <td>{{ f.visibilidad }}</td>
+                <td>{{ f.visibilidad | etiqueta }}</td>
                 <td>
                   @if (resultadoDe()[i + 2]; as r) {
                     <span class="pill" [class.riesgo]="!r.ok"><cv-icono [nombre]="r.ok ? 'check' : 'alerta'" [tamano]="14" /> {{ r.mensaje }}</span>

@@ -9,11 +9,12 @@ import { Modal } from '../../shared/modal';
 import { SesionService } from '../../core/sesion/sesion.service';
 import { textoError } from '../../core/util/errores';
 import { Icono } from '../../shared/icono';
+import { EtiquetaPipe } from '../../shared/etiqueta.pipe';
 import { DialogoService } from '../../shared/dialogo';
 
 @Component({
   selector: 'cv-tab-libreta',
-  imports: [Icono, DatePipe, DecimalPipe, Modal],
+  imports: [EtiquetaPipe, Icono, DatePipe, DecimalPipe, Modal],
   templateUrl: './tab-libreta.html',
   styleUrl: './tab-libreta.css',
 })

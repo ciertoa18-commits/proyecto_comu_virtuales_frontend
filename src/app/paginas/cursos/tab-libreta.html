@@ -59,7 +59,7 @@
             </td>
           }
           <td class="numero"><strong [class.mal]="f.promedio < aprobatoria">{{ f.promedio | number: '1.1-2' }}</strong></td>
-          <td><span class="pill" [class.inactivo]="f.matricula.estado === 'RETIRADO'" [class.riesgo]="f.matricula.estado === 'DESAPROBADO'">{{ f.matricula.estado }}</span></td>
+          <td><span class="pill" [class.inactivo]="f.matricula.estado === 'RETIRADO'" [class.riesgo]="f.matricula.estado === 'DESAPROBADO'">{{ f.matricula.estado | etiqueta }}</span></td>
           @if (sesion.rol() === 'ADMIN' && !bloqueada()) {
             <td>@if (f.matricula.estado === 'MATRICULADO') { <button class="btn btn-chico btn-peligro" type="button" (click)="retirar(f)">Retirar</button> }</td>
           }

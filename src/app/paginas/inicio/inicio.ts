@@ -7,11 +7,12 @@ import { ComunidadApi } from '../../core/api/comunidad.api';
 import { Clase, Comunidad, SeccionResumen } from '../../core/modelos';
 import { SesionService } from '../../core/sesion/sesion.service';
 import { portada } from '../../core/util/texto';
+import { EtiquetaPipe } from '../../shared/etiqueta.pipe';
 import { Icono } from '../../shared/icono';
 
 @Component({
   selector: 'cv-inicio',
-  imports: [DatePipe, RouterLink, Icono],
+  imports: [EtiquetaPipe, DatePipe, RouterLink, Icono],
   templateUrl: './inicio.html',
   styleUrl: './inicio.css',
 })

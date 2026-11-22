@@ -11,11 +11,12 @@ import { iniciales, LIMITE_ARCHIVO } from '../../core/util/texto';
 import { BotonDescarga } from '../../shared/boton-descarga';
 import { Paginador } from '../../shared/paginador';
 import { Icono } from '../../shared/icono';
+import { EtiquetaPipe } from '../../shared/etiqueta.pipe';
 import { DialogoService } from '../../shared/dialogo';
 
 @Component({
   selector: 'cv-tab-muro',
-  imports: [Icono, DatePipe, ReactiveFormsModule, RouterLink, BotonDescarga, Paginador],
+  imports: [EtiquetaPipe, Icono, DatePipe, ReactiveFormsModule, RouterLink, BotonDescarga, Paginador],
   templateUrl: './tab-muro.html',
   styleUrl: './tab-muro.css',
 })

@@ -3,7 +3,7 @@
   <article class="bloque">
     <header class="autor">
       <span class="av">{{ iniciales(v.autor.nombres + ' ' + v.autor.apellidos) }}</span>
-      <div><strong>{{ v.autor.nombres }} {{ v.autor.apellidos }}</strong><small class="apagado">{{ v.autor.rol }} · {{ v.publicacion.fechaPublicacion | date: 'dd/MM/yyyy HH:mm' }}</small></div>
+      <div><strong>{{ v.autor.nombres }} {{ v.autor.apellidos }}</strong><small class="apagado">{{ v.autor.rol | etiqueta }} · {{ v.publicacion.fechaPublicacion | date: 'dd/MM/yyyy HH:mm' }}</small></div>
     </header>
     @if (v.publicacion.titulo) { <h1 class="titulo">{{ v.publicacion.titulo }}</h1> }
     @if (v.publicacion.contenido) { <p class="texto">{{ v.publicacion.contenido }}</p> }

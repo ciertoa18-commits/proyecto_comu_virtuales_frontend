@@ -8,13 +8,14 @@ import { textoError } from '../../core/util/errores';
 import { portada } from '../../core/util/texto';
 import { BotonDescarga } from '../../shared/boton-descarga';
 import { Icono } from '../../shared/icono';
+import { EtiquetaPipe } from '../../shared/etiqueta.pipe';
 import { ICONO_RECURSO } from './tab-contenido';
 
 interface Grupo { unidad: Unidad | null; recursos: Recurso[]; }
 
 @Component({
   selector: 'cv-mis-recursos',
-  imports: [DatePipe, RouterLink, BotonDescarga, Icono],
+  imports: [EtiquetaPipe, DatePipe, RouterLink, BotonDescarga, Icono],
   template: `
     @if (elegido(); as c) {
       <button class="volver enlace" type="button" (click)="volver()"><cv-icono nombre="atras" [tamano]="16" /> Elegir otro curso</button>
@@ -38,7 +39,7 @@ interface Grupo { unidad: Unidad | null; recursos: Recurso[]; }
           @for (r of g.recursos; track r.idRecurso) {
             <div class="fila">
               <div class="r"><span class="ico"><cv-icono [nombre]="icono[r.tipo]" [tamano]="20" /></span>
-                <div><strong>{{ r.titulo }}</strong><div class="apagado">{{ r.tipo }} · {{ r.fechaPublicacion | date: 'dd/MM/yyyy' }}</div>
+                <div><strong>{{ r.titulo }}</strong><div class="apagado">{{ r.tipo | etiqueta }} · {{ r.fechaPublicacion | date: 'dd/MM/yyyy' }}</div>
                   @if (r.descripcion) { <div class="desc">{{ r.descripcion }}</div> }</div></div>
               <div class="acciones">
                 @if (r.idArchivo) { <cv-descarga [idArchivo]="r.idArchivo" /> }

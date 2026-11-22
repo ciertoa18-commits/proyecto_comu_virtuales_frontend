@@ -19,7 +19,7 @@
           <div class="fila">
             <div>
               <strong>Grupo {{ s.grupo }}</strong>
-              <span class="pill" [class.inactivo]="s.estado === 'CERRADA'">{{ s.estado }}</span>
+              <span class="pill" [class.inactivo]="s.estado === 'CERRADA'">{{ s.estado | etiqueta }}</span>
               <div class="apagado">Docente: {{ personas.nombre(s.idDocente) }}@if (s.cupoMaximo) { · Cupo: {{ s.cupoMaximo }} }</div>
             </div>
             <div class="acciones">
@@ -68,7 +68,7 @@
       <label for="sp">Periodo académico</label>
       <select id="sp" formControlName="idPeriodo">
         <option [ngValue]="null">Elige...</option>
-        @for (p of periodos(); track p.idPeriodo) { <option [ngValue]="p.idPeriodo">{{ p.nombre }} ({{ p.estado }})</option> }
+        @for (p of periodos(); track p.idPeriodo) { <option [ngValue]="p.idPeriodo">{{ p.nombre }} ({{ p.estado | etiqueta }})</option> }
       </select>
       @if (errorCampo(formSeccion.controls.idPeriodo); as m) { <small class="campo-error">{{ m }}</small> }
       <label for="sd">Docente</label>

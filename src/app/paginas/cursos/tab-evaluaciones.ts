@@ -4,11 +4,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AcademicoApi } from '../../core/api/academico.api';
 import { Evaluacion, Seccion, TIPOS_EVALUACION, TipoEvaluacion, Unidad } from '../../core/modelos';
 import { errorCampo, textoError } from '../../core/util/errores';
+import { EtiquetaPipe } from '../../shared/etiqueta.pipe';
 import { aFechaJava } from '../../core/util/texto';
 
 @Component({
   selector: 'cv-tab-evaluaciones',
-  imports: [DatePipe, DecimalPipe, ReactiveFormsModule],
+  imports: [EtiquetaPipe, DatePipe, DecimalPipe, ReactiveFormsModule],
   template: `
     @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
     <div class="dos">
@@ -21,7 +22,7 @@ import { aFechaJava } from '../../core/util/texto';
             <thead><tr><th>Nombre</th><th>Tipo</th><th class="numero">Peso</th><th>Fecha</th></tr></thead>
             <tbody>
               @for (e of evaluaciones(); track e.idEvaluacion) {
-                <tr><td>{{ e.nombre }}</td><td><span class="pill azul">{{ e.tipo }}</span></td><td class="numero">{{ e.peso }}%</td><td>{{ e.fecha ? (e.fecha | date: 'dd/MM/yyyy') : '—' }}</td></tr>
+                <tr><td>{{ e.nombre }}</td><td><span class="pill azul">{{ e.tipo | etiqueta }}</span></td><td class="numero">{{ e.peso }}%</td><td>{{ e.fecha ? (e.fecha | date: 'dd/MM/yyyy') : '—' }}</td></tr>
               } @empty {
                 <tr><td colspan="4" class="vacio">Aún no hay evaluaciones.</td></tr>
               }

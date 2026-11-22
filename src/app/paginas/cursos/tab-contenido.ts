@@ -10,6 +10,7 @@ import { aFechaJava, aInputFecha, LIMITE_ARCHIVO } from '../../core/util/texto';
 import { BotonDescarga } from '../../shared/boton-descarga';
 import { Modal } from '../../shared/modal';
 import { Icono, NombreIcono } from '../../shared/icono';
+import { EtiquetaPipe } from '../../shared/etiqueta.pipe';
 import { DialogoService } from '../../shared/dialogo';
 
 interface Bloque { unidad: Unidad; sesiones: Sesion[]; recursos: Recurso[]; }
@@ -18,7 +19,7 @@ export const ICONO_RECURSO: Record<TipoRecurso, NombreIcono> = { DOCUMENTO: 'arc
 
 @Component({
   selector: 'cv-tab-contenido',
-  imports: [Icono, DatePipe, ReactiveFormsModule, BotonDescarga, Modal],
+  imports: [EtiquetaPipe, Icono, DatePipe, ReactiveFormsModule, BotonDescarga, Modal],
   templateUrl: './tab-contenido.html',
   styleUrl: './tab-contenido.css',
 })

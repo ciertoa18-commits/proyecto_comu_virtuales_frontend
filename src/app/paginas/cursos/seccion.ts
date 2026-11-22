@@ -11,13 +11,14 @@ import { TabEvaluaciones } from './tab-evaluaciones';
 import { TabLibreta } from './tab-libreta';
 import { TabSeguimiento } from './tab-seguimiento';
 import { TabSilabo } from './tab-silabo';
+import { EtiquetaPipe } from '../../shared/etiqueta.pipe';
 import { Icono } from '../../shared/icono';
 
 type Pestana = 'contenido' | 'silabo' | 'evaluaciones' | 'libreta' | 'asistencia' | 'seguimiento';
 
 @Component({
   selector: 'cv-seccion',
-  imports: [Icono, RouterLink, TabContenido, TabEvaluaciones, TabLibreta, TabAsistencia, TabSeguimiento, TabSilabo],
+  imports: [EtiquetaPipe, Icono, RouterLink, TabContenido, TabEvaluaciones, TabLibreta, TabAsistencia, TabSeguimiento, TabSilabo],
   template: `
     @if (esAdmin) {
       <a class="volver" [routerLink]="idComunidad() ? ['/comunidades', idComunidad()] : ['/comunidades']"><cv-icono nombre="atras" [tamano]="16" /> Volver a la comunidad</a>
@@ -28,7 +29,7 @@ type Pestana = 'contenido' | 'silabo' | 'evaluaciones' | 'libreta' | 'asistencia
       <section class="cabeza-seccion">
         <div>
           <h1>{{ curso() || 'Sección' }} <span class="grupo">Grupo {{ s.grupo }}</span></h1>
-          <p class="apagado">Docente: <strong>{{ personas.nombre(s.idDocente) }}</strong> · <span class="pill" [class.inactivo]="s.estado === 'CERRADA'">{{ s.estado }}</span></p>
+          <p class="apagado">Docente: <strong>{{ personas.nombre(s.idDocente) }}</strong> · <span class="pill" [class.inactivo]="s.estado === 'CERRADA'">{{ s.estado | etiqueta }}</span></p>
         </div>
         @if (s.salaVirtual) { <a class="btn btn-coral" [href]="s.salaVirtual" target="_blank" rel="noopener"><cv-icono nombre="video" [tamano]="16" /> Sala virtual</a> }
       </section>
