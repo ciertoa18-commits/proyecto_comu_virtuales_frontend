@@ -12,7 +12,7 @@
       @if (adjuntos().length) {
         <div class="chips">
           @for (a of adjuntos(); track a.idArchivo) {
-            <span class="chip"><cv-icono nombre="clip" [tamano]="14" /> {{ a.nombreOriginal }} <button type="button" aria-label="Quitar" (click)="quitar(a)">×</button></span>
+            <span class="chip"><cv-icono nombre="clip" [tamano]="14" /> {{ a.nombreOriginal }} <button type="button" aria-label="Quitar" (click)="quitar(a)"><cv-icono nombre="cerrar" [tamano]="14" /></button></span>
           }
         </div>
       }

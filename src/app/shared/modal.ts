@@ -1,13 +1,15 @@
 import { Component, HostListener, input, output } from '@angular/core';
+import { Icono } from './icono';
 
 @Component({
   selector: 'cv-modal',
+  imports: [Icono],
   template: `
     <div class="modal-fondo" (click)="cerrar.emit()">
       <div class="modal" [class.ancho]="ancho()" role="dialog" aria-modal="true" [attr.aria-label]="titulo()" (click)="$event.stopPropagation()">
         <div class="modal-cabeza">
           <h3>{{ titulo() }}</h3>
-          <button class="modal-x" type="button" aria-label="Cerrar" (click)="cerrar.emit()">×</button>
+          <button class="modal-x" type="button" aria-label="Cerrar" (click)="cerrar.emit()"><cv-icono nombre="cerrar" [tamano]="20" /></button>
         </div>
         <ng-content />
       </div>
