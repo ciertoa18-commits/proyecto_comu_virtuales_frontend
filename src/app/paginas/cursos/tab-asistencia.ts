@@ -78,7 +78,7 @@ export const NOMBRE_ASISTENCIA: Record<EstadoAsistencia, string> = { PRESENTE: '
     .resumen { display: flex; gap: .5rem; flex-wrap: wrap; margin: .2rem 0 .8rem; }
     .etq { border-radius: 999px; padding: .2rem .7rem; font-size: .8rem; background: #eef7ee; color: #2e6b30; }
     .etq[data-estado='TARDANZA'] { background: #fff6e0; color: #8a5a00; }
-    .etq[data-estado='FALTA'] { background: var(--coral-claro); color: var(--coral-osc); }
+    .etq[data-estado='FALTA'] { background: var(--rojo-claro); color: var(--rojo); }
     .etq[data-estado='JUSTIFICADA'] { background: #eaf1fb; color: #2f5d9a; }
     input.invalido { border-color: #c0392b; }
   `,

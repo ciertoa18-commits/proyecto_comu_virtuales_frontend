@@ -51,7 +51,7 @@ import { DialogoService } from '../../shared/dialogo';
     .promedio small { display: block; font-size: .7rem; }
     .promedio b { font-size: 1.6rem; }
     .promedio.mal, .mal { color: #c0392b; }
-    .promedio.mal { background: var(--coral-claro); }
+    .promedio.mal { background: var(--rojo-claro); }
   `,
 })
 export class MisNotas implements OnInit {
