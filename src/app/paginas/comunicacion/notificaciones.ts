@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter, fromEvent, merge } from 'rxjs';
 import { TiempoRealService } from '../../core/util/tiempo-real.service';
 import { Router, RouterLink } from '@angular/router';
 import { ComunicacionApi } from '../../core/api/comunicacion.api';
@@ -97,8 +98,9 @@ export class Notificaciones implements OnInit {
 
   ngOnInit(): void {
     this.cargar(0);
-    this.tiempoReal
-      .de('NOTIFICACION')
+    // Se recarga con avisos en vivo y al volver a la pestaña (cambios hechos en otra ventana)
+    const alVolver = fromEvent(document, 'visibilitychange').pipe(filter(() => document.visibilityState === 'visible'));
+    merge(this.tiempoReal.de('NOTIFICACION'), alVolver)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.cargar(this.pagina()));
   }

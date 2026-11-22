@@ -2,7 +2,7 @@ import { Component, computed, DestroyRef, HostListener, inject, OnInit, signal }
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Icono } from '../shared/icono';
-import { merge, switchMap, timer } from 'rxjs';
+import { filter, fromEvent, merge, switchMap, timer } from 'rxjs';
 import { ComunicacionApi } from '../core/api/comunicacion.api';
 import { NOMBRE_ROL } from '../core/modelos';
 import { SesionService } from '../core/sesion/sesion.service';
@@ -48,7 +48,9 @@ export class Portal implements OnInit {
   private readonly tiempoReal = inject(TiempoRealService);
 
   ngOnInit(): void {
-    merge(timer(0, 120_000), this.tiempoReal.de('NOTIFICACION'))
+    // Al volver a la pestaña se recuenta, por si hubo cambios en otra ventana
+    const alVolver = fromEvent(document, 'visibilitychange').pipe(filter(() => document.visibilityState === 'visible'));
+    merge(timer(0, 120_000), this.tiempoReal.de('NOTIFICACION'), alVolver)
       .pipe(
         switchMap(() => this.comunicacion.contarSinLeer()),
         takeUntilDestroyed(this.destroyRef),

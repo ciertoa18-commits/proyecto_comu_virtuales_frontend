@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { catchError, EMPTY, tap } from 'rxjs';
+import { catchError, defer, EMPTY, finalize, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { DatosAviso, Mensaje, Notificacion, Pagina, Persona, UsuarioResumen } from '../modelos';
 import { params } from './parametros';
@@ -11,27 +11,43 @@ export class ComunicacionApi {
   private readonly url = environment.apiUrl;
 
   readonly sinLeer = signal(0);
+  /** Cambios de notificaciones aún sin respuesta: mientras haya, la campana no toma recuentos viejos. */
+  private pendientes = 0;
 
   notificaciones(page = 0, size = 15) {
     return this.http.get<Pagina<Notificacion>>(`${this.url}/me/notificaciones`, { params: { page, size } });
   }
   contarSinLeer() {
     return this.http.get<{ total: number }>(`${this.url}/me/notificaciones/no-leidas`).pipe(
-      tap((r) => this.sinLeer.set(r.total)),
+      tap((r) => {
+        if (this.pendientes === 0) this.sinLeer.set(r.total);
+      }),
       catchError(() => EMPTY),
     );
   }
+  /** Al terminar el último cambio pendiente, se pide un solo recuento al servidor. */
+  private cambio(peticion: Observable<void>): Observable<void> {
+    return defer(() => {
+      this.pendientes++;
+      return peticion.pipe(
+        finalize(() => {
+          this.pendientes--;
+          if (this.pendientes === 0) this.contarSinLeer().subscribe();
+        }),
+      );
+    });
+  }
   marcarLeida(id: number) {
-    return this.http.put<void>(`${this.url}/notificaciones/${id}/leida`, null).pipe(tap(() => this.contarSinLeer().subscribe()));
+    return this.cambio(this.http.put<void>(`${this.url}/notificaciones/${id}/leida`, null));
   }
   marcarNoLeida(id: number) {
-    return this.http.delete<void>(`${this.url}/notificaciones/${id}/leida`).pipe(tap(() => this.contarSinLeer().subscribe()));
+    return this.cambio(this.http.delete<void>(`${this.url}/notificaciones/${id}/leida`));
   }
   eliminarNotificacion(id: number) {
-    return this.http.delete<void>(`${this.url}/notificaciones/${id}`).pipe(tap(() => this.contarSinLeer().subscribe()));
+    return this.cambio(this.http.delete<void>(`${this.url}/notificaciones/${id}`));
   }
   marcarTodas() {
-    return this.http.put<void>(`${this.url}/me/notificaciones/leidas`, null).pipe(tap(() => this.contarSinLeer().subscribe()));
+    return this.cambio(this.http.put<void>(`${this.url}/me/notificaciones/leidas`, null));
   }
   enviarAviso(d: DatosAviso) {
     return this.http.post<{ enviadas: number; mensaje: string }>(`${this.url}/notificaciones`, d);
