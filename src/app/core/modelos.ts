@@ -33,6 +33,8 @@ export interface DatosRegistro {
   telefono: string | null;
   idIdiomaPref: number | null;
   correoRecuperacion: string;
+  idiomaOtro: string | null;
+  idSegundaLengua: number | null;
 }
 export interface Usuario {
   idUsuario: number;
