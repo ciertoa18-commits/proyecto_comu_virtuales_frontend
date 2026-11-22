@@ -304,6 +304,8 @@ export const TIPOS_EVALUACION: TipoEvaluacion[] = ['PRACTICA', 'TAREA', 'EXAMEN'
 export const ESTADOS_ASISTENCIA: EstadoAsistencia[] = ['PRESENTE', 'TARDANZA', 'FALTA', 'JUSTIFICADA'];
 export const NOTA_APROBATORIA = 10.5;
 export const PATRON_CORREO = /^[A-Za-z0-9._%+-]+@(perueduca\.pe|minedu\.gob\.pe)$/i;
+/** En el inicio de sesión se acepta el correo institucional o el Gmail personal registrado. */
+export const PATRON_LOGIN = /^[A-Za-z0-9._%+-]+@(perueduca\.pe|minedu\.gob\.pe|gmail\.com)$/i;
 export function dominioCorreo(rol: Rol): string {
   return rol === 'ESTUDIANTE' ? '@perueduca.pe' : '@minedu.gob.pe';
 }
