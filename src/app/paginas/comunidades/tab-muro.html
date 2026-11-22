@@ -31,7 +31,7 @@
       <span class="av">{{ iniciales(v.autor.nombres + ' ' + v.autor.apellidos) }}</span>
       <div>
         <strong>{{ v.autor.nombres }} {{ v.autor.apellidos }}</strong>
-        <small class="apagado">{{ v.autor.rol }} · {{ v.publicacion.fechaPublicacion | date: 'dd/MM/yyyy HH:mm' }}</small>
+        <small class="apagado">{{ v.autor.rol | etiqueta }} · {{ v.publicacion.fechaPublicacion | date: 'dd/MM/yyyy HH:mm' }}</small>
       </div>
       @if (esMia(v) || sesion.rol() === 'ADMIN') { <button class="btn btn-chico btn-peligro borrar" type="button" (click)="eliminar(v)">Eliminar</button> }
     </header>

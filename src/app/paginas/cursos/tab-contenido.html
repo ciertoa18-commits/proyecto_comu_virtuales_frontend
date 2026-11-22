@@ -42,7 +42,7 @@
         <div class="r-info">
           <span class="r-ico"><cv-icono [nombre]="icono[r.tipo]" [tamano]="22" /></span>
           <div><strong>{{ r.titulo }}</strong>
-            <div class="apagado">{{ r.tipo }}@if (r.idSesion) { · {{ sesionDe(b, r.idSesion) }} }</div>
+            <div class="apagado">{{ r.tipo | etiqueta }}@if (r.idSesion) { · {{ sesionDe(b, r.idSesion) }} }</div>
             @if (r.descripcion) { <div class="desc">{{ r.descripcion }}</div> }</div>
         </div>
         <div class="acciones">
@@ -149,7 +149,7 @@
   <cv-modal [titulo]="'Entregas · ' + mx.recurso.titulo" [ancho]="true" (cerrar)="modalEntregas.set(null)">
     @for (e of mx.lista; track e.idEntrega) {
       <div class="fila">
-        <div><strong>{{ mx.nombres[e.idMatricula] || 'Matrícula #' + e.idMatricula }}</strong> <span class="pill" [class.alerta-pill]="e.estado === 'TARDIA'">{{ e.estado }}</span>
+        <div><strong>{{ mx.nombres[e.idMatricula] || 'Matrícula #' + e.idMatricula }}</strong> <span class="pill" [class.alerta-pill]="e.estado === 'TARDIA'">{{ e.estado | etiqueta }}</span>
           <div class="apagado">{{ e.fechaEntrega | date: 'dd/MM/yyyy HH:mm' }}</div>
           @if (e.comentario) { <div class="desc">{{ e.comentario }}</div> }</div>
         @if (e.idArchivo) { <cv-descarga [idArchivo]="e.idArchivo" /> }

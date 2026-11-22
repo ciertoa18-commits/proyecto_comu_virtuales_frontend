@@ -8,11 +8,12 @@ import { textoError } from '../../core/util/errores';
 import { iniciales } from '../../core/util/texto';
 import { BotonDescarga } from '../../shared/boton-descarga';
 import { Icono } from '../../shared/icono';
+import { EtiquetaPipe } from '../../shared/etiqueta.pipe';
 import { DialogoService } from '../../shared/dialogo';
 
 @Component({
   selector: 'cv-publicacion',
-  imports: [Icono, DatePipe, NgTemplateOutlet, RouterLink, BotonDescarga],
+  imports: [EtiquetaPipe, Icono, DatePipe, NgTemplateOutlet, RouterLink, BotonDescarga],
   templateUrl: './publicacion.html',
   styleUrl: './publicacion.css',
 })

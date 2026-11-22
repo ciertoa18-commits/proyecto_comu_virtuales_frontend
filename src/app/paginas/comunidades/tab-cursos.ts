@@ -11,11 +11,12 @@ import { errorCampo, textoError } from '../../core/util/errores';
 import { Modal } from '../../shared/modal';
 import { SiPuede } from '../../shared/si-puede';
 import { Icono } from '../../shared/icono';
+import { EtiquetaPipe } from '../../shared/etiqueta.pipe';
 import { DialogoService } from '../../shared/dialogo';
 
 @Component({
   selector: 'cv-tab-cursos',
-  imports: [Icono, ReactiveFormsModule, RouterLink, Modal, SiPuede],
+  imports: [EtiquetaPipe, Icono, ReactiveFormsModule, RouterLink, Modal, SiPuede],
   templateUrl: './tab-cursos.html',
   styleUrl: './tab-cursos.css',
 })

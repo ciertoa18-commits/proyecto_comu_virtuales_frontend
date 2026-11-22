@@ -4,11 +4,12 @@ import { RouterLink } from '@angular/router';
 import { AcademicoApi } from '../../core/api/academico.api';
 import { Evaluacion, MiCurso, NOTA_APROBATORIA } from '../../core/modelos';
 import { textoError } from '../../core/util/errores';
+import { EtiquetaPipe } from '../../shared/etiqueta.pipe';
 import { DialogoService } from '../../shared/dialogo';
 
 @Component({
   selector: 'cv-mis-notas',
-  imports: [DecimalPipe, RouterLink],
+  imports: [EtiquetaPipe, DecimalPipe, RouterLink],
   template: `
     <h1>Mis notas</h1>
     <p class="subtitulo-pagina">Apruebas con {{ aprobatoria }}.</p>
@@ -18,7 +19,7 @@ import { DialogoService } from '../../shared/dialogo';
       <section class="bloque">
         <div class="cabecera">
           <div><h2>{{ c.curso }} <small class="apagado">· Grupo {{ c.grupo }}</small></h2>
-            <span class="pill" [class.riesgo]="c.matricula.estado === 'DESAPROBADO'" [class.inactivo]="c.matricula.estado === 'RETIRADO'">{{ c.matricula.estado }}</span></div>
+            <span class="pill" [class.riesgo]="c.matricula.estado === 'DESAPROBADO'" [class.inactivo]="c.matricula.estado === 'RETIRADO'">{{ c.matricula.estado | etiqueta }}</span></div>
           <div class="promedio" [class.mal]="c.promedio < aprobatoria">
             <small>Promedio</small><b>{{ (c.matricula.notaFinal ?? c.promedio) | number: '1.1-2' }}</b>
           </div>
@@ -29,7 +30,7 @@ import { DialogoService } from '../../shared/dialogo';
             <tbody>
               @for (e of c.evaluaciones; track e.idEvaluacion) {
                 <tr>
-                  <td>{{ e.nombre }}</td><td>{{ e.tipo }}</td><td class="numero">{{ e.peso }}%</td>
+                  <td>{{ e.nombre }}</td><td>{{ e.tipo | etiqueta }}</td><td class="numero">{{ e.peso }}%</td>
                   <td class="numero">@if (notaDe(c, e); as n) { <strong [class.mal]="n.calificacion < aprobatoria">{{ n.calificacion }}</strong> } @else { <span class="apagado">—</span> }</td>
                   <td>{{ notaDe(c, e)?.comentarioDocente ?? '' }}</td>
                 </tr>

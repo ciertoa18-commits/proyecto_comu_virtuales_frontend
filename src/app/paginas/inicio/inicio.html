@@ -46,8 +46,8 @@
       <div class="bloque">
         @for (s of secciones(); track s.idSeccion) {
           <a class="fila enlace-fila" [routerLink]="['/secciones', s.idSeccion]">
-            <span><strong>{{ s.curso }}</strong> <span class="apagado">· Grupo {{ s.grupo }}</span></span>
-            <span class="pill" [class.inactivo]="s.estado === 'CERRADA'">{{ s.estado }}</span>
+            <span><strong>{{ s.curso }}</strong><span class="apagado">&nbsp;· Grupo {{ s.grupo }}</span></span>
+            <span class="pill" [class.inactivo]="s.estado === 'CERRADA'">{{ s.estado | etiqueta }}</span>
           </a>
         } @empty {
           <p class="vacio">{{ sesion.rol() === 'DOCENTE' ? 'Aún no tienes secciones asignadas.' : 'Aún no tienes cursos. Únete a una comunidad y matricúlate.' }}</p>
