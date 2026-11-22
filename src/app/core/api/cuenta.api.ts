@@ -28,7 +28,7 @@ export class CuentaApi {
     return this.http.put<Usuario>(`${this.url}/me`, d);
   }
   pedirCodigoPassword() {
-    return this.http.post<{ destino: string; correoActivo: boolean }>(`${this.url}/me/password/codigo`, null);
+    return this.http.post<{ destino: string; correoActivo: boolean; codigoDemo?: string }>(`${this.url}/me/password/codigo`, null);
   }
   cambiarPassword(actual: string, nueva: string, codigo: string) {
     return this.http.put<void>(`${this.url}/me/password`, { actual, nueva, codigo });
