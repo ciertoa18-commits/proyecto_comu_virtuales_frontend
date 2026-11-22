@@ -37,15 +37,14 @@ const ICONO: Record<TipoNotificacion, NombreIcono> = {
           <button class="abrir" type="button" (click)="abrir(n)">
             <span class="ico"><cv-icono [nombre]="icono[n.tipo]" [tamano]="20" /></span>
             <span class="txt">
-              <strong>{{ n.titulo }}</strong>
+              <strong>@if (!n.leida) { <span class="etiqueta-nueva">Nueva</span> }{{ n.titulo }}</strong>
               @if (n.contenido) { <span class="cont">{{ n.contenido }}</span> }
               <small class="apagado">{{ n.fechaCreacion | date: 'dd/MM/yyyy h:mm a' }}@if (n.idEmisor) { · de {{ personas.nombre(n.idEmisor) }} }</small>
             </span>
-            @if (!n.leida) { <span class="punto" aria-label="Sin leer"></span> }
           </button>
           <div class="botones-noti">
             <button class="mini-btn" type="button" [title]="n.leida ? 'Marcar como no leída' : 'Marcar como leída'" [attr.aria-label]="n.leida ? 'Marcar como no leída' : 'Marcar como leída'" (click)="alternarLeida(n)">
-              <cv-icono [nombre]="n.leida ? 'correo' : 'check'" [tamano]="18" /><span>{{ n.leida ? 'No leída' : 'Leída' }}</span>
+              <cv-icono [nombre]="n.leida ? 'correo' : 'check'" [tamano]="18" /><span>{{ n.leida ? 'Marcar como no leída' : 'Marcar como leída' }}</span>
             </button>
             <button class="mini-btn borrar" type="button" title="Eliminar" aria-label="Eliminar notificación" (click)="eliminar(n)">
               <cv-icono nombre="basura" [tamano]="18" /><span>Eliminar</span>
@@ -75,7 +74,8 @@ const ICONO: Record<TipoNotificacion, NombreIcono> = {
     .acciones .btn { display: inline-flex; align-items: center; gap: .3rem; }
     .txt { flex: 1; display: flex; flex-direction: column; gap: .15rem; }
     .cont { color: var(--ink-2); font-size: .9rem; white-space: pre-wrap; }
-    .punto { width: 10px; height: 10px; border-radius: 50%; background: var(--rojo); margin-top: .4rem; }
+    .etiqueta-nueva { display: inline-block; background: var(--rojo); color: #fff; font-size: .68rem; font-weight: 800; letter-spacing: .3px; text-transform: uppercase; border-radius: 999px; padding: .1rem .5rem; margin-right: .45rem; vertical-align: .12em; }
+    .noti.nueva { box-shadow: inset 4px 0 0 var(--rojo); }
   `,
 })
 export class Notificaciones implements OnInit {
