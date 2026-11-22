@@ -8,7 +8,21 @@
       <cv-icono nombre="campana" [tamano]="20" />
       @if (comunicacion.sinLeer() > 0) { <span class="globo">{{ comunicacion.sinLeer() }}</span> }
     </a>
-    <a class="avatar" routerLink="/perfil" [title]="sesion.sesion()?.nombre ?? ''" aria-label="Mi perfil">{{ iniciales() }}</a>
+    <div class="cuenta">
+      <button class="avatar" type="button" [title]="sesion.sesion()?.nombre ?? ''" aria-label="Menú de la cuenta" aria-haspopup="menu" [attr.aria-expanded]="menuCuenta()" (click)="alternarCuenta($event)">{{ iniciales() }}</button>
+      @if (menuCuenta()) {
+        <div class="menu-cuenta" role="menu" (click)="$event.stopPropagation()">
+          <div class="quien">
+            <span class="mini">{{ iniciales() }}</span>
+            <div><strong>{{ sesion.sesion()?.nombre }}</strong><small>{{ rolTexto() }}</small></div>
+          </div>
+          <a role="menuitem" routerLink="/perfil" [queryParams]="{ pestana: 'datos' }" (click)="cerrarCuenta()"><cv-icono nombre="usuario" /> Mi perfil</a>
+          <a role="menuitem" routerLink="/perfil" [queryParams]="{ pestana: 'seguridad' }" (click)="cerrarCuenta()"><cv-icono nombre="ajustes" /> Ajustes <small>Cambiar contraseña</small></a>
+          <hr />
+          <button role="menuitem" type="button" class="salir" (click)="salir()"><cv-icono nombre="salir" /> Cerrar sesión</button>
+        </div>
+      }
+    </div>
   </div>
 </header>
 
@@ -29,7 +43,6 @@
         <span class="mini">{{ iniciales() }}</span>
         <div><strong>{{ sesion.sesion()?.nombre }}</strong><small>{{ rolTexto() }}</small></div>
       </div>
-      <button class="salir" type="button" (click)="sesion.salir()"><cv-icono nombre="salir" /> Cerrar sesión</button>
     </div>
   </aside>
   <main class="contenido">

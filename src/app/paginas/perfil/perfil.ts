@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { interval, takeWhile } from 'rxjs';
 import { CatalogoApi } from '../../core/api/catalogo.api';
 import { CuentaApi } from '../../core/api/cuenta.api';
@@ -24,6 +25,7 @@ export class Perfil implements OnInit {
   private readonly sesion = inject(SesionService);
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly ruta = inject(ActivatedRoute);
   protected readonly idiomas = toSignal(inject(CatalogoApi).idiomas$, { initialValue: [] });
 
   protected readonly usuario = signal<Usuario | null>(null);
@@ -70,6 +72,10 @@ export class Perfil implements OnInit {
   );
 
   ngOnInit(): void {
+    this.ruta.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((q) => {
+      const p = q.get('pestana');
+      if (p === 'datos' || p === 'seguridad') this.pestana.set(p);
+    });
     this.cuenta.yo().subscribe({
       next: ({ usuario, idiomas }) => {
         this.usuario.set(usuario);
