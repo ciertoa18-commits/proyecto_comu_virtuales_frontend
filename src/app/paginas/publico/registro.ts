@@ -16,6 +16,8 @@ export function mismasClaves(a: string, b: string) {
   };
 }
 
+export const OTRO_IDIOMA = -1;
+
 @Component({
   selector: 'cv-registro',
   imports: [ReactiveFormsModule, RouterLink, AsyncPipe, Icono],
@@ -43,12 +45,26 @@ export class Registro {
       telefono: ['', Validators.pattern(PATRON_TELEFONO)],
       correoRecuperacion: ['', [Validators.required, Validators.email, Validators.maxLength(150)]],
       especialidad: ['', Validators.maxLength(100)],
-      idIdiomaPref: [1],
+      idIdiomaPref: [1 as number | null],
+      idiomaOtro: ['', Validators.maxLength(60)],
+      idSegundaLengua: [null as number | null],
       password: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(72)]],
       confirmar: ['', Validators.required],
     },
     { validators: mismasClaves('password', 'confirmar') },
   );
+
+  protected readonly otroIdioma = OTRO_IDIOMA;
+
+  protected get esOtroIdioma(): boolean {
+    return this.form.controls.idIdiomaPref.value === OTRO_IDIOMA;
+  }
+
+  protected cambiarIdioma(): void {
+    const c = this.form.controls.idiomaOtro;
+    c.setValidators(this.esOtroIdioma ? [Validators.required, Validators.maxLength(60)] : [Validators.maxLength(60)]);
+    c.updateValueAndValidity();
+  }
 
   protected get docente(): boolean {
     return this.form.controls.rol.value === 'DOCENTE';
@@ -88,7 +104,9 @@ export class Registro {
         telefono: v.telefono.trim() || null,
         correoRecuperacion: v.correoRecuperacion.trim().toLowerCase(),
         especialidad: v.rol === 'DOCENTE' ? v.especialidad.trim() || null : null,
-        idIdiomaPref: v.idIdiomaPref,
+        idIdiomaPref: v.idIdiomaPref === OTRO_IDIOMA ? null : v.idIdiomaPref,
+        idiomaOtro: v.idIdiomaPref === OTRO_IDIOMA ? v.idiomaOtro.trim() : null,
+        idSegundaLengua: v.idSegundaLengua,
         password: v.password,
       })
       .subscribe({

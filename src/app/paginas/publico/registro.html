@@ -48,7 +48,22 @@
           @if (err('telefono', msgTelefono); as m) { <small class="campo-error">{{ m }}</small> }
         </label>
         <label class="campo"><span>Idioma preferido</span>
-          <select formControlName="idIdiomaPref">
+          <select formControlName="idIdiomaPref" (change)="cambiarIdioma()">
+            @for (i of (idiomas$ | async) ?? []; track i.idIdioma) { <option [ngValue]="i.idIdioma">{{ i.nombre }}</option> }
+            <option [ngValue]="otroIdioma">Otro</option>
+          </select>
+        </label>
+      </div>
+      @if (esOtroIdioma) {
+        <label class="campo"><span>¿Cuál idioma? <b class="req">*</b></span>
+          <input type="text" maxlength="60" placeholder="Ej.: Awajún" formControlName="idiomaOtro" />
+          @if (err('idiomaOtro'); as m) { <small class="campo-error">{{ m }}</small> }
+        </label>
+      }
+      <div class="par">
+        <label class="campo"><span>Segunda lengua (opcional)</span>
+          <select formControlName="idSegundaLengua">
+            <option [ngValue]="null">Ninguna</option>
             @for (i of (idiomas$ | async) ?? []; track i.idIdioma) { <option [ngValue]="i.idIdioma">{{ i.nombre }}</option> }
           </select>
         </label>
