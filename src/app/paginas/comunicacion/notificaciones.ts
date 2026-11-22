@@ -43,9 +43,13 @@ const ICONO: Record<TipoNotificacion, NombreIcono> = {
             </span>
           </button>
           <div class="botones-noti">
-            <button class="mini-btn" type="button" [title]="n.leida ? 'Marcar como no leída' : 'Marcar como leída'" [attr.aria-label]="n.leida ? 'Marcar como no leída' : 'Marcar como leída'" (click)="alternarLeida(n)">
-              <cv-icono [nombre]="n.leida ? 'correo' : 'check'" [tamano]="18" /><span>{{ n.leida ? 'Marcar como no leída' : 'Marcar como leída' }}</span>
-            </button>
+            @if (n.leida) {
+              <span class="leida" title="Leída"><cv-icono nombre="check" [tamano]="16" /><span>Leída</span></span>
+            } @else {
+              <button class="mini-btn" type="button" title="Marcar como leída" aria-label="Marcar como leída" (click)="marcarLeida(n)">
+                <cv-icono nombre="check" [tamano]="18" /><span>Marcar como leída</span>
+              </button>
+            }
             <button class="mini-btn borrar" type="button" title="Eliminar" aria-label="Eliminar notificación" (click)="eliminar(n)">
               <cv-icono nombre="basura" [tamano]="18" /><span>Eliminar</span>
             </button>
@@ -68,8 +72,9 @@ const ICONO: Record<TipoNotificacion, NombreIcono> = {
     .botones-noti { display: flex; gap: 4px; flex: none; }
     .mini-btn { display: inline-flex; align-items: center; gap: .3rem; background: none; border: 1px solid transparent; border-radius: 8px; padding: .4rem .55rem; color: var(--muted); font: inherit; font-size: .8rem; font-weight: 600; cursor: pointer; }
     .mini-btn:hover { background: var(--superficie); border-color: var(--line); color: var(--ink); }
+    .leida { display: inline-flex; align-items: center; gap: .3rem; padding: .4rem .55rem; color: var(--txt-verde); font-size: .8rem; font-weight: 600; }
     .mini-btn.borrar:hover { color: var(--rojo); border-color: var(--rojo); background: var(--rojo-claro); }
-    @media (max-width: 640px) { .mini-btn span { display: none; } }
+    @media (max-width: 640px) { .mini-btn span, .leida span { display: none; } }
     .ico { width: 38px; height: 38px; border-radius: 50%; background: var(--coral-claro); color: var(--acento-texto-osc); display: flex; align-items: center; justify-content: center; flex: none; }
     .acciones .btn { display: inline-flex; align-items: center; gap: .3rem; }
     .txt { flex: 1; display: flex; flex-direction: column; gap: .15rem; }
@@ -139,14 +144,15 @@ export class Notificaciones implements OnInit {
     });
   }
 
-  protected alternarLeida(n: Notificacion): void {
+  /** Una vez leída, la notificación queda leída (no se puede volver a marcar como no leída). */
+  protected marcarLeida(n: Notificacion): void {
+    if (n.leida) return;
     this.error.set(null);
-    const leida = !n.leida;
-    this.poner(n.idNotificacion, leida);
-    this.api.sinLeer.update((v) => Math.max(0, v + (leida ? -1 : 1)));
-    (leida ? this.api.marcarLeida(n.idNotificacion) : this.api.marcarNoLeida(n.idNotificacion)).subscribe({
+    this.poner(n.idNotificacion, true);
+    this.api.sinLeer.update((v) => Math.max(0, v - 1));
+    this.api.marcarLeida(n.idNotificacion).subscribe({
       error: (e) => {
-        this.poner(n.idNotificacion, !leida);
+        this.poner(n.idNotificacion, false);
         this.api.contarSinLeer().subscribe();
         this.error.set(textoError(e));
       },
