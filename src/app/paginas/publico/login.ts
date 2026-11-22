@@ -1,7 +1,7 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { PATRON_CORREO } from '../../core/modelos';
+import { PATRON_LOGIN } from '../../core/modelos';
 import { SesionService } from '../../core/sesion/sesion.service';
 import { errorCampo, textoError } from '../../core/util/errores';
 
@@ -21,10 +21,10 @@ export class Login {
   protected readonly enviando = signal(false);
   protected readonly intentado = signal(false);
   protected readonly correcto = signal<string | null>(null);
-  protected readonly msgCorreo = 'Usa tu correo institucional (@perueduca.pe o @minedu.gob.pe).';
+  protected readonly msgCorreo = 'Usa tu correo institucional (@perueduca.pe o @minedu.gob.pe) o tu Gmail personal.';
 
   protected readonly form = inject(FormBuilder).nonNullable.group({
-    correo: ['', [Validators.required, Validators.pattern(PATRON_CORREO)]],
+    correo: ['', [Validators.required, Validators.pattern(PATRON_LOGIN)]],
     password: ['', Validators.required],
   });
 
