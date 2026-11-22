@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, HostListener, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Icono } from '../shared/icono';
@@ -22,6 +22,7 @@ export class Portal implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly menuAbierto = signal(window.innerWidth > 760);
+  protected readonly menuCuenta = signal(false);
   protected readonly iniciales = computed(() => iniciales(this.sesion.sesion()?.nombre));
   protected readonly rolTexto = computed(() => {
     const r = this.sesion.rol();
@@ -47,6 +48,22 @@ export class Portal implements OnInit {
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
+  }
+
+  protected alternarCuenta(ev: Event): void {
+    ev.stopPropagation();
+    this.menuCuenta.update((v) => !v);
+  }
+
+  @HostListener('document:click')
+  @HostListener('document:keydown.escape')
+  protected cerrarCuenta(): void {
+    this.menuCuenta.set(false);
+  }
+
+  protected salir(): void {
+    this.menuCuenta.set(false);
+    this.sesion.salir();
   }
 
   protected alternar(): void {
