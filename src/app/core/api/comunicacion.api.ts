@@ -24,6 +24,12 @@ export class ComunicacionApi {
   marcarLeida(id: number) {
     return this.http.put<void>(`${this.url}/notificaciones/${id}/leida`, null).pipe(tap(() => this.contarSinLeer().subscribe()));
   }
+  marcarNoLeida(id: number) {
+    return this.http.delete<void>(`${this.url}/notificaciones/${id}/leida`).pipe(tap(() => this.contarSinLeer().subscribe()));
+  }
+  eliminarNotificacion(id: number) {
+    return this.http.delete<void>(`${this.url}/notificaciones/${id}`).pipe(tap(() => this.contarSinLeer().subscribe()));
+  }
   marcarTodas() {
     return this.http.put<void>(`${this.url}/me/notificaciones/leidas`, null).pipe(tap(() => this.contarSinLeer().subscribe()));
   }
