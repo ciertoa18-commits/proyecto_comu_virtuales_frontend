@@ -60,7 +60,7 @@ type Pestana = 'contenido' | 'silabo' | 'evaluaciones' | 'libreta' | 'asistencia
     }
   `,
   styles: `
-    .cabeza-seccion { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; background: #fff; border-radius: 14px; padding: 20px 24px; margin-bottom: 1.2rem; box-shadow: 0 2px 10px rgba(0,0,0,.05); border-left: 6px solid var(--coral); }
+    .cabeza-seccion { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; background: var(--superficie); border-radius: 14px; padding: 20px 24px; margin-bottom: 1.2rem; box-shadow: 0 2px 10px rgba(0,0,0,.05); border-left: 6px solid var(--coral); }
     .cabeza-seccion h1 { margin: 0 0 .3rem; font-size: 1.6rem; }
     .grupo { font-size: .9rem; background: var(--azul-claro); color: var(--primario); border-radius: 8px; padding: .2rem .6rem; vertical-align: middle; }
     .cabeza-seccion p { margin: 0; }

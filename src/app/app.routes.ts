@@ -67,6 +67,7 @@ export const rutas: Routes = [
       },
       { path: 'mensajes', loadComponent: () => import('./paginas/comunicacion/mensajes').then((m) => m.Mensajes) },
       { path: 'perfil', loadComponent: () => import('./paginas/perfil/perfil').then((m) => m.Perfil) },
+      { path: 'ajustes', loadComponent: () => import('./paginas/ajustes/ajustes').then((m) => m.Ajustes) },
 
       {
         path: 'admin/usuarios',

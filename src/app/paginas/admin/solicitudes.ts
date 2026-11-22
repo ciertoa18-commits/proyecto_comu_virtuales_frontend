@@ -77,16 +77,16 @@ type Estado = 'PENDIENTE' | 'APROBADA' | 'RECHAZADA';
   `,
   styles: `
     .barra { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin: .8rem 0; }
-    .busca { display: flex; align-items: center; gap: .5rem; flex: 1; min-width: 220px; max-width: 420px; color: #777; }
+    .busca { display: flex; align-items: center; gap: .5rem; flex: 1; min-width: 220px; max-width: 420px; color: var(--muted); }
     .busca input { flex: 1; }
-    .filas { display: flex; align-items: center; gap: .4rem; font-size: .85rem; color: #666; }
+    .filas { display: flex; align-items: center; gap: .4rem; font-size: .85rem; color: var(--muted); }
     .filas select { width: auto; }
     .hoja { font-size: .86rem; }
-    .hoja th, .hoja td { padding: .4rem .6rem; border: 1px solid #eee; white-space: nowrap; }
-    .hoja thead th { background: #f7f7f7; position: sticky; top: 0; }
-    .hoja tbody tr:nth-child(even) { background: #fcfcfc; }
+    .hoja th, .hoja td { padding: .4rem .6rem; border: 1px solid var(--line); white-space: nowrap; }
+    .hoja thead th { background: var(--superficie-2); position: sticky; top: 0; }
+    .hoja tbody tr:nth-child(even) { background: var(--superficie-2); }
     .hoja tbody tr:hover { background: var(--coral-claro); }
-    .num { width: 3rem; text-align: right; color: #999; }
+    .num { width: 3rem; text-align: right; color: var(--muted); }
     .msj { max-width: 260px; overflow: hidden; text-overflow: ellipsis; }
     .der { text-align: right; }
     .acciones { display: inline-flex; gap: .3rem; }

@@ -75,10 +75,10 @@ const SECCIONES: { campo: Campo; titulo: string; icono: NombreIcono; ayuda: stri
     .silabo header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
     .silabo header h2 { margin: 0; }
     .acciones { display: flex; gap: .4rem; flex-wrap: wrap; }
-    .silabo article { background: #fff; border-radius: 12px; padding: 14px 18px; margin-bottom: .8rem; box-shadow: 0 1px 6px rgba(0, 0, 0, .05); border-left: 4px solid var(--coral); }
-    .silabo h3 { display: flex; align-items: center; gap: .4rem; margin: 0 0 .4rem; font-size: 1rem; color: var(--coral-osc); }
-    .texto { white-space: pre-wrap; margin: 0; color: #333; line-height: 1.5; }
-    .vacio-silabo { display: flex; flex-direction: column; align-items: center; gap: .6rem; text-align: center; color: #888; padding: 2rem; }
+    .silabo article { background: var(--superficie); border-radius: 12px; padding: 14px 18px; margin-bottom: .8rem; box-shadow: 0 1px 6px rgba(0, 0, 0, .05); border-left: 4px solid var(--coral); }
+    .silabo h3 { display: flex; align-items: center; gap: .4rem; margin: 0 0 .4rem; font-size: 1rem; color: var(--acento-texto-osc); }
+    .texto { white-space: pre-wrap; margin: 0; color: var(--ink); line-height: 1.5; }
+    .vacio-silabo { display: flex; flex-direction: column; align-items: center; gap: .6rem; text-align: center; color: var(--muted); padding: 2rem; }
     .adjunto { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: .6rem; }
     textarea { resize: vertical; }
   `,

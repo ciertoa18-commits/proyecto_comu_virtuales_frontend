@@ -47,7 +47,7 @@ import { DialogoService } from '../../shared/dialogo';
     }
   `,
   styles: `
-    .promedio { text-align: center; background: #e5f5e9; color: var(--verde); border-radius: 12px; padding: .5rem 1rem; }
+    .promedio { text-align: center; background: var(--tinte-verde); color: var(--verde); border-radius: 12px; padding: .5rem 1rem; }
     .promedio small { display: block; font-size: .7rem; }
     .promedio b { font-size: 1.6rem; }
     .promedio.mal, .mal { color: #c0392b; }

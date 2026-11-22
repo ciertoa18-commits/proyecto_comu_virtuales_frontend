@@ -142,11 +142,11 @@ export function filasAComunidades(filas: string[][]): ComunidadImportada[] {
     .num { width: 30px; height: 30px; border-radius: 50%; background: var(--coral); color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; flex: none; }
     .btn { display: inline-flex; align-items: center; gap: .3rem; }
     .subir { cursor: pointer; }
-    code { background: #f4f4f4; padding: 0 .3rem; border-radius: 4px; }
-    .catalogos summary { cursor: pointer; color: var(--coral-osc); font-weight: 600; }
+    code { background: var(--superficie-2); padding: 0 .3rem; border-radius: 4px; }
+    .catalogos summary { cursor: pointer; color: var(--acento-texto-osc); font-weight: 600; }
     .tres-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-top: .6rem; font-size: .88rem; }
     .tres-col ul { margin: .3rem 0 0; padding-left: 1.1rem; max-height: 180px; overflow-y: auto; }
-    .desc { display: block; color: #888; max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .desc { display: block; color: var(--muted); max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .pill { display: inline-flex; align-items: center; gap: .25rem; }
   `,
 })

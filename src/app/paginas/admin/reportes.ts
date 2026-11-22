@@ -57,13 +57,13 @@ import { Icono } from '../../shared/icono';
   styles: `
     .tarjetas { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
     .kpi { display: flex; flex-direction: column; align-items: flex-start; gap: .2rem; border-left: 5px solid var(--coral); }
-    .kpi span { color: var(--coral); } .kpi b { font-size: 1.8rem; } .kpi small { color: #666; }
+    .kpi span { color: var(--acento-texto); } .kpi b { font-size: 1.8rem; } .kpi small { color: var(--muted); }
     .barra-fila { display: grid; grid-template-columns: 110px 1fr; gap: .8rem; align-items: center; margin: .6rem 0; }
     .etq { font-weight: 600; font-size: .9rem; }
     .barras { display: flex; flex-direction: column; gap: 3px; }
     .barra { min-width: 26px; height: 18px; border-radius: 4px; color: #fff; font-size: .7rem; font-weight: 700; padding: 0 6px; display: flex; align-items: center; }
     .c { background: var(--primario); } .r { background: var(--coral); }
-    .leyenda { font-size: .8rem; color: #666; display: flex; gap: .4rem; align-items: center; }
+    .leyenda { font-size: .8rem; color: var(--muted); display: flex; gap: .4rem; align-items: center; }
     .m { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-left: .6rem; }
   `,
 })

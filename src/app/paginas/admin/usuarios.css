@@ -1,16 +1,16 @@
-.pendientes { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; background: #fff6e0; border-radius: 12px; padding: 14px 18px; margin-bottom: 1.2rem; border: 2px solid transparent; cursor: pointer; font: inherit; }
+.pendientes { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; background: var(--tinte-ambar); border-radius: 12px; padding: 14px 18px; margin-bottom: 1.2rem; border: 2px solid transparent; cursor: pointer; font: inherit; }
 .pendientes:hover { border-color: #f0c96a; }
 .pendientes .ico { width: 44px; height: 44px; border-radius: 10px; background: var(--ambar); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex: none; }
-.pendientes strong { color: #8a5a00; display: block; }
+.pendientes strong { color: var(--txt-ambar); display: block; }
 .pendientes small { color: #7a6a40; }
 .persona { display: flex; align-items: center; gap: 10px; }
-.persona small { display: block; color: #888; }
-.av { width: 34px; height: 34px; border-radius: 50%; background: #e0e0e0; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .72rem; color: #555; flex: none; }
+.persona small { display: block; color: var(--muted); }
+.av { width: 34px; height: 34px; border-radius: 50%; background: var(--superficie-2); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .72rem; color: var(--ink-2); flex: none; }
 .acciones .btn, .cabecera .btn { display: inline-flex; align-items: center; gap: .3rem; }
 .ficha-cab { display: flex; align-items: center; gap: .8rem; margin-bottom: 1rem; }
 .ficha-cab strong { display: block; font-size: 1.05rem; }
-.ficha-cab small { color: #777; }
-.av.grande { width: 52px; height: 52px; font-size: 1rem; background: var(--coral-claro); color: var(--coral-osc); }
+.ficha-cab small { color: var(--muted); }
+.av.grande { width: 52px; height: 52px; font-size: 1rem; background: var(--coral-claro); color: var(--acento-texto-osc); }
 .ficha dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .7rem 1.2rem; margin: 0 0 1rem; }
-.ficha dt { font-size: .75rem; color: #888; text-transform: uppercase; letter-spacing: .03em; }
+.ficha dt { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
 .ficha dd { margin: .15rem 0 0; font-weight: 600; word-break: break-word; }

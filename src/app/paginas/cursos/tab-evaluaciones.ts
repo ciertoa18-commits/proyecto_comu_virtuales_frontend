@@ -49,7 +49,7 @@ import { aFechaJava } from '../../core/util/texto';
   `,
   styles: `
     .dos { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.4rem; align-items: start; }
-    .medidor { height: 10px; background: #e6e6e6; border-radius: 6px; overflow: hidden; }
+    .medidor { height: 10px; background: var(--superficie-2); border-radius: 6px; overflow: hidden; }
     .lleno { height: 100%; background: var(--verde); }
     .lleno.pasado { background: var(--coral); }
     @media (max-width: 900px) { .dos { grid-template-columns: 1fr; } }

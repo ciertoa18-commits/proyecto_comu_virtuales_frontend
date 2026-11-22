@@ -17,7 +17,8 @@
             <div><strong>{{ sesion.sesion()?.nombre }}</strong><small>{{ rolTexto() }}</small></div>
           </div>
           <a role="menuitem" routerLink="/perfil" [queryParams]="{ pestana: 'datos' }" (click)="cerrarCuenta()"><cv-icono nombre="usuario" /> Mi perfil</a>
-          <a role="menuitem" routerLink="/perfil" [queryParams]="{ pestana: 'seguridad' }" (click)="cerrarCuenta()"><cv-icono nombre="ajustes" /> Ajustes <small>Cambiar contraseña</small></a>
+          <a role="menuitem" routerLink="/ajustes" (click)="cerrarCuenta()"><cv-icono nombre="ajustes" /> Ajustes <small>Tema y apariencia</small></a>
+          <button role="menuitem" type="button" (click)="alternarTema()"><cv-icono [nombre]="oscuro() ? 'brillo' : 'luna'" /> {{ oscuro() ? 'Modo claro' : 'Modo oscuro' }}</button>
           <hr />
           <button role="menuitem" type="button" class="salir" (click)="salir()"><cv-icono nombre="salir" /> Cerrar sesión</button>
         </div>

@@ -81,20 +81,20 @@ const CARACTERES = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$
   styles: `
     .rejilla { display: grid; grid-template-columns: minmax(260px, 1fr) 2fr; gap: 1.2rem; align-items: start; }
     @media (max-width: 860px) { .rejilla { grid-template-columns: 1fr; } }
-    .busca { display: flex; align-items: center; gap: .5rem; color: #777; margin-bottom: .6rem; }
+    .busca { display: flex; align-items: center; gap: .5rem; color: var(--muted); margin-bottom: .6rem; }
     .busca input { flex: 1; }
     .resultados { list-style: none; margin: 0; padding: 0; max-height: 460px; overflow-y: auto; }
     .resultados button { display: flex; align-items: center; gap: .6rem; width: 100%; padding: .55rem .6rem; border: 0; border-radius: 8px; background: none; font: inherit; text-align: left; cursor: pointer; }
-    .resultados button:hover { background: #f5f5f5; }
+    .resultados button:hover { background: var(--superficie-2); }
     .resultados button.activo { background: var(--coral-claro); }
     .datos { flex: 1; min-width: 0; }
-    .datos small, .cab small { display: block; color: #888; overflow: hidden; text-overflow: ellipsis; }
-    .av { width: 34px; height: 34px; border-radius: 50%; background: #e0e0e0; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .72rem; color: #555; flex: none; }
-    .av.grande { width: 52px; height: 52px; font-size: 1rem; background: var(--coral-claro); color: var(--coral-osc); }
+    .datos small, .cab small { display: block; color: var(--muted); overflow: hidden; text-overflow: ellipsis; }
+    .av { width: 34px; height: 34px; border-radius: 50%; background: var(--superficie-2); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .72rem; color: var(--ink-2); flex: none; }
+    .av.grande { width: 52px; height: 52px; font-size: 1rem; background: var(--coral-claro); color: var(--acento-texto-osc); }
     .cab { display: flex; align-items: center; gap: .8rem; margin-bottom: 1rem; }
     .cab strong { font-size: 1.05rem; }
     .estado { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: .7rem 1.2rem; margin: 0 0 1rem; }
-    .estado dt { font-size: .75rem; color: #888; text-transform: uppercase; letter-spacing: .03em; }
+    .estado dt { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
     .estado dd { margin: .15rem 0 0; font-weight: 600; word-break: break-word; }
     .acciones { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1rem; }
     .btn { display: inline-flex; align-items: center; gap: .3rem; }

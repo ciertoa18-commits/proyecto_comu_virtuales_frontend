@@ -65,6 +65,7 @@ export const ICONOS = {
   portapapeles: 'content_paste',
   lista: 'list',
   info: 'info',
+  luna: 'dark_mode',
 } satisfies Record<string, string>;
 
 export type NombreIcono = keyof typeof ICONOS;

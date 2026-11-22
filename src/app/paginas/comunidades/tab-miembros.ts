@@ -33,7 +33,7 @@ import { DialogoService } from '../../shared/dialogo';
       </table>
     </div>
   `,
-  styles: `.av { display: inline-flex; width: 30px; height: 30px; border-radius: 50%; background: #e0e0e0; align-items: center; justify-content: center; font-size: .7rem; font-weight: 700; margin-right: .5rem; }`,
+  styles: `.av { display: inline-flex; width: 30px; height: 30px; border-radius: 50%; background: var(--superficie-2); align-items: center; justify-content: center; font-size: .7rem; font-weight: 700; margin-right: .5rem; }`,
 })
 export class TabMiembros implements OnInit {
   private readonly dialogo = inject(DialogoService);
