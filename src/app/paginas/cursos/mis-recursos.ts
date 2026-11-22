@@ -71,12 +71,12 @@ interface Grupo { unidad: Unidad | null; recursos: Recurso[]; }
     }
   `,
   styles: `
-    .r { display: flex; gap: 12px; } .ico { color: var(--coral); display: inline-flex; } .desc { color: #444; font-size: .88rem; }
+    .r { display: flex; gap: 12px; } .ico { color: var(--acento-texto); display: inline-flex; } .desc { color: var(--ink-2); font-size: .88rem; }
     .btn, .pill, .volver { display: inline-flex; align-items: center; gap: .3rem; }
     .enlace { background: none; border: 0; font: inherit; cursor: pointer; padding: 0; }
     .cabeza { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
     .cabeza h1 { margin: 0; }
-    .unidad { font-size: 1rem; margin: 1.2rem 0 .5rem; color: var(--coral-osc); }
+    .unidad { font-size: 1rem; margin: 1.2rem 0 .5rem; color: var(--acento-texto-osc); }
     .tarjeta-curso { text-align: left; font: inherit; border: 0; padding: 0; cursor: pointer; }
   `,
 })

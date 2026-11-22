@@ -84,7 +84,7 @@ function sinTildes(s: string): string {
   `,
   styles: `
     .cabecera .btn, .acciones .btn, .tab { display: inline-flex; align-items: center; gap: .3rem; }
-    .busca { display: flex; align-items: center; gap: .5rem; max-width: 420px; color: #777; margin: .6rem 0 1rem; }
+    .busca { display: flex; align-items: center; gap: .5rem; max-width: 420px; color: var(--muted); margin: .6rem 0 1rem; }
     .busca input { flex: 1; }
     .der { text-align: right; }
     .acciones { display: flex; gap: .4rem; justify-content: flex-end; flex-wrap: wrap; }

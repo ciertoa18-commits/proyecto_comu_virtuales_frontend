@@ -1,0 +1,70 @@
+<div class="cabecera">
+  <h1>Ajustes</h1>
+</div>
+<p class="subtitulo-pagina">Personaliza cómo se ve Comunidades Virtuales. Los cambios se aplican al instante y se guardan en este navegador.</p>
+
+<section class="bloque">
+  <h2><cv-icono nombre="brillo" /> Apariencia</h2>
+
+  <p class="rotulo" id="r-tema">Tema</p>
+  <div class="opciones tres" role="radiogroup" aria-labelledby="r-tema">
+    @for (t of temas; track t.valor) {
+      <button type="button" role="radio" class="opcion-tema" [class.sel]="p().tema === t.valor" [attr.aria-checked]="p().tema === t.valor" (click)="ajustes.cambiar('tema', t.valor)">
+        <span class="vista" [class]="'vista ' + t.valor"><span></span><span></span></span>
+        <span class="nombre"><cv-icono [nombre]="t.icono" /> {{ t.texto }}</span>
+        <small>{{ t.ayuda }}</small>
+      </button>
+    }
+  </div>
+
+  <p class="rotulo" id="r-acento">Color de la barra superior</p>
+  <div class="colores" role="radiogroup" aria-labelledby="r-acento">
+    @for (a of acentos; track a.valor) {
+      <button type="button" role="radio" class="color" [class.sel]="p().acento === a.valor" [attr.aria-checked]="p().acento === a.valor" [attr.aria-label]="a.texto" (click)="ajustes.cambiar('acento', a.valor)">
+        <span class="punto" [style.background]="a.color">@if (p().acento === a.valor) { <cv-icono nombre="check" [tamano]="16" /> }</span>
+        {{ a.texto }}
+      </button>
+    }
+  </div>
+</section>
+
+<section class="bloque">
+  <h2><cv-icono nombre="ojo" /> Lectura y accesibilidad</h2>
+
+  <p class="rotulo" id="r-letra">Tamaño de letra</p>
+  <div class="opciones tres" role="radiogroup" aria-labelledby="r-letra">
+    @for (l of letras; track l.valor) {
+      <button type="button" role="radio" class="opcion-letra" [class.sel]="p().letra === l.valor" [attr.aria-checked]="p().letra === l.valor" (click)="ajustes.cambiar('letra', l.valor)">
+        <span class="aa" [style.font-size]="l.muestra">Aa</span>{{ l.texto }}
+      </button>
+    }
+  </div>
+
+  <label class="interruptor">
+    <span><strong>Alto contraste</strong><small>Textos y bordes más marcados, enlaces subrayados.</small></span>
+    <input type="checkbox" role="switch" [checked]="p().altoContraste" (change)="interruptor('altoContraste', $event)" />
+  </label>
+  <label class="interruptor">
+    <span><strong>Reducir animaciones</strong><small>Quita los movimientos y transiciones de la pantalla.</small></span>
+    <input type="checkbox" role="switch" [checked]="p().reducirAnimaciones" (change)="interruptor('reducirAnimaciones', $event)" />
+  </label>
+</section>
+
+<section class="bloque">
+  <h2><cv-icono nombre="menu" /> Navegación</h2>
+  <label class="interruptor">
+    <span><strong>Menú lateral abierto al entrar</strong><small>En pantallas pequeñas el menú siempre empieza cerrado.</small></span>
+    <input type="checkbox" role="switch" [checked]="p().menuAbiertoAlEntrar" (change)="interruptor('menuAbiertoAlEntrar', $event)" />
+  </label>
+</section>
+
+<section class="bloque">
+  <h2><cv-icono nombre="escudo" /> Cuenta y seguridad</h2>
+  <a class="fila-enlace" routerLink="/perfil" [queryParams]="{ pestana: 'datos' }"><cv-icono nombre="usuario" /><span><strong>Mi perfil</strong><small>Nombre, foto, teléfono, Gmail e idiomas</small></span><cv-icono nombre="adelante" /></a>
+  <a class="fila-enlace" routerLink="/perfil" [queryParams]="{ pestana: 'seguridad' }"><cv-icono nombre="llave" /><span><strong>Cambiar contraseña</strong><small>Te enviaremos un código a tu Gmail</small></span><cv-icono nombre="adelante" /></a>
+  <a class="fila-enlace" routerLink="/notificaciones"><cv-icono nombre="campana" /><span><strong>Notificaciones</strong><small>Revisa tus avisos</small></span><cv-icono nombre="adelante" /></a>
+</section>
+
+<div class="botones">
+  <button type="button" class="btn" (click)="ajustes.restablecer()"><cv-icono nombre="deshacer" /> Restablecer ajustes</button>
+</div>

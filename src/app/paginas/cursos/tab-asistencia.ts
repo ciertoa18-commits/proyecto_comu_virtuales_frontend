@@ -76,10 +76,10 @@ export const NOMBRE_ASISTENCIA: Record<EstadoAsistencia, string> = { PRESENTE: '
     .centro { text-align: center !important; }
     .btn { display: inline-flex; align-items: center; gap: .3rem; }
     .resumen { display: flex; gap: .5rem; flex-wrap: wrap; margin: .2rem 0 .8rem; }
-    .etq { border-radius: 999px; padding: .2rem .7rem; font-size: .8rem; background: #eef7ee; color: #2e6b30; }
-    .etq[data-estado='TARDANZA'] { background: #fff6e0; color: #8a5a00; }
+    .etq { border-radius: 999px; padding: .2rem .7rem; font-size: .8rem; background: var(--tinte-verde); color: var(--txt-verde); }
+    .etq[data-estado='TARDANZA'] { background: var(--tinte-ambar); color: var(--txt-ambar); }
     .etq[data-estado='FALTA'] { background: var(--rojo-claro); color: var(--rojo); }
-    .etq[data-estado='JUSTIFICADA'] { background: #eaf1fb; color: #2f5d9a; }
+    .etq[data-estado='JUSTIFICADA'] { background: var(--tinte-azul); color: var(--txt-azul); }
     input.invalido { border-color: #c0392b; }
   `,
 })

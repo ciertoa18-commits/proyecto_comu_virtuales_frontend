@@ -1,9 +1,9 @@
 .roles { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin-bottom: 1.4rem; }
-.rol { border: 2px solid #e2e2e2; border-radius: 14px; padding: .9rem; text-align: center; cursor: pointer; background: #fff; font: inherit; }
-.rol:hover { border-color: #b9c9ef; }
+.rol { border: 2px solid var(--line); border-radius: 14px; padding: .9rem; text-align: center; cursor: pointer; background: var(--superficie); font: inherit; }
+.rol:hover { border-color: var(--borde-input); }
 .rol.sel { border-color: var(--primario); background: var(--azul-claro); }
-.rol .ico { display: flex; justify-content: center; color: var(--coral); margin-bottom: .2rem; }
+.rol .ico { display: flex; justify-content: center; color: var(--acento-texto); margin-bottom: .2rem; }
 .rol strong { display: block; margin-top: .3rem; }
-.rol small { color: #666; font-size: .76rem; }
+.rol small { color: var(--muted); font-size: .76rem; }
 .par { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
 @media (max-width: 520px) { .par, .roles { grid-template-columns: 1fr; } }

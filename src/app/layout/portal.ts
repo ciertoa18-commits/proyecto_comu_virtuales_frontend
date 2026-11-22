@@ -8,6 +8,7 @@ import { NOMBRE_ROL } from '../core/modelos';
 import { SesionService } from '../core/sesion/sesion.service';
 import { iniciales } from '../core/util/texto';
 import { MENU } from './menu';
+import { AjustesService } from '../core/ajustes/ajustes.service';
 import { TiempoRealService } from '../core/util/tiempo-real.service';
 
 @Component({
@@ -21,7 +22,12 @@ export class Portal implements OnInit {
   protected readonly comunicacion = inject(ComunicacionApi);
   private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly menuAbierto = signal(window.innerWidth > 760);
+  private readonly ajustes = inject(AjustesService);
+  protected readonly menuAbierto = signal(window.innerWidth > 760 && this.ajustes.preferencias().menuAbiertoAlEntrar);
+  protected readonly oscuro = computed(() => {
+    const t = this.ajustes.preferencias().tema;
+    return t === 'oscuro' || (t === 'sistema' && window.matchMedia?.('(prefers-color-scheme: dark)').matches);
+  });
   protected readonly menuCuenta = signal(false);
   protected readonly iniciales = computed(() => iniciales(this.sesion.sesion()?.nombre));
   protected readonly rolTexto = computed(() => {
@@ -59,6 +65,10 @@ export class Portal implements OnInit {
   @HostListener('document:keydown.escape')
   protected cerrarCuenta(): void {
     this.menuCuenta.set(false);
+  }
+
+  protected alternarTema(): void {
+    this.ajustes.cambiar('tema', this.oscuro() ? 'claro' : 'oscuro');
   }
 
   protected salir(): void {

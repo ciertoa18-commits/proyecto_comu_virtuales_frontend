@@ -8,5 +8,5 @@
 .acciones { display: flex; gap: .5rem; flex-wrap: wrap; }
 .grande { font-size: .85rem; padding: .45rem .9rem; }
 .bloqueado { text-align: center; padding: 2.5rem 1rem; }
-.grande-ico { color: var(--coral); display: flex; justify-content: center; }
+.grande-ico { color: var(--acento-texto); display: flex; justify-content: center; }
 .tab, .btn, .pill { display: inline-flex; align-items: center; gap: .3rem; }

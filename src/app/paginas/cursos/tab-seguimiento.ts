@@ -35,8 +35,8 @@ import { Icono } from '../../shared/icono';
   `,
   styles: `
     .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
-    .puesto { display: inline-flex; width: 26px; height: 26px; border-radius: 50%; background: #eee; align-items: center; justify-content: center; font-size: .78rem; font-weight: 800; margin-right: .4rem; }
-    .oro { background: #f5c542; } .plata { background: #cfd4da; } .bronce { background: #e0a46b; }
+    .puesto { display: inline-flex; width: 26px; height: 26px; border-radius: 50%; background: var(--superficie-2); align-items: center; justify-content: center; font-size: .78rem; font-weight: 800; margin-right: .4rem; }
+    .oro { background: #f5c542; } .plata { background: var(--borde-input); } .bronce { background: #e0a46b; }
     .mal { color: #c0392b; }
     @media (max-width: 800px) { .dos { grid-template-columns: 1fr; } }
   `,

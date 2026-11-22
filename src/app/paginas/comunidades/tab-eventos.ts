@@ -61,8 +61,8 @@ import { SiPuede } from '../../shared/si-puede';
     .fecha b { font-size: 1.4rem; line-height: 1; }
     .fecha span { font-size: .72rem; text-transform: uppercase; }
     .info { flex: 1; }
-    .info p { margin: .3rem 0 0; color: #444; font-size: .9rem; }
-    .pasados { margin-top: 1rem; background: #fff; border-radius: 12px; padding: .8rem 1rem; }
+    .info p { margin: .3rem 0 0; color: var(--ink-2); font-size: .9rem; }
+    .pasados { margin-top: 1rem; background: var(--superficie); border-radius: 12px; padding: .8rem 1rem; }
     summary { cursor: pointer; font-weight: 600; }
   `,
 })

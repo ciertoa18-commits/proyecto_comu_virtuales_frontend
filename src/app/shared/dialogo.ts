@@ -57,9 +57,9 @@ export class DialogoService {
     .dialogo { max-width: 420px; }
     .cabeza { display: flex; align-items: center; gap: .7rem; margin-bottom: .4rem; }
     .cabeza h3 { margin: 0; font-size: 1.15rem; font-weight: 800; }
-    .ico { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #eaf1fb; color: #2f5d9a; flex: none; }
+    .ico { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--tinte-azul); color: var(--txt-azul); flex: none; }
     .ico.peligro { background: var(--rojo-claro); color: var(--rojo); }
-    p { color: #444; margin: .4rem 0 1.2rem; line-height: 1.45; }
+    p { color: var(--ink-2); margin: .4rem 0 1.2rem; line-height: 1.45; }
     .botones { display: flex; justify-content: flex-end; gap: .5rem; }
     .btn-peligro-lleno { background: #c0392b; border-color: #c0392b; color: #fff; }
     .btn-peligro-lleno:hover { background: #a93226; }

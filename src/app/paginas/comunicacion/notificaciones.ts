@@ -47,14 +47,14 @@ const ICONO: Record<TipoNotificacion, NombreIcono> = {
     <cv-paginador [pagina]="pagina()" [total]="totalPaginas()" (ir)="cargar($event)" />
   `,
   styles: `
-    .noti { width: 100%; display: flex; gap: 14px; align-items: flex-start; text-align: left; background: #fff; border: 0; border-top: 1px solid #f0f0f0; padding: 14px 6px; font: inherit; cursor: pointer; }
+    .noti { width: 100%; display: flex; gap: 14px; align-items: flex-start; text-align: left; background: var(--superficie); border: 0; border-top: 1px solid var(--line); padding: 14px 6px; font: inherit; cursor: pointer; }
     .noti:first-child { border-top: 0; }
-    .noti:hover { background: #fafafa; }
-    .noti.nueva { background: #f4f6f8; }
-    .ico { width: 38px; height: 38px; border-radius: 50%; background: var(--coral-claro); color: var(--coral-osc); display: flex; align-items: center; justify-content: center; flex: none; }
+    .noti:hover { background: var(--superficie-2); }
+    .noti.nueva { background: var(--superficie-2); }
+    .ico { width: 38px; height: 38px; border-radius: 50%; background: var(--coral-claro); color: var(--acento-texto-osc); display: flex; align-items: center; justify-content: center; flex: none; }
     .acciones .btn { display: inline-flex; align-items: center; gap: .3rem; }
     .txt { flex: 1; display: flex; flex-direction: column; gap: .15rem; }
-    .cont { color: #444; font-size: .9rem; white-space: pre-wrap; }
+    .cont { color: var(--ink-2); font-size: .9rem; white-space: pre-wrap; }
     .punto { width: 10px; height: 10px; border-radius: 50%; background: var(--rojo); margin-top: .4rem; }
   `,
 })

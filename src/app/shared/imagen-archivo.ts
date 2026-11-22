@@ -12,7 +12,7 @@ import { CatalogoApi } from '../core/api/catalogo.api';
   `,
   styles: `
     img, .hueco { display: block; object-fit: cover; border-radius: 10px; max-width: 100%; }
-    .hueco { background: #e9e9e9; }
+    .hueco { background: var(--superficie-2); }
     .redonda { border-radius: 50%; }
   `,
 })

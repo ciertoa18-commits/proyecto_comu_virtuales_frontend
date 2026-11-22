@@ -7,6 +7,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0&display=block" />
+  <script>
+    // Aplica el tema guardado antes de que cargue la app (evita el parpadeo blanco en modo oscuro)
+    try {
+      var a = JSON.parse(localStorage.getItem('cv-ajustes') || '{}'), r = document.documentElement;
+      var osc = a.tema === 'oscuro' || (a.tema === 'sistema' && matchMedia('(prefers-color-scheme: dark)').matches);
+      if (osc) r.setAttribute('data-tema', 'oscuro');
+      if (a.acento && a.acento !== 'gris') r.setAttribute('data-acento', a.acento);
+      if (a.letra && a.letra !== 'normal') r.setAttribute('data-letra', a.letra);
+      if (a.reducirAnimaciones) r.setAttribute('data-movimiento', 'reducido');
+      if (a.altoContraste) r.setAttribute('data-contraste', 'alto');
+    } catch (e) {}
+  </script>
 </head>
 <body>
   <cv-root></cv-root>

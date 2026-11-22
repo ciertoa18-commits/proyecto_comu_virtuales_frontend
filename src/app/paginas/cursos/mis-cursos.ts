@@ -86,22 +86,22 @@ import { Icono } from '../../shared/icono';
   `,
   styles: `
     .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: .8rem; margin-bottom: 1.2rem; }
-    .kpi { display: flex; flex-direction: column; gap: .15rem; border-left: 5px solid var(--coral); color: var(--coral); }
-    .kpi b { font-size: 1.6rem; color: #222; } .kpi small { color: #666; }
+    .kpi { display: flex; flex-direction: column; gap: .15rem; border-left: 5px solid var(--coral); color: var(--acento-texto); }
+    .kpi b { font-size: 1.6rem; color: var(--ink); } .kpi small { color: var(--muted); }
     .lista { display: flex; flex-direction: column; gap: 1rem; }
-    .curso { display: flex; background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, .06); }
+    .curso { display: flex; background: var(--superficie); border-radius: 14px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, .06); }
     .banda { width: 120px; flex: none; background-size: cover; background-position: center; }
     .cuerpo { flex: 1; padding: 16px 20px; min-width: 0; }
     .cab { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
-    .nombre { font-size: 1.15rem; font-weight: 800; color: #222; text-decoration: none; }
-    .nombre:hover { color: var(--coral-osc); }
+    .nombre { font-size: 1.15rem; font-weight: 800; color: var(--ink); text-decoration: none; }
+    .nombre:hover { color: var(--acento-texto-osc); }
     .metricas { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .8rem; margin: .9rem 0; }
-    .metrica { background: #fafafa; border-radius: 10px; padding: .6rem .8rem; display: flex; flex-direction: column; gap: .1rem; }
-    .metrica small { color: #888; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; }
+    .metrica { background: var(--superficie-2); border-radius: 10px; padding: .6rem .8rem; display: flex; flex-direction: column; gap: .1rem; }
+    .metrica small { color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; }
     .metrica b { font-size: 1.35rem; }
     .metrica .apagado { font-size: .75rem; }
     .bien { color: #2e7d32; } .mal { color: #c0392b; }
-    .barra { height: 6px; background: #eee; border-radius: 999px; overflow: hidden; }
+    .barra { height: 6px; background: var(--superficie-2); border-radius: 999px; overflow: hidden; }
     .barra span { display: block; height: 100%; background: var(--coral); }
     .accesos { display: flex; gap: .4rem; flex-wrap: wrap; }
     .btn { display: inline-flex; align-items: center; gap: .3rem; }
