@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { tap } from 'rxjs';
+import { catchError, EMPTY, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { DatosAviso, Mensaje, Notificacion, Pagina, Persona, UsuarioResumen } from '../modelos';
 import { params } from './parametros';
@@ -13,15 +13,19 @@ export class ComunicacionApi {
   readonly sinLeer = signal(0);
 
   notificaciones(page = 0, size = 15) {
-    return this.http
-      .get<Pagina<Notificacion>>(`${this.url}/me/notificaciones`, { params: { page, size } })
-      .pipe(tap((p) => page === 0 && size >= 15 && this.sinLeer.set(p.content.filter((n) => !n.leida).length)));
+    return this.http.get<Pagina<Notificacion>>(`${this.url}/me/notificaciones`, { params: { page, size } });
+  }
+  contarSinLeer() {
+    return this.http.get<{ total: number }>(`${this.url}/me/notificaciones/no-leidas`).pipe(
+      tap((r) => this.sinLeer.set(r.total)),
+      catchError(() => EMPTY),
+    );
   }
   marcarLeida(id: number) {
-    return this.http.put<void>(`${this.url}/notificaciones/${id}/leida`, null).pipe(tap(() => this.sinLeer.update((n) => Math.max(0, n - 1))));
+    return this.http.put<void>(`${this.url}/notificaciones/${id}/leida`, null).pipe(tap(() => this.contarSinLeer().subscribe()));
   }
   marcarTodas() {
-    return this.http.put<void>(`${this.url}/me/notificaciones/leidas`, null).pipe(tap(() => this.sinLeer.set(0)));
+    return this.http.put<void>(`${this.url}/me/notificaciones/leidas`, null).pipe(tap(() => this.contarSinLeer().subscribe()));
   }
   enviarAviso(d: DatosAviso) {
     return this.http.post<{ enviadas: number; mensaje: string }>(`${this.url}/notificaciones`, d);
