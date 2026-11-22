@@ -2,7 +2,7 @@ import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angula
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Icono } from '../shared/icono';
-import { catchError, EMPTY, merge, switchMap, timer } from 'rxjs';
+import { merge, switchMap, timer } from 'rxjs';
 import { ComunicacionApi } from '../core/api/comunicacion.api';
 import { NOMBRE_ROL } from '../core/modelos';
 import { SesionService } from '../core/sesion/sesion.service';
@@ -43,7 +43,7 @@ export class Portal implements OnInit {
   ngOnInit(): void {
     merge(timer(0, 120_000), this.tiempoReal.de('NOTIFICACION'))
       .pipe(
-        switchMap(() => this.comunicacion.notificaciones(0, 50).pipe(catchError(() => EMPTY))),
+        switchMap(() => this.comunicacion.contarSinLeer()),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
