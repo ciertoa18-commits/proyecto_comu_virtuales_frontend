@@ -39,6 +39,7 @@ export class Perfil implements OnInit {
   protected readonly subiendo = signal(false);
   protected readonly destinoCodigo = signal<string | null>(null);
   protected readonly correoActivo = signal(true);
+  protected readonly codigoDemo = signal<string | null>(null);
   protected readonly enviandoCodigo = signal(false);
   protected readonly espera = signal(0);
   protected readonly msgTelefono = 'Debe tener 9 dígitos.';
@@ -181,7 +182,8 @@ export class Perfil implements OnInit {
     }
     this.enviandoCodigo.set(true);
     this.cuenta.pedirCodigoPassword().subscribe({
-      next: ({ destino, correoActivo }) => {
+      next: ({ destino, correoActivo, codigoDemo }) => {
+        this.codigoDemo.set(codigoDemo ?? null);
         this.enviandoCodigo.set(false);
         this.destinoCodigo.set(destino);
         this.correoActivo.set(correoActivo !== false);
@@ -213,7 +215,8 @@ export class Perfil implements OnInit {
         this.formClave.reset();
         this.destinoCodigo.set(null);
         this.espera.set(0);
-        this.exito.set('Tu contraseña fue cambiada.');
+        this.codigoDemo.set(null);
+        this.exito.set('Tu contraseña fue cambiada. Te enviamos un aviso a tu Gmail.');
       },
       error: (e) => this.error.set(textoError(e)),
     });

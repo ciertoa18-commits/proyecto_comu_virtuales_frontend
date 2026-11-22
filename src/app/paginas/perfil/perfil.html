@@ -106,7 +106,9 @@
 
     @if (destinoCodigo(); as destino) {
       <div class="codigo-enviado"><cv-icono nombre="correo" [tamano]="16" /> Código enviado a <b>{{ destino }}</b></div>
-      @if (!correoActivo()) { <small class="ayuda">El envío de correos no está configurado: el código aparece en la consola del backend.</small> }
+      @if (codigoDemo(); as c) {
+        <div class="aviso">Modo demostración: Gmail no permitió enviar el correo. Tu código es <strong>{{ c }}</strong></div>
+      } @else if (!correoActivo()) { <small class="ayuda">El envío de correos no está configurado: el código aparece en la consola del backend.</small> }
       <label for="co">Código de 6 dígitos <b class="req">*</b></label>
       <input id="co" class="codigo" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000" formControlName="codigo" />
       @if (errorCampo(formClave.controls.codigo, 'Escribe los 6 dígitos del código.'); as m) { <small class="campo-error">{{ m }}</small> }
