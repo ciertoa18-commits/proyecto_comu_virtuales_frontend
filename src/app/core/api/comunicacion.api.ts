@@ -40,9 +40,6 @@ export class ComunicacionApi {
   marcarLeida(id: number) {
     return this.cambio(this.http.put<void>(`${this.url}/notificaciones/${id}/leida`, null));
   }
-  marcarNoLeida(id: number) {
-    return this.cambio(this.http.delete<void>(`${this.url}/notificaciones/${id}/leida`));
-  }
   eliminarNotificacion(id: number) {
     return this.cambio(this.http.delete<void>(`${this.url}/notificaciones/${id}`));
   }
