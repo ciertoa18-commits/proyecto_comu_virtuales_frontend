@@ -3,7 +3,7 @@
 .lado { display: flex; align-items: center; gap: 16px; }
 .icono { background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer; text-decoration: none; position: relative; line-height: 1; }
 .marca { color: #fff; text-decoration: none; font-weight: 800; letter-spacing: .5px; font-size: 1.1rem; white-space: nowrap; }
-.globo { position: absolute; top: -.5rem; right: -.7rem; min-width: 1.15rem; padding: 0 .3rem; border-radius: 999px; background: #fff; color: var(--coral); font-size: .66rem; font-weight: 800; line-height: 1.15rem; text-align: center; }
+.globo { position: absolute; top: -.5rem; right: -.7rem; min-width: 1.15rem; padding: 0 .3rem; border-radius: 999px; background: var(--rojo); color: #fff; font-size: .66rem; font-weight: 800; line-height: 1.15rem; text-align: center; }
 .avatar { width: 36px; height: 36px; border-radius: 50%; background: rgba(255, 255, 255, .25); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: .82rem; text-decoration: none; }
 
 .cuerpo { display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: calc(100vh - 64px); }
@@ -20,7 +20,7 @@
 .mini { width: 38px; height: 38px; border-radius: 50%; background: var(--primario); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .8rem; flex: none; }
 .yo strong { display: block; font-size: .88rem; line-height: 1.2; overflow-wrap: anywhere; }
 .yo small { color: #888; font-size: .76rem; }
-.salir { width: 100%; display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 10px; border: 1.5px solid var(--coral); background: #fff; color: var(--coral); font: inherit; font-weight: 700; cursor: pointer; }
+.salir { width: 100%; display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 10px; border: 1.5px solid var(--coral); background: var(--rojo); color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
 .salir:hover { background: var(--coral-claro); }
 .contenido { padding: 30px; min-width: 0; }
 .centro { max-width: 1120px; margin: 0 auto; }

@@ -13,6 +13,6 @@ import { Icono } from '../../shared/icono';
       <a class="btn btn-primario" routerLink="/inicio">Volver al inicio</a>
     </div>
   `,
-  styles: `.centrado { text-align: center; padding: 3rem 1rem; } .grande { color: var(--coral); }`,
+  styles: `.centrado { text-align: center; padding: 3rem 1rem; } .grande { color: var(--rojo); }`,
 })
 export class SinPermiso {}

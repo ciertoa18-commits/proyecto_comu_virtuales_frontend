@@ -50,12 +50,12 @@ const ICONO: Record<TipoNotificacion, NombreIcono> = {
     .noti { width: 100%; display: flex; gap: 14px; align-items: flex-start; text-align: left; background: #fff; border: 0; border-top: 1px solid #f0f0f0; padding: 14px 6px; font: inherit; cursor: pointer; }
     .noti:first-child { border-top: 0; }
     .noti:hover { background: #fafafa; }
-    .noti.nueva { background: #fff8f7; }
+    .noti.nueva { background: #f4f6f8; }
     .ico { width: 38px; height: 38px; border-radius: 50%; background: var(--coral-claro); color: var(--coral-osc); display: flex; align-items: center; justify-content: center; flex: none; }
     .acciones .btn { display: inline-flex; align-items: center; gap: .3rem; }
     .txt { flex: 1; display: flex; flex-direction: column; gap: .15rem; }
     .cont { color: #444; font-size: .9rem; white-space: pre-wrap; }
-    .punto { width: 10px; height: 10px; border-radius: 50%; background: var(--coral); margin-top: .4rem; }
+    .punto { width: 10px; height: 10px; border-radius: 50%; background: var(--rojo); margin-top: .4rem; }
   `,
 })
 export class Notificaciones implements OnInit {
