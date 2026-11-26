@@ -10,6 +10,8 @@ import { SesionService } from '../../core/sesion/sesion.service';
 import { errorCampo, erroresPorCampo, textoError } from '../../core/util/errores';
 import { iniciales } from '../../core/util/texto';
 import { Icono } from '../../shared/icono';
+import { VerClave } from '../../shared/ver-clave';
+import { claveSegura } from '../../core/util/clave';
 import { Modal } from '../../shared/modal';
 import { Paginador } from '../../shared/paginador';
 import { OTRO_IDIOMA } from '../publico/registro';
@@ -17,7 +19,7 @@ import { DialogoService } from '../../shared/dialogo';
 
 @Component({
   selector: 'cv-usuarios',
-  imports: [AsyncPipe, DatePipe, ReactiveFormsModule, Icono, Modal, Paginador],
+  imports: [AsyncPipe, DatePipe, ReactiveFormsModule, Icono, Modal, Paginador, VerClave],
   templateUrl: './usuarios.html',
   styleUrl: './usuarios.css',
 })
@@ -69,7 +71,7 @@ export class Usuarios implements OnInit {
     idIdiomaPref: [1 as number | null],
     idiomaOtro: ['', Validators.maxLength(60)],
     idSegundaLengua: [null as number | null],
-    password: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(72)]],
+    password: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(72), claveSegura]],
   });
   protected readonly formEdicion = this.fb.nonNullable.group({
     rol: ['DOCENTE' as Rol],
@@ -82,7 +84,7 @@ export class Usuarios implements OnInit {
     idIdiomaPref: [null as number | null],
   });
   protected readonly formClave = this.fb.nonNullable.group({
-    nueva: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(72)]],
+    nueva: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(72), claveSegura]],
   });
 
   constructor() {

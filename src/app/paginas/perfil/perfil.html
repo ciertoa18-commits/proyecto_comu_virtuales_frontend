@@ -100,7 +100,7 @@
     <label for="ca">Contraseña actual <b class="req">*</b></label><input id="ca" type="password" autocomplete="current-password" formControlName="actual" />
     @if (errorCampo(formClave.controls.actual); as m) { <small class="campo-error">{{ m }}</small> }
     <label for="cn">Nueva contraseña <b class="req">*</b></label><input id="cn" type="password" autocomplete="new-password" formControlName="nueva" />
-    @if (errorCampo(formClave.controls.nueva); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres.</small> }
+    @if (errorCampo(formClave.controls.nueva); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres, con mayúscula, minúscula, número y símbolo (ej. ! @ # $ %).</small> }
     <label for="cc">Repite la nueva contraseña <b class="req">*</b></label><input id="cc" type="password" autocomplete="new-password" formControlName="confirmar" />
     @if (formClave.errors?.['distintas'] && formClave.controls.confirmar.touched) { <small class="campo-error">Las contraseñas no coinciden.</small> }
 

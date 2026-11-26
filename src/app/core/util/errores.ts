@@ -33,6 +33,7 @@ export function errorCampo(c: AbstractControl, formato = 'Formato no válido.'):
   if (e['email']) return 'Escribe un correo válido.';
   if (e['minlength']) return `Mínimo ${e['minlength'].requiredLength} caracteres.`;
   if (e['maxlength']) return `Máximo ${e['maxlength'].requiredLength} caracteres.`;
+  if (e['claveDebil']) return `Contraseña poco segura: le falta ${(e['claveDebil'] as string[]).join(', ')}.`;
   if (e['min']) return `Debe ser al menos ${e['min'].min}.`;
   if (e['max']) return `Debe ser como máximo ${e['max'].max}.`;
   if (e['pattern']) return formato;

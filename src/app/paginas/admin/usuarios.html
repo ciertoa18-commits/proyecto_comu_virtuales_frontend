@@ -153,7 +153,7 @@
         @if (err('idiomaOtro'); as m) { <small class="campo-error">{{ m }}</small> }
       }
       <label for="np">Contraseña inicial <b class="req">*</b></label><input id="np" type="password" autocomplete="new-password" formControlName="password" />
-      @if (err('password'); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres.</small> }
+      @if (err('password'); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres, con mayúscula, minúscula, número y símbolo (ej. ! @ # $ %).</small> }
       <div class="botones"><button class="btn" type="button" (click)="modalNuevo.set(false)">Cancelar</button><button class="btn btn-primario" type="submit">Crear usuario</button></div>
     </form>
   </cv-modal>
@@ -165,7 +165,7 @@
     @if (errorModal()) { <div class="alerta">{{ errorModal() }}</div> }
     <form class="tarjeta" [formGroup]="formClave" (ngSubmit)="guardarClave()" novalidate>
       <label for="cl">Contraseña nueva <b class="req">*</b></label><input id="cl" type="password" autocomplete="new-password" formControlName="nueva" />
-      @if (errorCampo(formClave.controls.nueva); as m) { <small class="campo-error">{{ m }}</small> }
+      @if (errorCampo(formClave.controls.nueva); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres, con mayúscula, minúscula, número y símbolo (ej. ! @ # $ %).</small> }
       <div class="botones"><button class="btn" type="button" (click)="modalClave.set(null)">Cancelar</button><button class="btn btn-primario" type="submit">Guardar</button></div>
     </form>
   </cv-modal>

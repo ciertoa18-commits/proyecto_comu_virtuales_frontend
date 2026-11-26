@@ -39,7 +39,7 @@
         <form [formGroup]="formClave" (ngSubmit)="cambiar()" novalidate>
           <label class="campo"><span>Nueva contraseña</span>
             <input type="password" autocomplete="new-password" formControlName="nueva" />
-            @if (errorCampo(formClave.controls.nueva); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres.</small> }
+            @if (errorCampo(formClave.controls.nueva); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres, con mayúscula, minúscula, número y símbolo (ej. ! @ # $ %).</small> }
           </label>
           <label class="campo"><span>Repite la nueva contraseña</span>
             <input type="password" autocomplete="new-password" formControlName="confirmar" />

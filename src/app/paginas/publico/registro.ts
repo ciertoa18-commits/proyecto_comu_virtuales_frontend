@@ -7,6 +7,8 @@ import { CuentaApi } from '../../core/api/cuenta.api';
 import { dominioCorreo, mensajeCorreo, PATRON_TELEFONO, patronCorreo, RespuestaCuenta } from '../../core/modelos';
 import { errorCampo, erroresPorCampo, textoError } from '../../core/util/errores';
 import { Icono } from '../../shared/icono';
+import { VerClave } from '../../shared/ver-clave';
+import { claveSegura } from '../../core/util/clave';
 
 export function mismasClaves(a: string, b: string) {
   return (g: AbstractControl): ValidationErrors | null => {
@@ -20,7 +22,7 @@ export const OTRO_IDIOMA = -1;
 
 @Component({
   selector: 'cv-registro',
-  imports: [ReactiveFormsModule, RouterLink, AsyncPipe, Icono],
+  imports: [ReactiveFormsModule, RouterLink, AsyncPipe, Icono, VerClave],
   templateUrl: './registro.html',
   styleUrl: './registro.css',
 })
@@ -48,7 +50,7 @@ export class Registro {
       idIdiomaPref: [1 as number | null],
       idiomaOtro: ['', Validators.maxLength(60)],
       idSegundaLengua: [null as number | null],
-      password: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(72)]],
+      password: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(72), claveSegura]],
       confirmar: ['', Validators.required],
     },
     { validators: mismasClaves('password', 'confirmar') },
