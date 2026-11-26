@@ -1,7 +1,7 @@
 @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
 @if (exito()) { <div class="exito" role="status">{{ exito() }}</div> }
 
-@if (!revision()) {
+@if (!revision() && sesion.puede('PUBLICAR')) {
   <form class="bloque nueva" [formGroup]="form" (ngSubmit)="publicar()">
     <div class="yo">{{ iniciales(sesion.sesion()?.nombre) }}</div>
     <div class="campos">
