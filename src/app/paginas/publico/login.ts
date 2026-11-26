@@ -4,10 +4,11 @@ import { Router, RouterLink } from '@angular/router';
 import { PATRON_LOGIN } from '../../core/modelos';
 import { SesionService } from '../../core/sesion/sesion.service';
 import { errorCampo, textoError } from '../../core/util/errores';
+import { VerClave } from '../../shared/ver-clave';
 
 @Component({
   selector: 'cv-login',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, VerClave],
   templateUrl: './login.html',
 })
 export class Login {

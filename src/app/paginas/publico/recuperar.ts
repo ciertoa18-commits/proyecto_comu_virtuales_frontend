@@ -4,13 +4,15 @@ import { Router, RouterLink } from '@angular/router';
 import { CuentaApi } from '../../core/api/cuenta.api';
 import { errorCampo, textoError } from '../../core/util/errores';
 import { Icono } from '../../shared/icono';
+import { VerClave } from '../../shared/ver-clave';
+import { claveSegura } from '../../core/util/clave';
 import { mismasClaves } from './registro';
 
 type Paso = 'correo' | 'codigo' | 'clave';
 
 @Component({
   selector: 'cv-recuperar',
-  imports: [ReactiveFormsModule, RouterLink, Icono],
+  imports: [ReactiveFormsModule, RouterLink, Icono, VerClave],
   templateUrl: './recuperar.html',
   styleUrl: './recuperar.css',
 })
@@ -31,7 +33,7 @@ export class Recuperar {
   protected readonly formCodigo = this.fb.nonNullable.group({ codigo: ['', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]] });
   protected readonly formClave = this.fb.nonNullable.group(
     {
-      nueva: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(72)]],
+      nueva: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(72), claveSegura]],
       confirmar: ['', Validators.required],
     },
     { validators: mismasClaves('nueva', 'confirmar') },

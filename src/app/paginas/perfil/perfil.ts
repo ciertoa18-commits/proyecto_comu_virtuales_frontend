@@ -11,12 +11,14 @@ import { SesionService } from '../../core/sesion/sesion.service';
 import { errorCampo, erroresPorCampo, textoError } from '../../core/util/errores';
 import { iniciales, LIMITE_FOTO } from '../../core/util/texto';
 import { Icono } from '../../shared/icono';
+import { VerClave } from '../../shared/ver-clave';
+import { claveSegura } from '../../core/util/clave';
 import { ImagenArchivo } from '../../shared/imagen-archivo';
 import { mismasClaves } from '../publico/registro';
 
 @Component({
   selector: 'cv-perfil',
-  imports: [ReactiveFormsModule, DatePipe, Icono, ImagenArchivo],
+  imports: [ReactiveFormsModule, DatePipe, Icono, ImagenArchivo, VerClave],
   templateUrl: './perfil.html',
   styleUrl: './perfil.css',
 })
@@ -65,7 +67,7 @@ export class Perfil implements OnInit {
   protected readonly formClave = this.fb.nonNullable.group(
     {
       actual: ['', Validators.required],
-      nueva: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(72)]],
+      nueva: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(72), claveSegura]],
       confirmar: ['', Validators.required],
       codigo: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
     },

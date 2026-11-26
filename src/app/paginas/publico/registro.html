@@ -77,7 +77,7 @@
       <div class="par">
         <label class="campo"><span>Contraseña <b class="req">*</b></span>
           <input type="password" autocomplete="new-password" formControlName="password" />
-          @if (err('password'); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres.</small> }
+          @if (err('password'); as m) { <small class="campo-error">{{ m }}</small> } @else { <small class="ayuda">Mínimo 12 caracteres, con mayúscula, minúscula, número y símbolo (ej. ! @ # $ %).</small> }
         </label>
         <label class="campo"><span>Repite la contraseña <b class="req">*</b></span>
           <input type="password" autocomplete="new-password" formControlName="confirmar" />
